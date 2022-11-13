@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:table_calendar/table_calendar.dart';
+import 'package:travela_mobile/screens/trips_page.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({Key? key}) : super(key: key);
@@ -154,7 +155,9 @@ class _ProfilePageState extends State<ProfilePage> {
                             ),
                           ),
                           IconButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              formGroup(context);
+                            },
                             tooltip: 'Form A Travel Group',
                             icon: Icon(Icons.add),
                           )
@@ -378,6 +381,93 @@ class _ProfilePageState extends State<ProfilePage> {
           ),
         ),
       ],
+    );
+  }
+
+  void formGroup(BuildContext context) {
+    showModalBottomSheet(
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(
+          top: Radius.circular(20),
+        ),
+      ),
+      context: context,
+      builder: (context) => Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: SafeArea(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                'Form Travel Group',
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              TextField(
+                decoration: InputDecoration(
+                  labelText: 'Group Name',
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(50),
+                  ),
+                ),
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              ListTile(
+                title: Text('Add Members'),
+                trailing: IconButton(
+                  icon: Icon(Icons.add),
+                  onPressed: () {
+                    showDialog(
+                        context: context,
+                        builder: (context) {
+                          return AlertDialog(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            title: Text('Invite Members'),
+                            content: TextField(
+                              decoration: InputDecoration(
+                                hintText: 'Enter username',
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(25),
+                                ),
+                              ),
+                            ),
+                            actions: [
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                                child: Text('Cancel'),
+                              ),
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                                child: Text('Send Invite'),
+                              ),
+                            ],
+                          );
+                        });
+                  },
+                ),
+              ),
+              Spacer(),
+              ElevatedButton(
+                onPressed: () {},
+                child: Text('Create'),
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }

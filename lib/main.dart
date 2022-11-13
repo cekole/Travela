@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:travela_mobile/screens/edit_profile.dart';
+import 'package:travela_mobile/screens/friends_map.dart';
 import 'package:travela_mobile/screens/friends_page.dart';
 import 'package:travela_mobile/screens/home_page.dart';
 import 'package:travela_mobile/screens/login.dart';
@@ -55,6 +56,7 @@ class MyApp extends StatelessWidget {
         '/seasons': (context) => const Seasons(),
         '/popular': (context) => const PopularDestinations(),
         '/map': (context) => const MapPage(),
+        '/friends-map': (context) => const FriendsMap(),
         '/edit_profile': (context) => const EditProfile(),
       },
     );

@@ -1,10 +1,17 @@
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_map/plugin_api.dart';
-import "package:latlong2/latlong.dart";
+import 'package:travela_mobile/screens/discovery_map.dart';
+import 'package:travela_mobile/screens/friends_map.dart';
+
 import 'package:travela_mobile/screens/friends_page.dart';
+import 'package:travela_mobile/screens/previous_trips_map.dart';
 import 'package:travela_mobile/widgets/custom_drawer.dart';
+import 'package:travela_mobile/widgets/maps/discovery_map_body.dart';
+import 'package:travela_mobile/widgets/maps/friends_map_body.dart';
+import 'package:travela_mobile/widgets/maps/previous_trips_map_body.dart';
 
 class MapPage extends StatelessWidget {
   const MapPage({Key? key}) : super(key: key);
@@ -12,6 +19,7 @@ class MapPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      drawerEnableOpenDragGesture: false,
       drawer: CustomDrawer(),
       appBar: AppBar(
         backgroundColor: Theme.of(context).primaryColor,
@@ -36,54 +44,77 @@ class MapPage extends StatelessWidget {
           ),
         ],
       ),
-      body: FlutterMap(
-        options: MapOptions(
-          center: LatLng(39.925533, 32.866287),
-          zoom: 3.0,
+      body: CarouselSlider(
+        options: CarouselOptions(
+          height: MediaQuery.of(context).size.height * 0.8,
+          enlargeCenterPage: true,
+          autoPlay: true,
+          aspectRatio: 16 / 9,
+          autoPlayCurve: Curves.fastOutSlowIn,
+          enableInfiniteScroll: true,
+          autoPlayInterval: const Duration(seconds: 3),
+          autoPlayAnimationDuration: const Duration(milliseconds: 800),
+          viewportFraction: 1,
         ),
-        layers: [
-          TileLayerOptions(
-            urlTemplate: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-            subdomains: ['a', 'b', 'c'],
+        items: [
+          Column(
+            children: [
+              TextButton.icon(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const FriendsMap(),
+                    ),
+                  );
+                },
+                icon: const Icon(Icons.map),
+                label: const Text('View Map', style: TextStyle(fontSize: 20)),
+                style: TextButton.styleFrom(
+                  primary: Theme.of(context).primaryColor,
+                ),
+              ),
+              Expanded(child: FriendsMapBody()),
+            ],
           ),
-          MarkerLayerOptions(
-            markers: [
-              Marker(
-                width: 80.0,
-                height: 80.0,
-                point: LatLng(39.925533, 32.866287),
-                builder: (ctx) => const Icon(
-                  Icons.location_on,
-                  color: Colors.red,
+          Column(
+            children: [
+              TextButton.icon(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const DiscoveryMap(),
+                    ),
+                  );
+                },
+                icon: const Icon(Icons.map),
+                label: const Text('View Map', style: TextStyle(fontSize: 20)),
+                style: TextButton.styleFrom(
+                  primary: Theme.of(context).primaryColor,
                 ),
               ),
-              Marker(
-                width: 80.0,
-                height: 80.0,
-                point: LatLng(39.925533, 32.836285),
-                builder: (ctx) => const Icon(
-                  Icons.location_on,
-                  color: Colors.red,
+              Expanded(child: DiscoveryMapBody()),
+            ],
+          ),
+          Column(
+            children: [
+              TextButton.icon(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const PreviousTripsMap(),
+                    ),
+                  );
+                },
+                icon: const Icon(Icons.map),
+                label: const Text('View Map', style: TextStyle(fontSize: 20)),
+                style: TextButton.styleFrom(
+                  primary: Theme.of(context).primaryColor,
                 ),
               ),
-              Marker(
-                width: 80.0,
-                height: 80.0,
-                point: LatLng(51.509865, -0.118092),
-                builder: (ctx) => const Icon(
-                  Icons.location_on,
-                  color: Colors.red,
-                ),
-              ),
-              Marker(
-                width: 80.0,
-                height: 80.0,
-                point: LatLng(7.509865, 0.018092),
-                builder: (ctx) => const Icon(
-                  Icons.location_on,
-                  color: Colors.red,
-                ),
-              ),
+              Expanded(child: PreviousTripsMapBody()),
             ],
           ),
         ],

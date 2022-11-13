@@ -2,6 +2,7 @@ import 'package:expansion_tile_card/expansion_tile_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:travela_mobile/screens/previous_trips_map.dart';
 
 class TripsPage extends StatelessWidget {
   const TripsPage({Key? key}) : super(key: key);
@@ -9,6 +10,13 @@ class TripsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          formGroup(context);
+        },
+        child: const Icon(Icons.add),
+        backgroundColor: Theme.of(context).primaryColor,
+      ),
       appBar: AppBar(
         title: Text('Trips'),
         backgroundColor: Theme.of(context).primaryColor,
@@ -29,10 +37,6 @@ class TripsPage extends StatelessWidget {
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
                         ),
-                      ),
-                      IconButton(
-                        onPressed: () {},
-                        icon: Icon(Icons.travel_explore),
                       ),
                     ],
                   ),
@@ -64,17 +68,79 @@ class TripsPage extends StatelessWidget {
                         leading: Icon(Icons.people),
                       ),
                       ListTile(
+                        title: Text('Transportation'),
+                        subtitle: Text(
+                            'Ferry \n7/13/2023 12:00 PM - 7/20/2023 12:00 PM'),
+                        leading: Icon(Icons.mode_of_travel_sharp),
+                      ),
+                      ListTile(
+                        title: Text('Accomodation'),
+                        subtitle: Text('Ferry Cabin'),
+                        leading: Icon(Icons.hotel),
+                      ),
+                      ListTile(
                         title: Text('Quick Notes'),
                         subtitle: Text('Bring sunscreen, bathing suit, etc.'),
                         leading: Icon(Icons.note),
                       ),
+                      ListTile(
+                        trailing: IconButton(
+                          onPressed: () {},
+                          icon: Icon(Icons.edit),
+                        ),
+                      )
                     ],
                   ),
                   SizedBox(
                     height: 10,
                   ),
-                  SizedBox(
-                    height: 10,
+                  ExpansionTileCard(
+                    baseColor: Theme.of(context).primaryColor.withOpacity(0.2),
+                    expandedColor: Theme.of(context).backgroundColor,
+                    leading: CircleAvatar(
+                      backgroundColor: Theme.of(context).backgroundColor,
+                      child: Icon(Icons.flight),
+                    ),
+                    title: Text('Aurora Borealis'),
+                    subtitle: Text('March 13 - 20, 2023'),
+                    children: [
+                      Divider(
+                        thickness: 1,
+                        height: 1,
+                      ),
+                      ListTile(
+                        title: Text('Locations'),
+                        subtitle: Text('Iceland'),
+                        leading: Icon(Icons.location_on),
+                      ),
+                      ListTile(
+                        title: Text('Travelers'),
+                        subtitle: Text('You, Wayne Gretzky, Emily Blunt'),
+                        leading: Icon(Icons.people),
+                      ),
+                      ListTile(
+                        title: Text('Transportation'),
+                        subtitle: Text(
+                            'Plane \n3/13/2023 12:00 PM - 3/20/2023 12:00 PM'),
+                        leading: Icon(Icons.mode_of_travel_sharp),
+                      ),
+                      ListTile(
+                        title: Text('Accomodation'),
+                        subtitle: Text('Igloo Hotel'),
+                        leading: Icon(Icons.hotel),
+                      ),
+                      ListTile(
+                        title: Text('Quick Notes'),
+                        subtitle: Text('Bring sunscreen, bathing suit, etc.'),
+                        leading: Icon(Icons.note),
+                      ),
+                      ListTile(
+                        trailing: IconButton(
+                          onPressed: () {},
+                          icon: Icon(Icons.edit),
+                        ),
+                      )
+                    ],
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -87,8 +153,15 @@ class TripsPage extends StatelessWidget {
                         ),
                       ),
                       IconButton(
-                        onPressed: () {},
-                        icon: Icon(Icons.history),
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const PreviousTripsMap(),
+                            ),
+                          );
+                        },
+                        icon: Icon(Icons.travel_explore),
                       ),
                     ],
                   ),
@@ -128,6 +201,93 @@ class TripsPage extends StatelessWidget {
                     ],
                   ),
                 ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  void formGroup(BuildContext context) {
+    showModalBottomSheet(
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(
+          top: Radius.circular(20),
+        ),
+      ),
+      context: context,
+      builder: (context) => Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: SafeArea(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                'Form Travel Group',
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              TextField(
+                decoration: InputDecoration(
+                  labelText: 'Group Name',
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(50),
+                  ),
+                ),
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              ListTile(
+                title: Text('Add Members'),
+                trailing: IconButton(
+                  icon: Icon(Icons.add),
+                  onPressed: () {
+                    showDialog(
+                        context: context,
+                        builder: (context) {
+                          return AlertDialog(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            title: Text('Invite Members'),
+                            content: TextField(
+                              decoration: InputDecoration(
+                                hintText: 'Enter username',
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(25),
+                                ),
+                              ),
+                            ),
+                            actions: [
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                                child: Text('Cancel'),
+                              ),
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                                child: Text('Send Invite'),
+                              ),
+                            ],
+                          );
+                        });
+                  },
+                ),
+              ),
+              Spacer(),
+              ElevatedButton(
+                onPressed: () {},
+                child: Text('Create'),
               ),
             ],
           ),
