@@ -144,11 +144,21 @@ class _ProfilePageState extends State<ProfilePage> {
                   children: [
                     Padding(
                       padding: EdgeInsets.only(left: 8.0, top: 8.0),
-                      child: Text(
-                        'Travel Groups',
-                        style: TextStyle(
-                          fontSize: 20,
-                        ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            'Travel Groups',
+                            style: TextStyle(
+                              fontSize: 20,
+                            ),
+                          ),
+                          IconButton(
+                            onPressed: () {},
+                            tooltip: 'Form A Travel Group',
+                            icon: Icon(Icons.add),
+                          )
+                        ],
                       ),
                     ),
                     Divider(
