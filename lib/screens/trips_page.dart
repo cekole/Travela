@@ -17,6 +17,7 @@ class TripsPage extends StatelessWidget {
         child: const Icon(Icons.add),
         backgroundColor: Theme.of(context).primaryColor,
       ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       appBar: AppBar(
         title: Text('Trips'),
         backgroundColor: Theme.of(context).primaryColor,
@@ -192,6 +193,17 @@ class TripsPage extends StatelessWidget {
                         subtitle: Text(
                             'You, Yağmur Eryılmaz, Efe Şaman, Çağla Ataoğlu, Efe Ertürk'),
                         leading: Icon(Icons.people),
+                      ),
+                      ListTile(
+                        title: Text('Transportation'),
+                        subtitle: Text(
+                            'Car \n8/20/2021 12:00 PM - 8/24/2021 12:00 PM'),
+                        leading: Icon(Icons.mode_of_travel_sharp),
+                      ),
+                      ListTile(
+                        title: Text('Accomodation'),
+                        subtitle: Text('Hotel'),
+                        leading: Icon(Icons.hotel),
                       ),
                       ListTile(
                         title: Text('Quick Notes'),

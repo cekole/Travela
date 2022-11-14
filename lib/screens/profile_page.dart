@@ -156,10 +156,79 @@ class _ProfilePageState extends State<ProfilePage> {
                           ),
                           IconButton(
                             onPressed: () {
-                              formGroup(context);
+                              //Edit Travel Group
+                              showModalBottomSheet(
+                                context: context,
+                                builder: (context) {
+                                  return Container(
+                                    padding: EdgeInsets.all(10),
+                                    child: Column(
+                                      children: [
+                                        ExpansionTileCard(
+                                          baseColor: Theme.of(context)
+                                              .primaryColor
+                                              .withOpacity(0.2),
+                                          leading: CircleAvatar(
+                                            backgroundImage: AssetImage(
+                                                'assets/images/swiss_alps.jpg'),
+                                          ),
+                                          title: Text('Swiss Alp Buddies'),
+                                          subtitle: Text('Switzerland'),
+                                          children: [
+                                            ListTile(
+                                              title: Text('Edit'),
+                                              leading: Icon(Icons.edit),
+                                              onTap: () {
+                                                Navigator.of(context).pushNamed(
+                                                    '/edit_travel_group');
+                                              },
+                                            ),
+                                            ListTile(
+                                              title: Text('Delete'),
+                                              leading: Icon(Icons.delete),
+                                              onTap: () {
+                                                Navigator.of(context).pop();
+                                              },
+                                            ),
+                                          ],
+                                        ),
+                                        SizedBox(height: 10),
+                                        ExpansionTileCard(
+                                          baseColor: Theme.of(context)
+                                              .primaryColor
+                                              .withOpacity(0.2),
+                                          leading: CircleAvatar(
+                                            backgroundImage: AssetImage(
+                                                'assets/images/paris.jpg'),
+                                          ),
+                                          title: Text('Paris Buddies'),
+                                          subtitle: Text('France'),
+                                          children: [
+                                            ListTile(
+                                              title: Text('Edit'),
+                                              leading: Icon(Icons.edit),
+                                              onTap: () {
+                                                Navigator.of(context).pushNamed(
+                                                    '/edit_travel_group');
+                                              },
+                                            ),
+                                            ListTile(
+                                              title: Text('Delete'),
+                                              leading: Icon(Icons.delete),
+                                              onTap: () {
+                                                Navigator.of(context).pop();
+                                              },
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                  );
+                                },
+                              );
                             },
                             tooltip: 'Form A Travel Group',
-                            icon: Icon(Icons.add),
+                            icon: Icon(Icons.edit),
                           )
                         ],
                       ),

@@ -67,12 +67,6 @@ class PreviousTripsMap extends StatelessWidget {
                               ),
                             ),
                             ListTile(
-                              title: Text('Share To All'),
-                              leading: Icon(Icons.share),
-                              trailing: Switch.adaptive(
-                                  value: true, onChanged: (value) {}),
-                            ),
-                            ListTile(
                               title: Text('Date'),
                               leading: Icon(Icons.date_range),
                               trailing: Icon(Icons.arrow_forward_ios),

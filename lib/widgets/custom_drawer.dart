@@ -35,6 +35,10 @@ class CustomDrawer extends StatelessWidget {
             title: Text('Help'),
           ),
           ListTile(
+            leading: Icon(Icons.favorite),
+            title: Text('Favorites'),
+          ),
+          ListTile(
               leading: Icon(Icons.logout),
               title: Text('Logout'),
               onTap: () {

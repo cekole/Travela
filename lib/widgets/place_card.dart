@@ -87,6 +87,17 @@ class PlaceCard extends StatelessWidget {
                                   )
                                 : SizedBox(),
                   ),
+                  //Suggested Activities
+                  Container(
+                    padding: EdgeInsets.all(10),
+                    child: Text(
+                      'Suggested Activities',
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
                   Spacer(),
                   Padding(
                     padding: const EdgeInsets.only(bottom: 16.0),
