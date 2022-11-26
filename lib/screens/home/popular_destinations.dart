@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
-import 'package:travela_mobile/widgets/place_card.dart';
-import 'package:travela_mobile/widgets/popular_places.dart';
+import 'package:travela_mobile/widgets/home/place_card.dart';
+import 'package:travela_mobile/widgets/home/popular_places.dart';
 
 class PopularDestinations extends StatelessWidget {
   const PopularDestinations({Key? key}) : super(key: key);

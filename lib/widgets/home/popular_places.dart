@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:travela_mobile/widgets/place_card.dart';
+import 'package:provider/provider.dart';
+import 'package:travela_mobile/providers/destinations.dart';
+import 'package:travela_mobile/widgets/home/place_card.dart';
 
 class PopularPlaces extends StatelessWidget {
   const PopularPlaces({
@@ -9,6 +11,7 @@ class PopularPlaces extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final destinationsData = Provider.of<Destinations>(context);
     return Column(
       children: [
         Row(
@@ -36,22 +39,16 @@ class PopularPlaces extends StatelessWidget {
         ),
         Container(
           height: MediaQuery.of(context).size.height * 0.25,
-          child: ListView(
+          child: ListView.builder(
             scrollDirection: Axis.horizontal,
-            children: [
-              PlaceCard(
-                destination: 'Paris, France',
-                image: 'assets/images/destinations/destination_1.jpeg',
-              ),
-              PlaceCard(
-                destination: 'London, UK',
-                image: 'assets/images/destinations/destination_2.jpeg',
-              ),
-              PlaceCard(
-                destination: 'New York, USA',
-                image: 'assets/images/destinations/destination_3.jpeg',
-              ),
-            ],
+            itemCount: destinationsData.destinations.length,
+            itemBuilder: (context, index) {
+              return PlaceCard(
+                destination:
+                    '${destinationsData.destinations[index].city}, ${destinationsData.destinations[index].country}',
+                image: destinationsData.destinations[index].imageUrl,
+              );
+            },
           ),
         ),
       ],

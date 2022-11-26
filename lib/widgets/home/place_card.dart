@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:provider/provider.dart';
+import 'package:travela_mobile/providers/activities.dart';
+import 'package:travela_mobile/providers/destinations.dart';
 
 class PlaceCard extends StatelessWidget {
   const PlaceCard({
@@ -15,6 +18,14 @@ class PlaceCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
+        final destinationsData =
+            Provider.of<Destinations>(context, listen: false);
+        final selectedDestination = destinationsData.destinations
+            .firstWhere((element) => element.imageUrl == image);
+        final activitiesData = Provider.of<Activities>(context, listen: false);
+        final selectedActivities =
+            activitiesData.getActivitiesByDestinationId(selectedDestination.id);
+
         showModalBottomSheet(
           isScrollControlled: true,
           useRootNavigator: true,
@@ -68,24 +79,18 @@ class PlaceCard extends StatelessWidget {
                     ),
                   ),
                   Container(
+                    margin: EdgeInsets.symmetric(horizontal: 10),
                     padding: EdgeInsets.all(10),
                     decoration: BoxDecoration(
                       color: Colors.grey[200],
                       borderRadius: BorderRadius.circular(20),
                     ),
-                    child: (destination.split(', ')[0] == 'London')
-                        ? Text(
-                            'London is the capital city of England. It is the most populous city in the United Kingdom, with a metropolitan area of over 13 million inhabitants.',
-                          )
-                        : (destination.split(', ')[0] == 'Paris')
-                            ? Text(
-                                'Paris is the capital and most populous city of France. The city is situated on the river Seine, in the north of the country, at the heart of the Île-de-France region.',
-                              )
-                            : (destination.split(', ')[0] == 'Rome')
-                                ? Text(
-                                    'Rome is the capital city and a special comune of Italy (named Comune di Roma Capitale). Rome also serves as the capital of the Lazio region. With 2,860,009 residents in 1,285 km2 (496.1 sq mi), it is also the country\'s most populated comune.',
-                                  )
-                                : SizedBox(),
+                    child: Text(
+                      selectedDestination.description,
+                      style: TextStyle(
+                        fontSize: 15,
+                      ),
+                    ),
                   ),
                   //Suggested Activities
                   Container(
@@ -96,6 +101,52 @@ class PlaceCard extends StatelessWidget {
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
                       ),
+                    ),
+                  ),
+                  Container(
+                    height: MediaQuery.of(context).size.height * 0.2,
+                    child: ListView.builder(
+                      scrollDirection: Axis.horizontal,
+                      itemCount: selectedDestination.activities.length,
+                      itemBuilder: (context, index) {
+                        return Container(
+                          width: MediaQuery.of(context).size.width * 0.4,
+                          margin: EdgeInsets.all(10),
+                          decoration: BoxDecoration(
+                            color: Colors.grey[200],
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          child: Column(
+                            children: [
+                              Container(
+                                height:
+                                    MediaQuery.of(context).size.height * 0.1,
+                                decoration: BoxDecoration(
+                                  image: DecorationImage(
+                                    image: AssetImage(
+                                        selectedActivities[index].imageUrl),
+                                    fit: BoxFit.cover,
+                                  ),
+                                  borderRadius: BorderRadius.only(
+                                    topLeft: Radius.circular(20),
+                                    topRight: Radius.circular(20),
+                                  ),
+                                ),
+                              ),
+                              Container(
+                                padding: EdgeInsets.all(10),
+                                child: Text(
+                                  selectedActivities[index].name,
+                                  style: TextStyle(
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        );
+                      },
                     ),
                   ),
                   Spacer(),

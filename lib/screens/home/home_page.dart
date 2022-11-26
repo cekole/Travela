@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
-import 'package:travela_mobile/screens/friends_page.dart';
-import 'package:travela_mobile/screens/map_page.dart';
-import 'package:travela_mobile/screens/profile_page.dart';
-import 'package:travela_mobile/screens/trips_page.dart';
+import 'package:travela_mobile/screens/friends/friends_page.dart';
+import 'package:travela_mobile/screens/maps/map_page.dart';
+import 'package:travela_mobile/screens/profile/profile_page.dart';
+import 'package:travela_mobile/screens/trips/trips_page.dart';
 import 'package:travela_mobile/widgets/custom_drawer.dart';
-import 'package:travela_mobile/widgets/home_body.dart';
+import 'package:travela_mobile/widgets/home/home_body.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({Key? key}) : super(key: key);

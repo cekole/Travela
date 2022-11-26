@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:travela_mobile/widgets/place_card.dart';
+import 'package:provider/provider.dart';
+import 'package:travela_mobile/providers/destinations.dart';
+import 'package:travela_mobile/widgets/home/place_card.dart';
 
 class SuggestionsForYou extends StatelessWidget {
   const SuggestionsForYou({
@@ -8,6 +10,10 @@ class SuggestionsForYou extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final destinationsData = Provider.of<Destinations>(context, listen: false);
+    //TODO: Get the destinations from suggestions, ml model, etc.
+    final suggestedDestinations =
+        destinationsData.destinations.skip(2).toList();
     return Column(
       children: [
         Row(
@@ -33,21 +39,18 @@ class SuggestionsForYou extends StatelessWidget {
             ),
           ],
         ),
-        Container(
+        SizedBox(
           height: MediaQuery.of(context).size.height * 0.25,
-          child: ListView(
+          child: ListView.builder(
             scrollDirection: Axis.horizontal,
-            children: [
-              PlaceCard(
-                  destination: 'Basel, Switzerland',
-                  image: 'assets/images/basel.jpg'),
-              PlaceCard(
-                  destination: 'Venice, Italy',
-                  image: 'assets/images/venice.jpg'),
-              PlaceCard(
-                  destination: 'Paris, France',
-                  image: 'assets/images/destinations/destination_1.jpeg'),
-            ],
+            itemCount: suggestedDestinations.length,
+            itemBuilder: (context, index) {
+              return PlaceCard(
+                destination:
+                    '${suggestedDestinations[index].city}, ${suggestedDestinations[index].country}',
+                image: suggestedDestinations[index].imageUrl,
+              );
+            },
           ),
         ),
       ],

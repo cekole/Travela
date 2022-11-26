@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:table_calendar/table_calendar.dart';
-import 'package:travela_mobile/screens/trips_page.dart';
+import 'package:travela_mobile/screens/trips/trips_page.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({Key? key}) : super(key: key);

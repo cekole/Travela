@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
-import 'package:travela_mobile/widgets/popular_places.dart';
-import 'package:travela_mobile/widgets/suggestions.dart';
+import 'package:travela_mobile/widgets/home/popular_places.dart';
+import 'package:travela_mobile/widgets/home/suggestions.dart';
 
 class HomeBody extends StatefulWidget {
   const HomeBody({Key? key}) : super(key: key);
@@ -16,6 +16,7 @@ class _HomeBodyState extends State<HomeBody> {
   RangeValues _currentRatingRangeValues = const RangeValues(3, 5);
   RangeValues _currentDistanceRangeValues = const RangeValues(0, 1000);
   String _currentSeason = 'Summer';
+  TextEditingController _searchController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return CustomScrollView(
@@ -50,6 +51,8 @@ class _HomeBodyState extends State<HomeBody> {
             child: Column(
               children: [
                 TextField(
+                  controller:
+                      _searchController, // TODO: Implement search functionality
                   decoration: InputDecoration(
                     hintText: 'Where Do You Want To Go?',
                     prefixIcon: Icon(
@@ -367,8 +370,6 @@ class _HomeBodyState extends State<HomeBody> {
             ),
           ),
         );
-        /*  }),
-        ); */
       },
     );
   }

@@ -3,11 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_map/plugin_api.dart';
-import 'package:travela_mobile/screens/discovery_map.dart';
-import 'package:travela_mobile/screens/friends_map.dart';
 
-import 'package:travela_mobile/screens/friends_page.dart';
-import 'package:travela_mobile/screens/previous_trips_map.dart';
+import 'package:travela_mobile/screens/friends/friends_page.dart';
+import 'package:travela_mobile/screens/maps/discovery_map.dart';
+import 'package:travela_mobile/screens/maps/friends_map.dart';
+import 'package:travela_mobile/screens/maps/previous_trips_map.dart';
 import 'package:travela_mobile/widgets/custom_drawer.dart';
 import 'package:travela_mobile/widgets/maps/discovery_map_body.dart';
 import 'package:travela_mobile/widgets/maps/friends_map_body.dart';

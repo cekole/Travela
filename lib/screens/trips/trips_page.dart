@@ -2,7 +2,7 @@ import 'package:expansion_tile_card/expansion_tile_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
-import 'package:travela_mobile/screens/previous_trips_map.dart';
+import 'package:travela_mobile/screens/maps/previous_trips_map.dart';
 
 class TripsPage extends StatelessWidget {
   const TripsPage({Key? key}) : super(key: key);
