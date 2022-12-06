@@ -70,6 +70,9 @@ class _HomeBodyState extends State<HomeBody> {
                       borderSide: BorderSide.none,
                     ),
                   ),
+                  onSubmitted: (value) {
+                    Navigator.of(context).pushNamed('/search_options');
+                  },
                 ),
                 Divider(
                   thickness: 0,
