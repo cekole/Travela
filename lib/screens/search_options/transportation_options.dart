@@ -18,12 +18,16 @@ class TransportationOptionsPage extends StatelessWidget {
         children: [
           const SizedBox(height: 16),
           TransportationCard(
-              title: 'Plane', imageUrl: 'assets/images/plane.png'),
-          const SizedBox(height: 16),
-          TransportationCard(title: 'Bus', imageUrl: 'assets/images/bus.png'),
+              title: 'Plane',
+              imageUrl: 'assets/images/transportation/plane.png'),
           const SizedBox(height: 16),
           TransportationCard(
-              title: 'Train', imageUrl: 'assets/images/train.png'),
+              title: 'Bus', imageUrl: 'assets/images/transportation/bus.png'),
+          const SizedBox(height: 16),
+          TransportationCard(
+            title: 'Train',
+            imageUrl: 'assets/images/transportation/train.png',
+          ),
         ],
       ),
     );
