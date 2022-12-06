@@ -120,8 +120,8 @@ class LoginPage extends StatelessWidget {
                                       ),
                                     ),
                                   ),
-                                  icon: Image.network(
-                                    'http://pngimg.com/uploads/google/google_PNG19635.png',
+                                  icon: Image.asset(
+                                    'assets/images/google.png',
                                     scale: 50,
                                   ),
                                   label: Text("Sign In With Google"),
