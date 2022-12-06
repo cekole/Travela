@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:travela_mobile/providers/activities.dart';
 import 'package:travela_mobile/providers/destinations.dart';
+import 'package:travela_mobile/screens/hotel/hotel_page.dart';
 import 'package:travela_mobile/screens/maps/friends_map.dart';
 import 'package:travela_mobile/screens/maps/map_page.dart';
 import 'package:travela_mobile/screens/profile/edit_profile.dart';
@@ -68,6 +69,7 @@ class MyApp extends StatelessWidget {
           '/edit_profile': (context) => const EditProfile(),
           '/edit_travel_group': (context) => const EditTravelGroup(),
           '/search_options': (context) => const SearchOptions(),
+          '/hotel_page': (context) => const HotelPage(),
         },
       ),
     );

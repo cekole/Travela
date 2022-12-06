@@ -18,9 +18,7 @@ class SearchOptions extends StatelessWidget {
       body: Container(
         margin: const EdgeInsets.all(16.0),
         alignment: Alignment.center,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
+        child: ListView(
           children: [
             const SizedBox(height: 40),
             const Text(
