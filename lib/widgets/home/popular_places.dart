@@ -11,7 +11,7 @@ class PopularPlaces extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final destinationsData = Provider.of<Destinations>(context);
+    final destinationsData = Provider.of<DestinationsProvider>(context);
     return Column(
       children: [
         Row(

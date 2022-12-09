@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
-import 'package:travela_mobile/providers/activities.dart';
+import 'package:travela_mobile/providers/activities_provider.dart';
 import 'package:travela_mobile/providers/destinations.dart';
 
 class PlaceCard extends StatelessWidget {
@@ -19,10 +19,11 @@ class PlaceCard extends StatelessWidget {
     return GestureDetector(
       onTap: () {
         final destinationsData =
-            Provider.of<Destinations>(context, listen: false);
+            Provider.of<DestinationsProvider>(context, listen: false);
         final selectedDestination = destinationsData.destinations
             .firstWhere((element) => element.imageUrl == image);
-        final activitiesData = Provider.of<Activities>(context, listen: false);
+        final activitiesData =
+            Provider.of<ActivitiesProvider>(context, listen: false);
         final selectedActivities =
             activitiesData.getActivitiesByDestinationId(selectedDestination.id);
 

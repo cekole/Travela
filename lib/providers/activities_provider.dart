@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:travela_mobile/models/activity.dart';
 
-class Activities with ChangeNotifier {
+class ActivitiesProvider with ChangeNotifier {
   List<Activity> _activities = [
     Activity(
       id: '1',

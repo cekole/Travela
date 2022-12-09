@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:travela_mobile/providers/activities.dart';
+import 'package:travela_mobile/providers/activities_provider.dart';
 import 'package:travela_mobile/providers/destinations.dart';
 import 'package:travela_mobile/screens/hotel/hotel_page.dart';
 import 'package:travela_mobile/screens/maps/friends_map.dart';
@@ -27,8 +27,8 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (context) => Destinations()),
-        ChangeNotifierProvider(create: (context) => Activities()),
+        ChangeNotifierProvider(create: (context) => DestinationsProvider()),
+        ChangeNotifierProvider(create: (context) => ActivitiesProvider()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:travela_mobile/models/destination.dart';
 
-class Destinations with ChangeNotifier {
+class DestinationsProvider with ChangeNotifier {
   List<Destination> _destinations = [
     Destination(
       id: '1',
