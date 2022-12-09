@@ -56,6 +56,7 @@ class SearchOptions extends StatelessWidget {
               },
               child: Container(
                 decoration: BoxDecoration(
+                  color: Colors.white,
                   border: Border.all(color: Colors.grey),
                   image: DecorationImage(
                     image: AssetImage('assets/images/hotel/accomodation2.png'),
