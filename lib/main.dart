@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:travela_mobile/providers/activities_provider.dart';
-import 'package:travela_mobile/providers/destinations.dart';
+import 'package:travela_mobile/providers/destinations_provider.dart';
 import 'package:travela_mobile/screens/hotel/hotel_page.dart';
 import 'package:travela_mobile/screens/maps/friends_map.dart';
 import 'package:travela_mobile/screens/maps/map_page.dart';

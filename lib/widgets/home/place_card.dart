@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 import 'package:travela_mobile/providers/activities_provider.dart';
-import 'package:travela_mobile/providers/destinations.dart';
+import 'package:travela_mobile/providers/destinations_provider.dart';
 
 class PlaceCard extends StatelessWidget {
   const PlaceCard({

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
-import 'package:travela_mobile/providers/destinations.dart';
+import 'package:travela_mobile/providers/destinations_provider.dart';
 import 'package:travela_mobile/widgets/home/place_card.dart';
 
 class PopularPlaces extends StatelessWidget {

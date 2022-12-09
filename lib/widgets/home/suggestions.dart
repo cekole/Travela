@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:travela_mobile/providers/destinations.dart';
+import 'package:travela_mobile/providers/destinations_provider.dart';
 import 'package:travela_mobile/widgets/home/place_card.dart';
 
 class SuggestionsForYou extends StatelessWidget {
