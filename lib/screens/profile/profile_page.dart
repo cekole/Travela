@@ -3,7 +3,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:provider/provider.dart';
 import 'package:table_calendar/table_calendar.dart';
+import 'package:travela_mobile/models/travel_group.dart';
+import 'package:travela_mobile/providers/travel_group_provider.dart';
 import 'package:travela_mobile/screens/trips/trips_page.dart';
 
 class ProfilePage extends StatefulWidget {
@@ -156,134 +159,69 @@ class _ProfilePageState extends State<ProfilePage> {
                           ),
                           IconButton(
                             onPressed: () {
-                              //Edit Travel Group
-                              showModalBottomSheet(
-                                context: context,
-                                builder: (context) {
-                                  return Container(
-                                    padding: EdgeInsets.all(10),
-                                    child: Column(
-                                      children: [
-                                        ExpansionTileCard(
-                                          baseColor: Theme.of(context)
-                                              .primaryColor
-                                              .withOpacity(0.2),
-                                          leading: CircleAvatar(
-                                            backgroundImage: AssetImage(
-                                                'assets/images/swiss_alps.jpg'),
-                                          ),
-                                          title: Text('Swiss Alp Buddies'),
-                                          subtitle: Text('Switzerland'),
-                                          children: [
-                                            ListTile(
-                                              title: Text('Edit'),
-                                              leading: Icon(Icons.edit),
-                                              onTap: () {
-                                                Navigator.of(context).pushNamed(
-                                                    '/edit_travel_group');
-                                              },
-                                            ),
-                                            ListTile(
-                                              title: Text('Delete'),
-                                              leading: Icon(Icons.delete),
-                                              onTap: () {
-                                                Navigator.of(context).pop();
-                                              },
-                                            ),
-                                          ],
-                                        ),
-                                        SizedBox(height: 10),
-                                        ExpansionTileCard(
-                                          baseColor: Theme.of(context)
-                                              .primaryColor
-                                              .withOpacity(0.2),
-                                          leading: CircleAvatar(
-                                            backgroundImage: AssetImage(
-                                                'assets/images/paris.jpg'),
-                                          ),
-                                          title: Text('Paris Buddies'),
-                                          subtitle: Text('France'),
-                                          children: [
-                                            ListTile(
-                                              title: Text('Edit'),
-                                              leading: Icon(Icons.edit),
-                                              onTap: () {
-                                                Navigator.of(context).pushNamed(
-                                                    '/edit_travel_group');
-                                              },
-                                            ),
-                                            ListTile(
-                                              title: Text('Delete'),
-                                              leading: Icon(Icons.delete),
-                                              onTap: () {
-                                                Navigator.of(context).pop();
-                                              },
-                                            ),
-                                          ],
-                                        ),
-                                      ],
-                                    ),
-                                  );
-                                },
-                              );
+                              _travelGroupModal(context);
                             },
                             tooltip: 'Form A Travel Group',
-                            icon: Icon(Icons.edit),
+                            icon: const Icon(Icons.view_headline_sharp),
                           )
                         ],
                       ),
                     ),
                     Divider(
-                      height: 20,
+                      height: 10,
                       thickness: 2,
                     ),
-                    ExpansionTileCard(
-                      baseColor:
-                          Theme.of(context).backgroundColor.withOpacity(0.4),
-                      title: Text('Swiss Alps Buddies'),
-                      subtitle: Text('Switzerland, August 2022'),
-                      children: [
-                        Builder(builder: (context) {
-                          return ListTile(
-                            title: Text('Yağmur Eryılmaz'),
-                            subtitle: Text('Sevilla, Spain'),
-                          );
-                        }),
-                      ],
-                    ),
-                    Divider(),
-                    ExpansionTileCard(
-                      elevation: 10,
-                      baseColor:
-                          Theme.of(context).backgroundColor.withOpacity(0.4),
-                      title: Text('Trippies'),
-                      subtitle: Text('Benelux, January 2023'),
-                      children: [
-                        Builder(builder: (context) {
-                          return SingleChildScrollView(
-                            child: Column(
-                              children: [
-                                ListTile(
-                                  title: Text('Yağmur Eryılmaz'),
-                                  subtitle: Text('Sevilla, Spain'),
-                                ),
-                                ListTile(
-                                  title: Text('Efe Ertürk'),
-                                  subtitle: Text('Turin, Italy'),
-                                ),
-                                ListTile(
-                                  title: Text('Yağmur Eryılmaz'),
-                                  subtitle: Text('Sevilla, Spain'),
-                                ),
-                                ListTile(
-                                  title: Text('Yağmur Eryılmaz'),
-                                  subtitle: Text('Sevilla, Spain'),
-                                ),
-                              ],
+                    MediaQuery.removePadding(
+                      context: context,
+                      removeTop: true,
+                      child: ListView.separated(
+                        separatorBuilder: (context, index) => SizedBox(
+                          height: 10,
+                        ),
+                        shrinkWrap: true,
+                        itemCount: Provider.of<TravelGroupProvider>(context)
+                            .travelGroups
+                            .length,
+                        itemBuilder: (context, index) {
+                          final travelGroup =
+                              Provider.of<TravelGroupProvider>(context)
+                                  .travelGroups[index];
+                          return ExpansionTileCard(
+                            baseColor: Theme.of(context)
+                                .backgroundColor
+                                .withOpacity(0.4),
+                            title: Text(travelGroup.name),
+                            subtitle: Text(
+                              travelGroup.destinations
+                                  .map((destination) =>
+                                      '${destination.city}, ${destination.country}')
+                                  .join(' | '),
+                              overflow: TextOverflow.ellipsis,
                             ),
+                            children: [
+                              Builder(
+                                builder: (context) {
+                                  return SingleChildScrollView(
+                                    child: Column(
+                                      children: [
+                                        ...travelGroup.participants
+                                            .map(
+                                              (member) => ListTile(
+                                                title: Text(member.name),
+                                                subtitle: Text(
+                                                    '${member.country.countryName}'),
+                                              ),
+                                            )
+                                            .toList(),
+                                      ],
+                                    ),
+                                  );
+                                },
+                              ),
+                            ],
                           );
-                        }),
-                      ],
+                        },
+                      ),
                     ),
                   ],
                 ),
@@ -450,6 +388,66 @@ class _ProfilePageState extends State<ProfilePage> {
           ),
         ),
       ],
+    );
+  }
+
+  Future<dynamic> _travelGroupModal(BuildContext context) {
+    final travelGroupData =
+        Provider.of<TravelGroupProvider>(context, listen: false);
+    return showModalBottomSheet(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(
+          top: Radius.circular(10),
+        ),
+      ),
+      context: context,
+      builder: (context) {
+        return Container(
+          margin: EdgeInsets.all(10),
+          padding: EdgeInsets.all(10),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.all(
+              Radius.circular(10),
+            ),
+          ),
+          child: ListView.separated(
+            separatorBuilder: (context, index) => SizedBox(
+              height: 10,
+            ),
+            itemBuilder: (context, index) {
+              final travelGroup = travelGroupData.travelGroups[index];
+              return Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(10),
+                  ),
+                  color: Theme.of(context).primaryColor.withOpacity(0.2),
+                ),
+                child: ListTile(
+                  onTap: () {
+                    Navigator.of(context).pushNamed(
+                      '/edit_travel_group',
+                      arguments: travelGroup,
+                    );
+                  },
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  title: Text(travelGroup.name),
+                  subtitle: Text(
+                    travelGroup.destinations
+                        .map((destination) =>
+                            '${destination.city}, ${destination.country}')
+                        .join(' | '),
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+              );
+            },
+            itemCount: travelGroupData.travelGroups.length,
+          ),
+        );
+      },
     );
   }
 

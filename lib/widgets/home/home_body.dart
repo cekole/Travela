@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:focused_menu/focused_menu.dart';
+import 'package:focused_menu/modals.dart';
 import 'package:travela_mobile/widgets/home/popular_places.dart';
 import 'package:travela_mobile/widgets/home/suggestions.dart';
 
@@ -50,29 +52,47 @@ class _HomeBodyState extends State<HomeBody> {
             padding: const EdgeInsets.all(8.0),
             child: Column(
               children: [
-                TextField(
-                  controller:
-                      _searchController, // TODO: Implement search functionality
-                  decoration: InputDecoration(
-                    hintText: 'Where Do You Want To Go?',
-                    prefixIcon: Icon(
-                      Icons.search,
-                      color: Theme.of(context).primaryColor,
-                    ),
-                    suffixIcon: IconButton(
-                      icon: Icon(Icons.filter_list),
-                      onPressed: () {
-                        _filterModal(context);
-                      },
-                    ),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(50),
-                      borderSide: BorderSide.none,
-                    ),
+                Container(
+                  decoration: BoxDecoration(
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(0.5),
+                        spreadRadius: 1,
+                        blurRadius: 7,
+                        offset: Offset(0, 3),
+                      ),
+                    ],
+                    color: Colors.grey[200],
+                    borderRadius: BorderRadius.circular(50),
                   ),
-                  onSubmitted: (value) {
-                    Navigator.of(context).pushNamed('/search_options');
-                  },
+                  child: TextField(
+                    onTap: () {
+                      //FocusedMenu
+                      //FocusedMenuController.of(context).showMenu();
+                    },
+                    controller:
+                        _searchController, // TODO: Implement search functionality
+                    decoration: InputDecoration(
+                      hintText: 'Where Do You Want To Go?',
+                      prefixIcon: Icon(
+                        Icons.search,
+                        color: Theme.of(context).primaryColor,
+                      ),
+                      suffixIcon: IconButton(
+                        icon: Icon(Icons.filter_list),
+                        onPressed: () {
+                          _filterModal(context);
+                        },
+                      ),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(50),
+                        borderSide: BorderSide.none,
+                      ),
+                    ),
+                    onSubmitted: (value) {
+                      Navigator.of(context).pushNamed('/search_options');
+                    },
+                  ),
                 ),
                 Divider(
                   thickness: 0,

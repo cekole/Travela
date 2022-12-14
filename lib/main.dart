@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:travela_mobile/providers/activities_provider.dart';
 import 'package:travela_mobile/providers/destinations_provider.dart';
+import 'package:travela_mobile/providers/travel_group_provider.dart';
 import 'package:travela_mobile/screens/hotel/hotel_page.dart';
 import 'package:travela_mobile/screens/maps/friends_map.dart';
 import 'package:travela_mobile/screens/maps/map_page.dart';
@@ -29,6 +30,7 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(create: (context) => DestinationsProvider()),
         ChangeNotifierProvider(create: (context) => ActivitiesProvider()),
+        ChangeNotifierProvider(create: (context) => TravelGroupProvider()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
