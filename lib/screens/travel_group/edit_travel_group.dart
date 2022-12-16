@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
@@ -18,6 +19,71 @@ class EditTravelGroup extends StatelessWidget {
         appBar: AppBar(
           backgroundColor: Theme.of(context).primaryColor,
           title: Text(travelGroup.name),
+          actions: [
+            IconButton(
+              onPressed: () {
+                //show dialog for options
+                showModalBottomSheet(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.vertical(
+                        top: Radius.circular(10.0),
+                      ),
+                    ),
+                    context: context,
+                    builder: (context) {
+                      return Container(
+                        padding: EdgeInsets.only(top: 20),
+                        child: ListView(
+                          children: [
+                            //ListTile for edit travel group
+                            ListTile(
+                              leading: Icon(Icons.place_sharp),
+                              title: Text('Previously Visited Places'),
+                              onTap: () {
+                                //show text field for adding new place
+                                showDialog(
+                                    context: context,
+                                    builder: (context) {
+                                      return AlertDialog(
+                                        title: Text('Add New Place'),
+                                        content: TextField(
+                                          decoration: InputDecoration(
+                                            hintText: 'Enter Place Name',
+                                            border: OutlineInputBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(10),
+                                            ),
+                                          ),
+                                        ),
+                                        actions: [
+                                          TextButton(
+                                            onPressed: () {
+                                              Navigator.of(context).pop();
+                                            },
+                                            child: Text('Cancel'),
+                                          ),
+                                          TextButton(
+                                            onPressed: () {
+                                              Navigator.of(context).pop();
+                                            },
+                                            child: Text('Add'),
+                                          ),
+                                        ],
+                                      );
+                                    });
+                              },
+                            ),
+                            Divider(
+                              thickness: 1,
+                            ),
+                          ],
+                        ),
+                      );
+                    });
+              },
+              icon: Icon(Icons.grid_view_rounded),
+            ),
+          ],
         ),
         body: SafeArea(
           child: Container(
