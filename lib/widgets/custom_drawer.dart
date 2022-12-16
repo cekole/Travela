@@ -37,6 +37,10 @@ class CustomDrawer extends StatelessWidget {
           ListTile(
             leading: Icon(Icons.favorite),
             title: Text('Favorites'),
+            onTap: () {
+              Navigator.pop(context);
+              Navigator.pushNamed(context, '/favorites');
+            },
           ),
           ListTile(
               leading: Icon(Icons.logout),

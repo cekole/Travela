@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
@@ -156,23 +158,41 @@ class PlaceCard extends StatelessWidget {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        SvgPicture.asset(
-                          'assets/images/svg/face-svgrepo-com.svg',
-                          height: 50,
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.pop(context);
+                            Navigator.pushNamed(context, '/favorites');
+                          },
+                          child: SvgPicture.asset(
+                            'assets/images/svg/face-svgrepo-com.svg',
+                            height: 50,
+                          ),
                         ),
                         SizedBox(
                           width: 10,
                         ),
-                        SvgPicture.asset(
-                          'assets/images/svg/straight-face.svg',
-                          height: 50,
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.pop(context);
+                            Navigator.pushNamed(context, '/favorites');
+                          },
+                          child: SvgPicture.asset(
+                            'assets/images/svg/straight-face.svg',
+                            height: 50,
+                          ),
                         ),
                         SizedBox(
                           width: 10,
                         ),
-                        SvgPicture.asset(
-                          'assets/images/svg/sad-face.svg',
-                          height: 50,
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.pop(context);
+                            Navigator.pushNamed(context, '/favorites');
+                          },
+                          child: SvgPicture.asset(
+                            'assets/images/svg/sad-face.svg',
+                            height: 50,
+                          ),
                         ),
                       ],
                     ),
