@@ -85,8 +85,7 @@ class CustomDrawer extends StatelessWidget {
                               TextButton(
                                 child: Text('Logout'),
                                 onPressed: () {
-                                  Navigator.pop(context);
-                                  Navigator.pop(context);
+                                  Navigator.popAndPushNamed(context, '/login');
                                 },
                               ),
                             ],

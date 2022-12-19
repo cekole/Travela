@@ -3,7 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_chat_ui/flutter_chat_ui.dart';
+import 'package:provider/provider.dart';
 import 'package:travela_mobile/models/travel_group.dart';
+import 'package:travela_mobile/providers/destinations_provider.dart';
+import 'package:travela_mobile/providers/recommendation_provider.dart';
 
 class EditTravelGroup extends StatelessWidget {
   const EditTravelGroup({Key? key}) : super(key: key);
@@ -22,7 +25,6 @@ class EditTravelGroup extends StatelessWidget {
           actions: [
             IconButton(
               onPressed: () {
-                //show dialog for options
                 showModalBottomSheet(
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.vertical(
@@ -40,20 +42,78 @@ class EditTravelGroup extends StatelessWidget {
                               leading: Icon(Icons.place_sharp),
                               title: Text('Previously Visited Places'),
                               onTap: () {
-                                //show text field for adding new place
+                                final recommendationData =
+                                    Provider.of<RecommendationProvider>(context,
+                                        listen: false);
+                                recommendationData.getToken();
                                 showDialog(
                                     context: context,
                                     builder: (context) {
                                       return AlertDialog(
-                                        title: Text('Add New Place'),
-                                        content: TextField(
-                                          decoration: InputDecoration(
-                                            hintText: 'Enter Place Name',
-                                            border: OutlineInputBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(10),
+                                        title: Text('Add Places'),
+                                        content: Column(
+                                          children: [
+                                            TextField(
+                                              decoration: InputDecoration(
+                                                hintText:
+                                                    'Enter places by comma',
+                                                border: OutlineInputBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(10),
+                                                ),
+                                              ),
+                                              onSubmitted: (value) {
+                                                recommendationData
+                                                    .setPreviousCities(value);
+                                              },
                                             ),
-                                          ),
+                                            SizedBox(
+                                              height: 10,
+                                            ),
+                                            TextField(
+                                              decoration: InputDecoration(
+                                                hintText:
+                                                    'Enter your current location',
+                                                border: OutlineInputBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(10),
+                                                ),
+                                              ),
+                                              onSubmitted: (value) {
+                                                recommendationData
+                                                    .setNation(value);
+                                              },
+                                            ),
+                                            SizedBox(
+                                              height: 10,
+                                            ),
+                                            //Recommendaed header
+                                            Text(
+                                              'Recommended',
+                                              style: TextStyle(
+                                                fontSize: 20,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                            SizedBox(
+                                              width: double.maxFinite,
+                                              height: 200,
+                                              child: ListView.builder(
+                                                shrinkWrap: true,
+                                                itemCount: recommendationData
+                                                    .enteredLocations.length,
+                                                itemBuilder: (context, index) {
+                                                  return ListTile(
+                                                    title: Text(
+                                                      recommendationData
+                                                              .enteredLocations[
+                                                          index],
+                                                    ),
+                                                  );
+                                                },
+                                              ),
+                                            ),
+                                          ],
                                         ),
                                         actions: [
                                           TextButton(
@@ -64,10 +124,17 @@ class EditTravelGroup extends StatelessWidget {
                                           ),
                                           TextButton(
                                             onPressed: () {
+                                              recommendationData
+                                                  .fetchAndSetRecommendations(
+                                                      recommendationData
+                                                          .previousCities,
+                                                      recommendationData
+                                                          .nation);
                                               Navigator.of(context).pop();
                                             },
                                             child: Text('Add'),
                                           ),
+                                          //ListView.builder for showing places
                                         ],
                                       );
                                     });
