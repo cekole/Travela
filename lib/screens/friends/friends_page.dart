@@ -31,7 +31,7 @@ class FriendsPage extends StatelessWidget {
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10),
                         ),
-                        title: Text('Add a friend'),
+                        title: Text('Send a friend request'),
                         content: TextField(
                           decoration: InputDecoration(
                             hintText: 'Enter username',
@@ -51,7 +51,7 @@ class FriendsPage extends StatelessWidget {
                             onPressed: () {
                               Navigator.of(context).pop();
                             },
-                            child: Text('Add'),
+                            child: Text('Send'),
                           ),
                         ],
                       );

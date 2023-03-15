@@ -67,6 +67,25 @@ class PlaceCard extends StatelessWidget {
                           ),
                         ),
                       ),
+                      //like button
+                      Positioned(
+                        top: 20,
+                        right: 20,
+                        child: IconButton(
+                          onPressed: () {},
+                          icon: Icon(
+                            Icons.favorite_border,
+                            color: Colors.white,
+                            size: 30,
+                            shadows: [
+                              Shadow(
+                                blurRadius: 10,
+                                color: Colors.black,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
                     ],
                   ),
                   Container(
@@ -148,51 +167,6 @@ class PlaceCard extends StatelessWidget {
                           ),
                         );
                       },
-                    ),
-                  ),
-                  Spacer(),
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 16.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        GestureDetector(
-                          onTap: () {
-                            Navigator.pop(context);
-                            Navigator.pushNamed(context, '/favorites');
-                          },
-                          child: SvgPicture.asset(
-                            'assets/images/svg/face-svgrepo-com.svg',
-                            height: 50,
-                          ),
-                        ),
-                        SizedBox(
-                          width: 10,
-                        ),
-                        GestureDetector(
-                          onTap: () {
-                            Navigator.pop(context);
-                            Navigator.pushNamed(context, '/favorites');
-                          },
-                          child: SvgPicture.asset(
-                            'assets/images/svg/straight-face.svg',
-                            height: 50,
-                          ),
-                        ),
-                        SizedBox(
-                          width: 10,
-                        ),
-                        GestureDetector(
-                          onTap: () {
-                            Navigator.pop(context);
-                            Navigator.pushNamed(context, '/favorites');
-                          },
-                          child: SvgPicture.asset(
-                            'assets/images/svg/sad-face.svg',
-                            height: 50,
-                          ),
-                        ),
-                      ],
                     ),
                   ),
                 ],

@@ -16,6 +16,18 @@ class TravelGroupProvider with ChangeNotifier {
         User(
           name: 'Yağmur Eryılmaz',
           email: 'yagmurery@gmail.com',
+          messages: [
+            'Hi, I am looking for a travel buddy for my trip to Switzerland.',
+            'I am looking for a travel buddy for my trip to Switzerland.',
+            'I am looking for a travel buddy for my trip to Switzerland.',
+            'I am looking for a travel buddy for my trip to Switzerland.',
+            'I am looking for a travel buddy for my trip to Switzerland.',
+            'I am looking for a travel buddy for my trip to Switzerland.',
+            'I am looking for a travel buddy for my trip to Switzerland.',
+            'I am looking for a travel buddy for my trip to Switzerland.',
+            'I am looking for a travel buddy for my trip to Switzerland.',
+            'I am looking for a travel buddy for my trip to Switzerland.',
+          ],
           country: Country(
             countryName: 'Spain',
             cities: [
@@ -117,6 +129,18 @@ class TravelGroupProvider with ChangeNotifier {
         User(
           name: 'Yağmur Eryılmaz',
           email: 'yagmurery@gmail.com',
+          messages: [
+            'Hi, I am looking for a travel buddy for my trip to Switzerland.',
+            'I am looking for a travel buddy for my trip to Switzerland.',
+            'I am looking for a travel buddy for my trip to Switzerland.',
+            'I am looking for a travel buddy for my trip to Switzerland.',
+            'I am looking for a travel buddy for my trip to Switzerland.',
+            'I am looking for a travel buddy for my trip to Switzerland.',
+            'I am looking for a travel buddy for my trip to Switzerland.',
+            'I am looking for a travel buddy for my trip to Switzerland.',
+            'I am looking for a travel buddy for my trip to Switzerland.',
+            'I am looking for a travel buddy for my trip to Switzerland.',
+          ],
           country: Country(
             countryName: 'Spain',
             cities: [
@@ -134,6 +158,18 @@ class TravelGroupProvider with ChangeNotifier {
         User(
           name: 'Cenk Duran',
           email: 'cekoley@gmail.com',
+          messages: [
+            'Hi, I am looking for a travel buddy for my trip to Switzerland.',
+            'I am looking for a travel buddy for my trip to Switzerland.',
+            'I am looking for a travel buddy for my trip to Switzerland.',
+            'I am looking for a travel buddy for my trip to Switzerland.',
+            'I am looking for a travel buddy for my trip to Switzerland.',
+            'I am looking for a travel buddy for my trip to Switzerland.',
+            'I am looking for a travel buddy for my trip to Switzerland.',
+            'I am looking for a travel buddy for my trip to Switzerland.',
+            'I am looking for a travel buddy for my trip to Switzerland.',
+            'I am looking for a travel buddy for my trip to Switzerland.',
+          ],
           country: Country(
             countryName: 'Turkey',
             cities: [
@@ -151,6 +187,18 @@ class TravelGroupProvider with ChangeNotifier {
         User(
           name: 'Efe Ertürk',
           email: 'efeerturk@gmail.com',
+          messages: [
+            'Hi, I am looking for a travel buddy for my trip to Switzerland.',
+            'I am looking for a travel buddy for my trip to Switzerland.',
+            'I am looking for a travel buddy for my trip to Switzerland.',
+            'I am looking for a travel buddy for my trip to Switzerland.',
+            'I am looking for a travel buddy for my trip to Switzerland.',
+            'I am looking for a travel buddy for my trip to Switzerland.',
+            'I am looking for a travel buddy for my trip to Switzerland.',
+            'I am looking for a travel buddy for my trip to Switzerland.',
+            'I am looking for a travel buddy for my trip to Switzerland.',
+            'I am looking for a travel buddy for my trip to Switzerland.',
+          ],
           country: Country(
             countryName: 'Italy',
             cities: [
@@ -168,6 +216,18 @@ class TravelGroupProvider with ChangeNotifier {
         User(
           name: 'Efe Şaman',
           email: 'efesaman@gmail.com',
+          messages: [
+            'Hi, I am looking for a travel buddy for my trip to Switzerland.',
+            'I am looking for a travel buddy for my trip to Switzerland.',
+            'I am looking for a travel buddy for my trip to Switzerland.',
+            'I am looking for a travel buddy for my trip to Switzerland.',
+            'I am looking for a travel buddy for my trip to Switzerland.',
+            'I am looking for a travel buddy for my trip to Switzerland.',
+            'I am looking for a travel buddy for my trip to Switzerland.',
+            'I am looking for a travel buddy for my trip to Switzerland.',
+            'I am looking for a travel buddy for my trip to Switzerland.',
+            'I am looking for a travel buddy for my trip to Switzerland.',
+          ],
           country: Country(
             countryName: 'United Kingdom',
             cities: [
@@ -185,6 +245,18 @@ class TravelGroupProvider with ChangeNotifier {
         User(
           name: 'Çağla Ataoğlu',
           email: 'caglaataoglu@gmail.com',
+          messages: [
+            'Hi, I am looking for a travel buddy for my trip to Switzerland.',
+            'I am looking for a travel buddy for my trip to Switzerland.',
+            'I am looking for a travel buddy for my trip to Switzerland.',
+            'I am looking for a travel buddy for my trip to Switzerland.',
+            'I am looking for a travel buddy for my trip to Switzerland.',
+            'I am looking for a travel buddy for my trip to Switzerland.',
+            'I am looking for a travel buddy for my trip to Switzerland.',
+            'I am looking for a travel buddy for my trip to Switzerland.',
+            'I am looking for a travel buddy for my trip to Switzerland.',
+            'I am looking for a travel buddy for my trip to Switzerland.',
+          ],
           country: Country(
             countryName: 'Germany',
             cities: [

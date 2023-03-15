@@ -10,12 +10,13 @@ class TripsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton: FloatingActionButton(
+      floatingActionButton: ElevatedButton(
         onPressed: () {
           formGroup(context);
         },
-        child: const Icon(Icons.add),
-        backgroundColor: Theme.of(context).primaryColor,
+        child: Text(
+          'Form Group',
+        ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       appBar: AppBar(

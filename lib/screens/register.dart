@@ -19,7 +19,7 @@ class RegisterPage extends StatelessWidget {
         body: Stack(
           children: [
             Container(
-              padding: EdgeInsets.only(left: 35, top: 150),
+              padding: EdgeInsets.only(left: 35, top: 100),
               child: Text(
                 'Travela',
                 style: TextStyle(
@@ -31,9 +31,63 @@ class RegisterPage extends StatelessWidget {
             SingleChildScrollView(
               child: Container(
                 padding: EdgeInsets.only(
-                    top: MediaQuery.of(context).size.height * 0.3),
+                    top: MediaQuery.of(context).size.height * 0.22),
                 child: Column(
                   children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        TextButton.icon(
+                          onPressed: () {
+                            Navigator.pushReplacementNamed(context, '/home');
+                          },
+                          style: ButtonStyle(
+                            padding: MaterialStateProperty.all(
+                                EdgeInsets.symmetric(
+                                    vertical: 15, horizontal: 20)),
+                            foregroundColor:
+                                MaterialStateProperty.all(Colors.grey.shade700),
+                            backgroundColor: Theme.of(context)
+                                .elevatedButtonTheme
+                                .style!
+                                .backgroundColor,
+                            shape: MaterialStateProperty.all(
+                              RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(50),
+                              ),
+                            ),
+                          ),
+                          icon: Image.asset(
+                            'assets/images/google.png',
+                            scale: 50,
+                          ),
+                          label: Text("Sign Up With Google"),
+                        ),
+                      ],
+                    ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    Row(children: <Widget>[
+                      Expanded(
+                          child: Divider(
+                        color: Colors.grey.shade700,
+                        indent: 35,
+                        endIndent: 35,
+                        thickness: 1,
+                      )),
+                      Text("OR"),
+                      Expanded(
+                          child: Divider(
+                        color: Colors.grey.shade700,
+                        indent: 35,
+                        endIndent: 35,
+                        thickness: 1,
+                      )),
+                    ]),
+                    SizedBox(
+                      height: 20,
+                    ),
                     Container(
                       margin: EdgeInsets.only(left: 35, right: 35),
                       child: Column(

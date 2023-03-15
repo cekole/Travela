@@ -240,8 +240,8 @@ class _ProfilePageState extends State<ProfilePage> {
                     Builder(builder: (context) {
                       return TableCalendar(
                         focusedDay: DateTime.now(),
-                        firstDay: DateTime(2021),
-                        lastDay: DateTime(2023),
+                        firstDay: DateTime(2022),
+                        lastDay: DateTime(2024),
                         calendarFormat: CalendarFormat.month,
                         startingDayOfWeek: StartingDayOfWeek.monday,
                         daysOfWeekVisible: true,
