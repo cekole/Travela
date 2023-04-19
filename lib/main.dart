@@ -4,6 +4,8 @@ import 'package:travela_mobile/providers/activities_provider.dart';
 import 'package:travela_mobile/providers/destinations_provider.dart';
 import 'package:travela_mobile/providers/recommendation_provider.dart';
 import 'package:travela_mobile/providers/travel_group_provider.dart';
+import 'package:travela_mobile/screens/destination/destination_detail.dart';
+import 'package:travela_mobile/screens/destination/destination_list.dart';
 import 'package:travela_mobile/screens/favorites/favorite_page.dart';
 import 'package:travela_mobile/screens/hotel/hotel_page.dart';
 import 'package:travela_mobile/screens/maps/friends_map.dart';
@@ -79,6 +81,7 @@ class MyApp extends StatelessWidget {
           '/transportation_options': (context) =>
               const TransportationOptionsPage(),
           '/favorites': (context) => FavoritesPage(),
+          '/destination_list': (context) => const DestinationListPage(),
         },
       ),
     );

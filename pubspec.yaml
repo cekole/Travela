@@ -43,6 +43,7 @@ dependencies:
   focused_menu: ^1.0.5
   flutter_slidable: ^2.0.0
   bubble: ^1.2.1
+  syncfusion_flutter_datepicker: ^21.1.41
 
 dev_dependencies:
   flutter_test:

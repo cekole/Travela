@@ -499,13 +499,17 @@ class _ProfilePageState extends State<ProfilePage> {
                               borderRadius: BorderRadius.circular(10),
                             ),
                             title: Text('Invite Members'),
-                            content: TextField(
-                              decoration: InputDecoration(
-                                hintText: 'Enter username',
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(25),
+                            content: ListView(
+                              children: [
+                                TextField(
+                                  decoration: InputDecoration(
+                                    hintText: 'Enter username',
+                                    border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(25),
+                                    ),
+                                  ),
                                 ),
-                              ),
+                              ],
                             ),
                             actions: [
                               TextButton(
