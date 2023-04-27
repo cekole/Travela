@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:get/get.dart';
+import 'package:provider/provider.dart';
+import 'package:travela_mobile/providers/authentication_provider.dart';
 
 class LoginPage extends StatelessWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -78,7 +81,28 @@ class LoginPage extends StatelessWidget {
                           ),
                           ElevatedButton(
                             onPressed: () {
-                              Navigator.pushReplacementNamed(context, '/home');
+                              final authenticationData =
+                                  Provider.of<AuthenticationProvider>(context,
+                                      listen: false);
+                              authenticationData
+                                  .login(
+                                email: 'testo@gmail.com',
+                                name: 'testo1e',
+                                username: 'testo1',
+                                password: '1234',
+                              )
+                                  .then((value) {
+                                if (value) {
+                                  Navigator.pushReplacementNamed(
+                                      context, '/home');
+                                } else {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: Text('Wrong email or password'),
+                                    ),
+                                  );
+                                }
+                              });
                             },
                             child: Text("Sign In"),
                             style: ButtonStyle(
