@@ -37,12 +37,6 @@ class _HomeBodyState extends State<HomeBody> {
           ),
           iconTheme: IconThemeData(color: Theme.of(context).primaryColor),
           pinned: true,
-          actions: [
-            IconButton(
-              onPressed: () {},
-              icon: Icon(Icons.notifications),
-            ),
-          ],
           backgroundColor: Colors.white,
           floating: true,
         ),

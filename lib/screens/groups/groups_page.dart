@@ -12,6 +12,7 @@ import 'package:travela_mobile/screens/trips/trips_page.dart';
 import 'package:travela_mobile/providers/travel_group_provider.dart';
 import 'package:travela_mobile/widgets/home/popular_places.dart';
 import 'package:travela_mobile/widgets/home/suggestions.dart';
+import 'package:travela_mobile/widgets/custom_drawer.dart';
 
 class GroupsPage extends StatefulWidget {
   static const String routeName = '/groups';
@@ -40,6 +41,8 @@ class _GroupsPageState extends State<GroupsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      drawerEnableOpenDragGesture: false,
+      drawer: CustomDrawer(),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: FloatingActionButton.extended(
           backgroundColor: Theme.of(context).primaryColor,

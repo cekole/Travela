@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:travela_mobile/providers/travel_group_provider.dart';
 import 'package:travela_mobile/screens/maps/previous_trips_map.dart';
 import 'package:travela_mobile/screens/home/popular_destinations.dart';
+import 'package:travela_mobile/widgets/custom_drawer.dart';
 
 class TripsPage extends StatelessWidget {
   const TripsPage({Key? key}) : super(key: key);
@@ -13,6 +14,8 @@ class TripsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      drawerEnableOpenDragGesture: false,
+      drawer: CustomDrawer(),
       appBar: AppBar(
         title: Text('Trips'),
         backgroundColor: Theme.of(context).primaryColor,
