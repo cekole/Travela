@@ -10,15 +10,25 @@ import 'package:travela_mobile/providers/destinations_provider.dart';
 import 'package:travela_mobile/providers/recommendation_provider.dart';
 import 'package:travela_mobile/widgets/home/suggestions.dart';
 
-class EditTravelGroup extends StatelessWidget {
+class EditTravelGroup extends StatefulWidget {
   const EditTravelGroup({Key? key}) : super(key: key);
+
+  @override
+  State<EditTravelGroup> createState() => _EditTravelGroupState();
+}
+
+class _EditTravelGroupState extends State<EditTravelGroup> {
+  TextEditingController _searchController = TextEditingController();
+  RangeValues _currentPriceRangeValues = const RangeValues(40, 80);
+  RangeValues _currentRatingRangeValues = const RangeValues(3, 5);
+  RangeValues _currentDistanceRangeValues = const RangeValues(0, 1000);
+  String _currentSeason = 'Summer';
 
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
     final travelGroup =
         ModalRoute.of(context)!.settings.arguments as TravelGroup;
-
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
@@ -185,70 +195,7 @@ class EditTravelGroup extends StatelessWidget {
 
               ElevatedButton(
                 onPressed: () {
-                  showModalBottomSheet(
-                    shape: const RoundedRectangleBorder(
-                      borderRadius: BorderRadius.vertical(
-                        top: Radius.circular(20),
-                      ),
-                    ),
-                    context: context,
-                    builder: (context) => Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: SafeArea(
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Text(
-                              'Add Trip',
-                              style: TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            const SizedBox(
-                              height: 10,
-                            ),
-                            TextField(
-                              decoration: InputDecoration(
-                                labelText: 'Trip Name',
-                              ),
-                            ),
-                            const SizedBox(
-                              height: 10,
-                            ),
-                            TextField(
-                              decoration: InputDecoration(
-                                labelText: 'Trip Date',
-                              ),
-                            ),
-                            const SizedBox(
-                              height: 10,
-                            ),
-                            TextField(
-                              decoration: InputDecoration(
-                                labelText: 'Trip Location',
-                              ),
-                            ),
-                            const SizedBox(
-                              height: 10,
-                            ),
-                            TextField(
-                              decoration: InputDecoration(
-                                labelText: 'Trip Description',
-                              ),
-                            ),
-                            const SizedBox(
-                              height: 10,
-                            ),
-                            ElevatedButton(
-                              onPressed: () {},
-                              child: Text('Add Trip'),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  );
+                  searchDialog(context);
                 },
                 child: Text('Arrange Trip'),
               ),
@@ -261,6 +208,354 @@ class EditTravelGroup extends StatelessWidget {
               ElevatedButton(
                 onPressed: () {},
                 child: Text('Show Common Dates'),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Future<dynamic> searchDialog(BuildContext context) {
+    return showDialog(
+      context: context,
+      builder: (context) => Container(
+        margin: EdgeInsets.all(8.0),
+        padding: EdgeInsets.all(8.0),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(20),
+        ),
+        child: Dialog.fullscreen(
+          child: ListView(
+            children: [
+              Align(
+                alignment: Alignment.topLeft,
+                child: IconButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  icon: Icon(Icons.close),
+                ),
+              ),
+              TextField(
+                controller: _searchController,
+                decoration: InputDecoration(
+                  hintText: 'Enter a place name',
+                  border: UnderlineInputBorder(
+                    borderSide: BorderSide.none,
+                  ),
+                  prefixIcon: Icon(Icons.search),
+                ),
+                onSubmitted: (value) {
+                  Navigator.of(context).pushNamed('/search_options');
+                },
+              ),
+              Divider(
+                thickness: 1,
+              ),
+              Container(
+                decoration: BoxDecoration(
+                  color: Colors.grey[200],
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                padding: EdgeInsets.all(10),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Row(
+                            children: [
+                              Text('Price Range'),
+                              Expanded(
+                                child: RangeSlider(
+                                  activeColor: Theme.of(context).primaryColor,
+                                  values: _currentPriceRangeValues,
+                                  max: 100,
+                                  labels: RangeLabels(
+                                    _currentPriceRangeValues.start
+                                        .round()
+                                        .toString(),
+                                    _currentPriceRangeValues.end
+                                        .round()
+                                        .toString(),
+                                  ),
+                                  onChanged: (values) {
+                                    setState(() {
+                                      _currentPriceRangeValues = values;
+                                    });
+                                  },
+                                ),
+                              ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Column(
+                                    children: [
+                                      Container(
+                                        padding: EdgeInsets.all(5),
+                                        decoration: BoxDecoration(
+                                          border: Border.all(
+                                            color:
+                                                Theme.of(context).primaryColor,
+                                          ),
+                                          borderRadius:
+                                              BorderRadius.circular(5),
+                                        ),
+                                        child: Text(
+                                          _currentPriceRangeValues.start
+                                              .round()
+                                              .toString(),
+                                        ),
+                                      ),
+                                      Text('Min'),
+                                    ],
+                                  ),
+                                  VerticalDivider(),
+                                  Column(
+                                    children: [
+                                      Container(
+                                        padding: EdgeInsets.all(5),
+                                        decoration: BoxDecoration(
+                                          border: Border.all(
+                                            color:
+                                                Theme.of(context).primaryColor,
+                                          ),
+                                          borderRadius:
+                                              BorderRadius.circular(5),
+                                        ),
+                                        child: Text(
+                                          _currentPriceRangeValues.end
+                                              .round()
+                                              .toString(),
+                                        ),
+                                      ),
+                                      Text('Max'),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                          Divider(),
+                          Row(
+                            children: [
+                              Text('Rating (0-5)'),
+                              Expanded(
+                                child: Row(
+                                  children: [
+                                    RangeSlider(
+                                      activeColor:
+                                          Theme.of(context).primaryColor,
+                                      values: _currentRatingRangeValues,
+                                      max: 5,
+                                      labels: RangeLabels(
+                                        _currentRatingRangeValues.start
+                                            .round()
+                                            .toString(),
+                                        _currentRatingRangeValues.end
+                                            .round()
+                                            .toString(),
+                                      ),
+                                      onChanged: (value) {
+                                        setState(() {
+                                          _currentRatingRangeValues = value;
+                                        });
+                                      },
+                                    ),
+                                    Spacer(),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Column(
+                                          children: [
+                                            Container(
+                                              padding: EdgeInsets.all(5),
+                                              decoration: BoxDecoration(
+                                                border: Border.all(
+                                                  color: Theme.of(context)
+                                                      .primaryColor,
+                                                ),
+                                                borderRadius:
+                                                    BorderRadius.circular(5),
+                                              ),
+                                              child: Text(
+                                                _currentRatingRangeValues.start
+                                                    .round()
+                                                    .toString(),
+                                              ),
+                                            ),
+                                            Text('Min'),
+                                          ],
+                                        ),
+                                        VerticalDivider(),
+                                        Column(
+                                          children: [
+                                            Container(
+                                              padding: EdgeInsets.all(5),
+                                              decoration: BoxDecoration(
+                                                border: Border.all(
+                                                  color: Theme.of(context)
+                                                      .primaryColor,
+                                                ),
+                                                borderRadius:
+                                                    BorderRadius.circular(5),
+                                              ),
+                                              child: Text(
+                                                _currentRatingRangeValues.end
+                                                    .round()
+                                                    .toString(),
+                                              ),
+                                            ),
+                                            Text('Max'),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                          Divider(),
+                          Row(
+                            children: [
+                              Text('Distance(km)'),
+                              Expanded(
+                                child: RangeSlider(
+                                  activeColor: Theme.of(context).primaryColor,
+                                  values: _currentDistanceRangeValues,
+                                  max: 1000,
+                                  labels: RangeLabels(
+                                    _currentDistanceRangeValues.start
+                                        .round()
+                                        .toString(),
+                                    _currentDistanceRangeValues.end
+                                        .round()
+                                        .toString(),
+                                  ),
+                                  onChanged: (values) {
+                                    setState(() {
+                                      _currentDistanceRangeValues = values;
+                                    });
+                                  },
+                                ),
+                              ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Column(
+                                    children: [
+                                      Container(
+                                        padding: EdgeInsets.all(5),
+                                        decoration: BoxDecoration(
+                                          border: Border.all(
+                                            color:
+                                                Theme.of(context).primaryColor,
+                                          ),
+                                          borderRadius:
+                                              BorderRadius.circular(5),
+                                        ),
+                                        child: Text(
+                                          _currentDistanceRangeValues.start
+                                              .round()
+                                              .toString(),
+                                        ),
+                                      ),
+                                      Text('Min'),
+                                    ],
+                                  ),
+                                  VerticalDivider(),
+                                  Column(
+                                    children: [
+                                      Container(
+                                        padding: EdgeInsets.all(5),
+                                        decoration: BoxDecoration(
+                                          border: Border.all(
+                                            color:
+                                                Theme.of(context).primaryColor,
+                                          ),
+                                          borderRadius:
+                                              BorderRadius.circular(5),
+                                        ),
+                                        child: Text(
+                                          _currentDistanceRangeValues.end
+                                              .round()
+                                              .toString(),
+                                        ),
+                                      ),
+                                      Text('Max'),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                          Divider(),
+                          Row(
+                            children: [
+                              Text('Season'),
+                              Spacer(),
+                              StatefulBuilder(
+                                builder: (context, setState) {
+                                  return DropdownButton(
+                                    value: _currentSeason,
+                                    items: [
+                                      DropdownMenuItem(
+                                        child: Text('Winter'),
+                                        value: 'Winter',
+                                      ),
+                                      DropdownMenuItem(
+                                        child: Text('Summer'),
+                                        value: 'Summer',
+                                      ),
+                                      DropdownMenuItem(
+                                        child: Text('Spring'),
+                                        value: 'Spring',
+                                      ),
+                                      DropdownMenuItem(
+                                        child: Text('Autumn'),
+                                        value: 'Autumn',
+                                      ),
+                                    ],
+                                    onChanged: (value) {
+                                      setState(() {
+                                        _currentSeason = value.toString();
+                                      });
+                                    },
+                                  );
+                                },
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(
+                height: 10,
+              ),
+              SizedBox(
+                height: 10,
+              ),
+              ElevatedButton(
+                onPressed: () {},
+                child: Text('Apply'),
+              ),
+              TextButton(
+                style: ButtonStyle(
+                  foregroundColor: MaterialStateProperty.all<Color>(
+                      Theme.of(context).primaryColor),
+                ),
+                onPressed: () {
+                  Navigator.of(context).pushNamed('/destination_list');
+                },
+                child: Text('Search'),
               ),
             ],
           ),
