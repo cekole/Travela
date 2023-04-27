@@ -4,6 +4,8 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:travela_mobile/screens/friends/friends_page.dart';
 import 'package:travela_mobile/screens/maps/map_page.dart';
 import 'package:travela_mobile/screens/profile/profile_page.dart';
+import 'package:travela_mobile/screens/travel_group/travel_group.dart';
+import 'package:travela_mobile/screens/groups/groups_page.dart';
 import 'package:travela_mobile/screens/trips/trips_page.dart';
 import 'package:travela_mobile/widgets/custom_drawer.dart';
 import 'package:travela_mobile/widgets/home/home_body.dart';
@@ -37,6 +39,10 @@ class _HomePageState extends State<HomePage> {
             label: 'Map',
           ),
           BottomNavigationBarItem(
+            icon: Icon(Icons.group),
+            label: 'Groups',
+          ),
+          BottomNavigationBarItem(
             icon: Icon(Icons.vrpano_outlined),
             label: 'Trips',
           ),
@@ -57,8 +63,10 @@ class _HomePageState extends State<HomePage> {
           : pageNum == 1
               ? MapPage()
               : pageNum == 2
-                  ? TripsPage()
-                  : ProfilePage(),
+                  ? GroupsPage()
+                  : pageNum == 3
+                      ? TripsPage()
+                      : ProfilePage(),
     );
   }
 }
