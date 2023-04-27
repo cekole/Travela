@@ -5,9 +5,17 @@ import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import 'package:travela_mobile/providers/authentication_provider.dart';
 
-class LoginPage extends StatelessWidget {
+class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
 
+  @override
+  State<LoginPage> createState() => _LoginPageState();
+}
+
+class _LoginPageState extends State<LoginPage> {
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+  bool _obscureText = true;
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -42,6 +50,7 @@ class LoginPage extends StatelessWidget {
                       child: Column(
                         children: [
                           TextField(
+                            controller: emailController,
                             style: TextStyle(color: Colors.black),
                             decoration: InputDecoration(
                               filled: true,
@@ -54,13 +63,16 @@ class LoginPage extends StatelessWidget {
                                 Icons.email,
                               ),
                             ),
+                            onSubmitted: (value) {
+                              emailController.text = value;
+                            },
                           ),
                           SizedBox(
                             height: 20,
                           ),
                           TextField(
-                            style: TextStyle(),
-                            obscureText: true,
+                            controller: passwordController,
+                            obscureText: _obscureText,
                             decoration: InputDecoration(
                               filled: true,
                               hintText: "Password",
@@ -71,10 +83,22 @@ class LoginPage extends StatelessWidget {
                               prefixIcon: Icon(
                                 Icons.lock,
                               ),
-                              suffixIcon: Icon(
-                                Icons.visibility,
+                              suffixIcon: IconButton(
+                                onPressed: () {
+                                  setState(() {
+                                    _obscureText = !_obscureText;
+                                  });
+                                },
+                                icon: Icon(
+                                  _obscureText
+                                      ? Icons.visibility
+                                      : Icons.visibility_off,
+                                ),
                               ),
                             ),
+                            onSubmitted: (value) {
+                              passwordController.text = value;
+                            },
                           ),
                           SizedBox(
                             height: 20,
@@ -86,10 +110,10 @@ class LoginPage extends StatelessWidget {
                                       listen: false);
                               authenticationData
                                   .login(
-                                email: 'testo@gmail.com',
-                                name: 'testo1e',
-                                username: 'testo1',
-                                password: '1234',
+                                email: 'testEmail@gmail.com',
+                                name: 'testName',
+                                username: emailController.text,
+                                password: passwordController.text,
                               )
                                   .then((value) {
                                 if (value) {

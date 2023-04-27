@@ -1,13 +1,16 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:travela_mobile/appConstant.dart';
 import 'package:http/http.dart' as http;
+import 'package:travela_mobile/models/country.dart';
+import 'package:travela_mobile/models/user.dart';
 
 class AuthenticationProvider with ChangeNotifier {
   final authUrl = baseUrl + 'authentication/';
-  Future<void> register({
+  Future<bool> register({
     required String email,
     required String name,
     required String username,
@@ -31,10 +34,12 @@ class AuthenticationProvider with ChangeNotifier {
 
     if (response.statusCode == 200) {
       print('register success');
+      notifyListeners();
+      return true;
     } else {
       print('register failed');
     }
-    notifyListeners();
+    return false;
   }
 
   Future<bool> login({
@@ -57,15 +62,53 @@ class AuthenticationProvider with ChangeNotifier {
         'password': password,
       }),
     );
+
     if (response.statusCode == 200) {
       print('login success');
+
+      bearerToken = response.body;
+      Map<String, dynamic> decodedToken = JwtDecoder.decode(bearerToken);
+
       final SharedPreferences prefs = await SharedPreferences.getInstance();
       prefs.setString('token', response.body);
+      prefs.setString('username', username);
+      prefs.setString('email', email);
+      prefs.setString('name', decodedToken['sub']);
       notifyListeners();
       return true;
     } else {
       print('login failed');
     }
     return false;
+  }
+
+  Future<bool> logout() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.remove('token');
+    notifyListeners();
+    return true;
+  }
+
+  //getCurrentUser
+  Future<void> getCurrentUser() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('token');
+    final username = prefs.getString('username');
+    final email = prefs.getString('email');
+    final name = prefs.getString('name');
+    if (token != null) {
+      currentUser = User(
+        name: name!,
+        email: email!,
+        messages: [],
+        country: Country(
+          countryName: 'Turkey',
+          cities: [],
+        ),
+      );
+    } else {
+      print('token is null');
+    }
+    notifyListeners();
   }
 }

@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -69,28 +70,32 @@ class CustomDrawer extends StatelessWidget {
                             ],
                           );
                         })
-                    : showDialog(
-                        context: context,
-                        builder: (context) {
-                          return AlertDialog(
-                            title: Text('Logout'),
-                            content: Text('Are you sure you want to logout?'),
-                            actions: [
-                              TextButton(
-                                child: Text('Cancel'),
-                                onPressed: () {
-                                  Navigator.pop(context);
-                                },
-                              ),
-                              TextButton(
-                                child: Text('Logout'),
-                                onPressed: () {
-                                  Navigator.popAndPushNamed(context, '/login');
-                                },
-                              ),
-                            ],
-                          );
-                        });
+                    : kIsWeb
+                        ? Container()
+                        : showDialog(
+                            context: context,
+                            builder: (context) {
+                              return AlertDialog(
+                                title: Text('Logout'),
+                                content:
+                                    Text('Are you sure you want to logout?'),
+                                actions: [
+                                  TextButton(
+                                    child: Text('Cancel'),
+                                    onPressed: () {
+                                      Navigator.pop(context);
+                                    },
+                                  ),
+                                  TextButton(
+                                    child: Text('Logout'),
+                                    onPressed: () {
+                                      Navigator.popAndPushNamed(
+                                          context, '/login');
+                                    },
+                                  ),
+                                ],
+                              );
+                            });
               }),
         ],
       ),

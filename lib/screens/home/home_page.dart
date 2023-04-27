@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:provider/provider.dart';
+import 'package:travela_mobile/providers/authentication_provider.dart';
 import 'package:travela_mobile/screens/friends/friends_page.dart';
 import 'package:travela_mobile/screens/maps/map_page.dart';
 import 'package:travela_mobile/screens/profile/profile_page.dart';
@@ -18,6 +20,13 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   int pageNum = 0;
+  @override
+  void initState() {
+    super.initState();
+    final authenticationData =
+        Provider.of<AuthenticationProvider>(context, listen: false);
+    authenticationData.getCurrentUser();
+  }
 
   @override
   Widget build(BuildContext context) {

@@ -1,9 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:provider/provider.dart';
+import 'package:travela_mobile/providers/authentication_provider.dart';
 
-class RegisterPage extends StatelessWidget {
+class RegisterPage extends StatefulWidget {
   const RegisterPage({Key? key}) : super(key: key);
+
+  @override
+  State<RegisterPage> createState() => _RegisterPageState();
+}
+
+class _RegisterPageState extends State<RegisterPage> {
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController nameController = TextEditingController();
+  final TextEditingController usernameController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+  final TextEditingController confirmPasswordController =
+      TextEditingController();
+  bool passwordCheck = false;
 
   @override
   Widget build(BuildContext context) {
@@ -93,6 +108,7 @@ class RegisterPage extends StatelessWidget {
                       child: Column(
                         children: [
                           TextField(
+                            controller: emailController,
                             style: TextStyle(color: Colors.black),
                             decoration: InputDecoration(
                               filled: true,
@@ -102,13 +118,16 @@ class RegisterPage extends StatelessWidget {
                                 borderSide: BorderSide.none,
                               ),
                             ),
+                            onSubmitted: (value) {
+                              emailController.text = value;
+                            },
                           ),
                           SizedBox(
                             height: 20,
                           ),
                           TextField(
+                            controller: passwordController,
                             style: TextStyle(),
-                            obscureText: true,
                             decoration: InputDecoration(
                               filled: true,
                               hintText: "Password",
@@ -117,13 +136,15 @@ class RegisterPage extends StatelessWidget {
                                 borderSide: BorderSide.none,
                               ),
                             ),
+                            onSubmitted: (value) {
+                              passwordController.text = value;
+                            },
                           ),
                           SizedBox(
                             height: 20,
                           ),
                           TextField(
-                            style: TextStyle(),
-                            obscureText: true,
+                            controller: confirmPasswordController,
                             decoration: InputDecoration(
                               filled: true,
                               hintText: "Confirm Password",
@@ -132,12 +153,15 @@ class RegisterPage extends StatelessWidget {
                                 borderSide: BorderSide.none,
                               ),
                             ),
+                            onSubmitted: (value) {
+                              confirmPasswordController.text = value;
+                            },
                           ),
                           SizedBox(
                             height: 20,
                           ),
                           TextField(
-                            style: TextStyle(),
+                            controller: nameController,
                             decoration: InputDecoration(
                               filled: true,
                               hintText: "Full Name",
@@ -146,12 +170,15 @@ class RegisterPage extends StatelessWidget {
                                 borderSide: BorderSide.none,
                               ),
                             ),
+                            onSubmitted: (value) {
+                              nameController.text = value;
+                            },
                           ),
                           SizedBox(
                             height: 20,
                           ),
                           TextField(
-                            style: TextStyle(),
+                            controller: usernameController,
                             decoration: InputDecoration(
                               filled: true,
                               hintText: "Username",
@@ -160,12 +187,15 @@ class RegisterPage extends StatelessWidget {
                                 borderSide: BorderSide.none,
                               ),
                             ),
+                            onSubmitted: (value) {
+                              usernameController.text = value;
+                            },
                           ),
                           SizedBox(
                             height: 20,
                           ),
                           ElevatedButton(
-                            onPressed: () {},
+                            onPressed: () => handleSignUp(),
                             child: Text(
                               'Sign Up',
                               style: TextStyle(color: Colors.grey.shade700),
@@ -206,5 +236,44 @@ class RegisterPage extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  handleSignUp() {
+    print(emailController.text);
+    print(passwordController.text);
+    print(confirmPasswordController.text);
+    print(nameController.text);
+    print(usernameController.text);
+    if (passwordController.text == confirmPasswordController.text) {
+      passwordCheck = true;
+    }
+    if (passwordCheck) {
+      final authenticaticationData =
+          Provider.of<AuthenticationProvider>(context, listen: false);
+      authenticaticationData
+          .register(
+        email: emailController.text,
+        name: nameController.text,
+        username: usernameController.text,
+        password: passwordController.text,
+      )
+          .then((value) {
+        if (value) {
+          Navigator.pushReplacementNamed(context, '/home');
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Could not register. Please try again.'),
+            ),
+          );
+        }
+      });
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Passwords do not match.'),
+        ),
+      );
+    }
   }
 }
