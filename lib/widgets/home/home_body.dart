@@ -19,23 +19,8 @@ class _HomeBodyState extends State<HomeBody> {
   RangeValues _currentPriceRangeValues = const RangeValues(40, 80);
   RangeValues _currentRatingRangeValues = const RangeValues(3, 5);
   RangeValues _currentDistanceRangeValues = const RangeValues(0, 1000);
-  DateTime _currentStartDate = DateTime.now();
-  DateTime _currentEndDate = DateTime.now().add(const Duration(days: 365));
   String _currentSeason = 'Summer';
   TextEditingController _searchController = TextEditingController();
-
-  void _onSelectionChanged(DateRangePickerSelectionChangedArgs args) {
-    if (args.value is PickerDateRange) {
-      final DateTime rangeStartDate = args.value.startDate;
-      final DateTime rangeEndDate = args.value.endDate;
-    } else if (args.value is DateTime) {
-      final DateTime selectedDate = args.value;
-    } else if (args.value is List<DateTime>) {
-      final List<DateTime> selectedDates = args.value;
-    } else {
-      final List<PickerDateRange> selectedRanges = args.value;
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -469,24 +454,6 @@ class _HomeBodyState extends State<HomeBody> {
                                 ),
                                 SizedBox(
                                   height: 10,
-                                ),
-                                ExpansionTileCard(
-                                  borderRadius: BorderRadius.circular(10),
-                                  baseColor: Colors.grey[200],
-                                  expandedColor: Colors.grey[200],
-                                  title: const Text('Select Date'),
-                                  children: [
-                                    SfDateRangePicker(
-                                      enablePastDates: false,
-                                      onSelectionChanged: _onSelectionChanged,
-                                      selectionMode:
-                                          DateRangePickerSelectionMode.range,
-                                      initialSelectedRange: PickerDateRange(
-                                        _currentStartDate,
-                                        _currentEndDate,
-                                      ),
-                                    ),
-                                  ],
                                 ),
                                 SizedBox(
                                   height: 10,

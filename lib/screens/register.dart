@@ -83,23 +83,25 @@ class _RegisterPageState extends State<RegisterPage> {
                     SizedBox(
                       height: 20,
                     ),
-                    Row(children: <Widget>[
-                      Expanded(
-                          child: Divider(
-                        color: Colors.grey.shade700,
-                        indent: 35,
-                        endIndent: 35,
-                        thickness: 1,
-                      )),
-                      Text("OR"),
-                      Expanded(
-                          child: Divider(
-                        color: Colors.grey.shade700,
-                        indent: 35,
-                        endIndent: 35,
-                        thickness: 1,
-                      )),
-                    ]),
+                    Row(
+                      children: <Widget>[
+                        Expanded(
+                            child: Divider(
+                          color: Colors.grey.shade700,
+                          indent: 35,
+                          endIndent: 35,
+                          thickness: 1,
+                        )),
+                        Text("OR"),
+                        Expanded(
+                            child: Divider(
+                          color: Colors.grey.shade700,
+                          indent: 35,
+                          endIndent: 35,
+                          thickness: 1,
+                        )),
+                      ],
+                    ),
                     SizedBox(
                       height: 20,
                     ),

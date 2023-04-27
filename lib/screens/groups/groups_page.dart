@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:provider/provider.dart';
+import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:travela_mobile/models/travel_group.dart';
 import 'package:travela_mobile/providers/travel_group_provider.dart';
@@ -20,6 +21,22 @@ class GroupsPage extends StatefulWidget {
 }
 
 class _GroupsPageState extends State<GroupsPage> {
+  DateTime _currentStartDate = DateTime.now();
+  DateTime _currentEndDate = DateTime.now().add(const Duration(days: 365));
+
+  void _onSelectionChanged(DateRangePickerSelectionChangedArgs args) {
+    if (args.value is PickerDateRange) {
+      final DateTime rangeStartDate = args.value.startDate;
+      final DateTime rangeEndDate = args.value.endDate;
+    } else if (args.value is DateTime) {
+      final DateTime selectedDate = args.value;
+    } else if (args.value is List<DateTime>) {
+      final List<DateTime> selectedDates = args.value;
+    } else {
+      final List<PickerDateRange> selectedRanges = args.value;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -37,62 +54,53 @@ class _GroupsPageState extends State<GroupsPage> {
       body: SafeArea(
         child: ListView(
           children: [
-            Container(
-              margin: EdgeInsets.all(10),
-              padding: EdgeInsets.all(10),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.all(
-                  Radius.circular(10),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Divider(
+                  height: 10,
+                  thickness: 2,
                 ),
-                color: Theme.of(context).primaryColor.withOpacity(0.2),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Padding(
-                    padding: EdgeInsets.only(left: 8.0, top: 8.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          'Travel Groups',
-                          style: TextStyle(
-                            fontSize: 20,
-                          ),
-                        ),
-                        IconButton(
-                          onPressed: () {
-                            _travelGroupModal(context);
-                          },
-                          tooltip: 'Form A Travel Group',
-                          icon: const Icon(Icons.view_headline_sharp),
-                        )
-                      ],
+                MediaQuery.removePadding(
+                  context: context,
+                  removeTop: true,
+                  child: ListView.separated(
+                    separatorBuilder: (context, index) => SizedBox(
+                      height: 10,
                     ),
-                  ),
-                  Divider(
-                    height: 10,
-                    thickness: 2,
-                  ),
-                  MediaQuery.removePadding(
-                    context: context,
-                    removeTop: true,
-                    child: ListView.separated(
-                      separatorBuilder: (context, index) => SizedBox(
-                        height: 10,
-                      ),
-                      shrinkWrap: true,
-                      itemCount: Provider.of<TravelGroupProvider>(context)
-                          .travelGroups
-                          .length,
-                      itemBuilder: (context, index) {
-                        final travelGroup =
-                            Provider.of<TravelGroupProvider>(context)
-                                .travelGroups[index];
-                        return ExpansionTileCard(
+                    shrinkWrap: true,
+                    itemCount: Provider.of<TravelGroupProvider>(context)
+                        .travelGroups
+                        .length,
+                    itemBuilder: (context, index) {
+                      final travelGroup =
+                          Provider.of<TravelGroupProvider>(context)
+                              .travelGroups[index];
+                      return Container(
+                        margin: EdgeInsets.symmetric(horizontal: 10),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(10),
+                          ),
+                          color:
+                              Theme.of(context).primaryColor.withOpacity(0.2),
+                        ),
+                        child: ExpansionTileCard(
                           baseColor: Theme.of(context)
                               .backgroundColor
-                              .withOpacity(0.4),
+                              .withOpacity(0.2),
+                          leading: CircleAvatar(
+                            backgroundColor: Theme.of(context).backgroundColor,
+                            child: IconButton(
+                              icon: Icon(Icons.edit),
+                              onPressed: () {
+                                Navigator.of(context).pushNamed(
+                                  '/edit_travel_group',
+                                  arguments: travelGroup,
+                                );
+                              },
+                            ),
+                          ),
                           title: Text(travelGroup.name),
                           subtitle: Text(
                             travelGroup.destinations
@@ -122,136 +130,44 @@ class _GroupsPageState extends State<GroupsPage> {
                               },
                             ),
                           ],
-                        );
-                      },
-                    ),
+                        ),
+                      );
+                    },
                   ),
-                  Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.all(
-                        Radius.circular(5),
+                ),
+                Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(5),
+                    ),
+                    color: Theme.of(context).primaryColor.withOpacity(0.2),
+                  ),
+                  margin: EdgeInsets.all(10),
+                  child: ExpansionTileCard(
+                    borderRadius: BorderRadius.circular(10),
+                    baseColor:
+                        Theme.of(context).backgroundColor.withOpacity(0.2),
+                    title: const Text('Select Date'),
+                    children: [
+                      SfDateRangePicker(
+                        enablePastDates: false,
+                        onSelectionChanged: _onSelectionChanged,
+                        selectionMode: DateRangePickerSelectionMode.range,
+                        initialSelectedRange: PickerDateRange(
+                          _currentStartDate,
+                          _currentEndDate,
+                        ),
                       ),
-                      color: Theme.of(context).primaryColor.withOpacity(0.2),
-                    ),
-                    margin: EdgeInsets.all(10),
-                    child: ExpansionTile(
-                      title: Text('Calendar'),
-                      children: [
-                        Builder(builder: (context) {
-                          return TableCalendar(
-                            focusedDay: DateTime.now(),
-                            firstDay: DateTime(2022),
-                            lastDay: DateTime(2024),
-                            calendarFormat: CalendarFormat.month,
-                            startingDayOfWeek: StartingDayOfWeek.monday,
-                            daysOfWeekVisible: true,
-                            calendarStyle: CalendarStyle(
-                              isTodayHighlighted: true,
-                              selectedDecoration: BoxDecoration(
-                                color: Theme.of(context).primaryColor,
-                                shape: BoxShape.circle,
-                              ),
-                              selectedTextStyle: TextStyle(color: Colors.white),
-                              todayDecoration: BoxDecoration(
-                                color: Theme.of(context).primaryColor,
-                                shape: BoxShape.circle,
-                              ),
-                              defaultDecoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                              ),
-                              weekendDecoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                              ),
-                            ),
-                            headerStyle: HeaderStyle(
-                              formatButtonVisible: false,
-                              titleCentered: true,
-                              titleTextStyle: TextStyle(
-                                color: Colors.white,
-                                fontSize: 20,
-                              ),
-                              leftChevronIcon: Icon(
-                                Icons.chevron_left,
-                                color: Colors.white,
-                              ),
-                              rightChevronIcon: Icon(
-                                Icons.chevron_right,
-                                color: Colors.white,
-                              ),
-                            ),
-                          );
-                        }),
-                      ],
-                    ),
+                    ],
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
           ],
         ),
       ),
     );
   }
-}
-
-Future<dynamic> _travelGroupModal(BuildContext context) {
-  final travelGroupData =
-      Provider.of<TravelGroupProvider>(context, listen: false);
-  return showModalBottomSheet(
-    shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.vertical(
-        top: Radius.circular(10),
-      ),
-    ),
-    context: context,
-    builder: (context) {
-      return Container(
-        margin: EdgeInsets.all(10),
-        padding: EdgeInsets.all(10),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.all(
-            Radius.circular(10),
-          ),
-        ),
-        child: ListView.separated(
-          separatorBuilder: (context, index) => SizedBox(
-            height: 10,
-          ),
-          itemBuilder: (context, index) {
-            final travelGroup = travelGroupData.travelGroups[index];
-            return Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.all(
-                  Radius.circular(10),
-                ),
-                color: Theme.of(context).primaryColor.withOpacity(0.2),
-              ),
-              child: ListTile(
-                onTap: () {
-                  Navigator.of(context).pushNamed(
-                    '/edit_travel_group',
-                    arguments: travelGroup,
-                  );
-                },
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                title: Text(travelGroup.name),
-                subtitle: Text(
-                  travelGroup.destinations
-                      .map((destination) =>
-                          '${destination.city}, ${destination.country}')
-                      .join(' | '),
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ),
-            );
-          },
-          itemCount: travelGroupData.travelGroups.length,
-        ),
-      );
-    },
-  );
 }
 
 void formGroup(BuildContext context) {
