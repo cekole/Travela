@@ -4,7 +4,6 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:travela_mobile/screens/friends/friends_page.dart';
 import 'package:travela_mobile/screens/maps/map_page.dart';
 import 'package:travela_mobile/screens/profile/profile_page.dart';
-import 'package:travela_mobile/screens/travel_group/travel_group.dart';
 import 'package:travela_mobile/screens/groups/groups_page.dart';
 import 'package:travela_mobile/screens/trips/trips_page.dart';
 import 'package:travela_mobile/widgets/custom_drawer.dart';
