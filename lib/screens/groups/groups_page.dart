@@ -9,6 +9,8 @@ import 'package:travela_mobile/models/travel_group.dart';
 import 'package:travela_mobile/providers/travel_group_provider.dart';
 import 'package:travela_mobile/screens/trips/trips_page.dart';
 import 'package:travela_mobile/providers/travel_group_provider.dart';
+import 'package:travela_mobile/widgets/home/popular_places.dart';
+import 'package:travela_mobile/widgets/home/suggestions.dart';
 
 class GroupsPage extends StatefulWidget {
   static const String routeName = '/groups';
@@ -21,6 +23,13 @@ class _GroupsPageState extends State<GroupsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      floatingActionButton: FloatingActionButton.extended(
+          backgroundColor: Theme.of(context).primaryColor,
+          onPressed: () {
+            formGroup(context);
+          },
+          label: Text('Form Group')),
       appBar: AppBar(
         title: Text('Groups'),
         backgroundColor: Theme.of(context).primaryColor,
@@ -174,18 +183,10 @@ class _GroupsPageState extends State<GroupsPage> {
                         }),
                       ],
                     ),
-                  )
+                  ),
                 ],
               ),
             ),
-            ElevatedButton(
-              onPressed: () {
-                formGroup(context);
-              },
-              child: Text(
-                'Form Group',
-              ),
-            )
           ],
         ),
       ),

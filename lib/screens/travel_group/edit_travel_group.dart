@@ -8,6 +8,7 @@ import 'package:provider/provider.dart';
 import 'package:travela_mobile/models/travel_group.dart';
 import 'package:travela_mobile/providers/destinations_provider.dart';
 import 'package:travela_mobile/providers/recommendation_provider.dart';
+import 'package:travela_mobile/widgets/home/suggestions.dart';
 
 class EditTravelGroup extends StatelessWidget {
   const EditTravelGroup({Key? key}) : super(key: key);
@@ -23,68 +24,15 @@ class EditTravelGroup extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Theme.of(context).primaryColor,
         title: Text(travelGroup.name),
-        actions: [
-          IconButton(
-            onPressed: () {
-              gridClick(context);
-            },
-            icon: Icon(Icons.grid_view_rounded),
-          ),
-        ],
+        actions: [],
       ),
       body: SafeArea(
         child: Container(
           padding: EdgeInsets.all(10),
           child: ListView(
             children: [
-              Text(
-                'Group Members',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  color: Colors.black,
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
               SizedBox(height: 10),
-              Container(
-                height: size.height * 0.15,
-                child: ListView.builder(
-                  shrinkWrap: true,
-                  scrollDirection: Axis.horizontal,
-                  itemCount: travelGroup.participants.length,
-                  itemBuilder: (context, index) {
-                    return Container(
-                      margin: EdgeInsets.only(right: 10, left: 5),
-                      child: Column(
-                        children: [
-                          Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              CircleAvatar(
-                                radius: 25,
-                                backgroundImage: NetworkImage(
-                                  'travelGroup.participants[index].name',
-                                ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Text(
-                                  travelGroup.participants[index].name,
-                                  style: TextStyle(
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    );
-                  },
-                ),
-              ),
+              Container(height: 0),
               Container(
                 margin: EdgeInsets.all(8.0),
                 height: size.height * 0.5,
@@ -216,8 +164,92 @@ class EditTravelGroup extends StatelessWidget {
                 ),
               ),
               SizedBox(height: 20),
+              SuggestionsForYou(),
+              Row(children: <Widget>[
+                Expanded(
+                    child: Divider(
+                  color: Colors.grey.shade700,
+                  indent: 35,
+                  endIndent: 35,
+                  thickness: 1,
+                )),
+                Text("OR"),
+                Expanded(
+                    child: Divider(
+                  color: Colors.grey.shade700,
+                  indent: 35,
+                  endIndent: 35,
+                  thickness: 1,
+                )),
+              ]),
+
               ElevatedButton(
-                onPressed: () {},
+                onPressed: () {
+                  showModalBottomSheet(
+                    shape: const RoundedRectangleBorder(
+                      borderRadius: BorderRadius.vertical(
+                        top: Radius.circular(20),
+                      ),
+                    ),
+                    context: context,
+                    builder: (context) => Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: SafeArea(
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(
+                              'Add Trip',
+                              style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            const SizedBox(
+                              height: 10,
+                            ),
+                            TextField(
+                              decoration: InputDecoration(
+                                labelText: 'Trip Name',
+                              ),
+                            ),
+                            const SizedBox(
+                              height: 10,
+                            ),
+                            TextField(
+                              decoration: InputDecoration(
+                                labelText: 'Trip Date',
+                              ),
+                            ),
+                            const SizedBox(
+                              height: 10,
+                            ),
+                            TextField(
+                              decoration: InputDecoration(
+                                labelText: 'Trip Location',
+                              ),
+                            ),
+                            const SizedBox(
+                              height: 10,
+                            ),
+                            TextField(
+                              decoration: InputDecoration(
+                                labelText: 'Trip Description',
+                              ),
+                            ),
+                            const SizedBox(
+                              height: 10,
+                            ),
+                            ElevatedButton(
+                              onPressed: () {},
+                              child: Text('Add Trip'),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  );
+                },
                 child: Text('Arrange Trip'),
               ),
               SizedBox(height: 20),
