@@ -98,6 +98,7 @@ class AuthenticationProvider with ChangeNotifier {
     final name = prefs.getString('name');
     if (token != null) {
       currentUser = User(
+        id: '',
         name: name!,
         email: email!,
         messages: [],

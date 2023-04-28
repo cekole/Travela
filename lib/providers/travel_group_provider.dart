@@ -14,6 +14,7 @@ class TravelGroupProvider with ChangeNotifier {
       description: 'Switzerland, August 2022',
       participants: [
         User(
+          id: '1',
           name: 'Yağmur Eryılmaz',
           email: 'yagmurery@gmail.com',
           messages: [
@@ -127,6 +128,7 @@ class TravelGroupProvider with ChangeNotifier {
       description: 'Berlin, June 2022',
       participants: [
         User(
+          id: '1',
           name: 'Yağmur Eryılmaz',
           email: 'yagmurery@gmail.com',
           messages: [
@@ -156,6 +158,7 @@ class TravelGroupProvider with ChangeNotifier {
           ),
         ),
         User(
+          id: '2',
           name: 'Cenk Duran',
           email: 'cekoley@gmail.com',
           messages: [
@@ -185,6 +188,7 @@ class TravelGroupProvider with ChangeNotifier {
           ),
         ),
         User(
+          id: '3',
           name: 'Efe Ertürk',
           email: 'efeerturk@gmail.com',
           messages: [
@@ -214,6 +218,7 @@ class TravelGroupProvider with ChangeNotifier {
           ),
         ),
         User(
+          id: '4',
           name: 'Efe Şaman',
           email: 'efesaman@gmail.com',
           messages: [
@@ -243,6 +248,7 @@ class TravelGroupProvider with ChangeNotifier {
           ),
         ),
         User(
+          id: '5',
           name: 'Çağla Ataoğlu',
           email: 'caglaataoglu@gmail.com',
           messages: [

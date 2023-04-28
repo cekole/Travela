@@ -3,6 +3,7 @@ import 'package:travela_mobile/models/country.dart';
 import 'package:travela_mobile/models/user.dart';
 
 User currentUser = User(
+  id: '',
   name: '',
   email: '',
   messages: [],

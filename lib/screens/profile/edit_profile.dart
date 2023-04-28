@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:provider/provider.dart';
 import 'package:travela_mobile/appConstant.dart';
+import 'package:travela_mobile/providers/user_provider.dart';
 
 class EditProfile extends StatelessWidget {
   const EditProfile({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final userData = Provider.of<UserProvider>(context);
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
@@ -107,12 +110,16 @@ class EditProfile extends StatelessWidget {
               ),
               SizedBox(height: 10),
               ElevatedButton(
-                onPressed: () {},
+                onPressed: () {
+                  userData.updateUserInfo(currentUser.id);
+                },
                 child: Text('Save'),
               ),
               Spacer(),
               TextButton(
-                onPressed: () {},
+                onPressed: () {
+                  userData.deleteUser(currentUser.id);
+                },
                 child: Text(
                   'Delete Account',
                   style: TextStyle(color: Theme.of(context).errorColor),
