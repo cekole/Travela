@@ -11,12 +11,12 @@ import 'package:travela_mobile/models/user.dart';
 
 class UserProvider with ChangeNotifier {
   Future getAllUsers() async {
-    final url = baseUrl + 'users/';
+    final url = baseUrl + 'users';
     print(url);
     final response = await http.get(
       Uri.parse(url),
       headers: {
-        'Authorzation ': 'Bearer  $bearerToken',
+        'Authorization': 'Bearer  $bearerToken',
         'Content-Type': 'application/json',
       },
     );
@@ -36,7 +36,7 @@ class UserProvider with ChangeNotifier {
     final response = await http.put(
       Uri.parse(url),
       headers: {
-        'Authorzation ': 'Bearer  $bearerToken',
+        'Authorization': 'Bearer  $bearerToken',
         'Content-Type': 'application/json',
       },
     );
@@ -55,7 +55,7 @@ class UserProvider with ChangeNotifier {
     final response = await http.delete(
       Uri.parse(url),
       headers: {
-        'Authorzation ': 'Bearer  $bearerToken',
+        'Authorization': 'Bearer  $bearerToken',
         'Content-Type': 'application/json',
       },
     );

@@ -33,12 +33,14 @@ class TravelGroupProvider with ChangeNotifier {
             countryName: 'Spain',
             cities: [
               City(
+                id: '1',
                 cityName: 'Sevilla',
-                countryId: '1',
+                countryName: '1',
                 activities: [
                   'Visit the Cathedral',
                   'Visit the Alcazar',
                 ],
+                iataCode: 'SVQ',
               ),
             ],
           ),
@@ -147,12 +149,14 @@ class TravelGroupProvider with ChangeNotifier {
             countryName: 'Spain',
             cities: [
               City(
+                id: '1',
                 cityName: 'Sevilla',
-                countryId: 'ESP',
+                countryName: 'ESP',
                 activities: [
                   'Visit the Cathedral',
                   'Visit the Alcazar',
                 ],
+                iataCode: 'SVQ',
               ),
             ],
           ),
@@ -177,12 +181,14 @@ class TravelGroupProvider with ChangeNotifier {
             countryName: 'Turkey',
             cities: [
               City(
+                id: '2',
                 cityName: 'Ankara',
-                countryId: 'TUR',
+                countryName: 'TUR',
                 activities: [
                   'Visit the Anıtkabir',
                   'Visit the Ankara Castle',
                 ],
+                iataCode: 'ESB',
               ),
             ],
           ),
@@ -207,12 +213,14 @@ class TravelGroupProvider with ChangeNotifier {
             countryName: 'Italy',
             cities: [
               City(
+                id: '3',
                 cityName: 'Turin',
-                countryId: 'ITA',
+                countryName: 'ITA',
                 activities: [
                   'Visit the Mole Antonelliana',
                   'Visit the Egyptian Museum',
                 ],
+                iataCode: 'TRN',
               ),
             ],
           ),
@@ -237,12 +245,14 @@ class TravelGroupProvider with ChangeNotifier {
             countryName: 'United Kingdom',
             cities: [
               City(
+                id: '4',
                 cityName: 'London',
-                countryId: 'GBR',
+                countryName: 'GBR',
                 activities: [
                   'Visit the Big Ben',
                   'Visit the London Eye',
                 ],
+                iataCode: 'LHR',
               ),
             ],
           ),
@@ -267,12 +277,14 @@ class TravelGroupProvider with ChangeNotifier {
             countryName: 'Germany',
             cities: [
               City(
+                id: '5',
                 cityName: 'Berlin',
-                countryId: 'DEU',
+                countryName: 'DEU',
                 activities: [
                   'Visit the Brandenburg Gate',
                   'Visit the Berlin Wall',
                 ],
+                iataCode: 'TXL',
               ),
             ],
           ),

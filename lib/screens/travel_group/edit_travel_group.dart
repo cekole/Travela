@@ -247,9 +247,7 @@ class _EditTravelGroupState extends State<EditTravelGroup> {
                   ),
                   prefixIcon: Icon(Icons.search),
                 ),
-                onSubmitted: (value) {
-                  Navigator.of(context).pushNamed('/search_options');
-                },
+                onSubmitted: (value) {},
               ),
               Divider(
                 thickness: 1,

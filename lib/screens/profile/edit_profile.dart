@@ -89,26 +89,6 @@ class EditProfile extends StatelessWidget {
                 ),
               ),
               SizedBox(height: 10),
-              TextField(
-                decoration: InputDecoration(
-                  labelText: 'Location',
-                  hintText: 'Ankara, Turkey',
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(50),
-                  ),
-                ),
-              ),
-              SizedBox(height: 10),
-              TextField(
-                decoration: InputDecoration(
-                  labelText: 'Bio',
-                  hintText: 'I am a software developer',
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(50),
-                  ),
-                ),
-              ),
-              SizedBox(height: 10),
               ElevatedButton(
                 onPressed: () {
                   userData.updateUserInfo(currentUser.id);
@@ -118,7 +98,9 @@ class EditProfile extends StatelessWidget {
               Spacer(),
               TextButton(
                 onPressed: () {
-                  userData.deleteUser(currentUser.id);
+                  userData.deleteUser(currentUser.id).then(
+                        (value) => Navigator.of(context).pushNamed('/login'),
+                      );
                 },
                 child: Text(
                   'Delete Account',

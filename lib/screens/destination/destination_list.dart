@@ -18,15 +18,7 @@ class DestinationListPage extends StatelessWidget {
           children: [
             GestureDetector(
               onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => DestinationDetailPage(
-                      destination: 'destination_1',
-                      image: 'assets/images/destinations/destination_1.jpeg',
-                    ),
-                  ),
-                );
+                Navigator.of(context).pushNamed('/search_options');
               },
               child: Container(
                 margin: EdgeInsets.all(12),

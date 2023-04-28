@@ -1,7 +1,13 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:travela_mobile/appConstant.dart';
+import 'package:travela_mobile/models/city.dart';
 import 'package:travela_mobile/models/destination.dart';
+import 'package:http/http.dart' as http;
 
 class DestinationsProvider with ChangeNotifier {
+  final destinationUrl = baseUrl + 'cities';
   List<Destination> _destinations = [
     Destination(
       id: '1',
@@ -103,8 +109,43 @@ class DestinationsProvider with ChangeNotifier {
     return _destinations.firstWhere((destination) => destination.id == id);
   }
 
-  void addDestination() {
-    // _destinations.add(value);
+  //fetch and set destinations
+  Future<void> fetchAndSetCities() async {
+    final response = await http.get(
+      Uri.parse(destinationUrl),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $bearerToken',
+      },
+    );
+    final extractedData = json.decode(response.body) as List<dynamic>;
+    final List<City> loadedCities = [];
+    extractedData.forEach((city) {
+      loadedCities.add(
+        City(
+          id: city['city_id'].toString(),
+          cityName: city['cityName'],
+          countryName: city['countryName'] == null ? '' : city['countryName'],
+          activities: [...city['activities']],
+          iataCode: city['iata_code'],
+        ),
+      );
+    });
+    _destinations = loadedCities
+        .map(
+          (city) => Destination(
+            id: city.id,
+            country: city.countryName,
+            city: city.cityName,
+            description: 'description',
+            imageUrl: 'assets/images/destinations/destination_1.jpeg',
+            rating: 4.5,
+            location: 'Europe',
+            activities: city.activities,
+            isPopular: false,
+          ),
+        )
+        .toList();
     notifyListeners();
   }
 
