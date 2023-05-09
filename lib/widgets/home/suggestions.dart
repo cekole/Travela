@@ -11,7 +11,7 @@ class SuggestionsForYou extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final destinationsData =
-        Provider.of<DestinationsProvider>(context, listen: false);
+        Provider.of<DestinationsProvider>(context, listen: true);
     //TODO: Get the destinations from suggestions, ml model, etc.
     final suggestedDestinations =
         destinationsData.destinations.skip(2).toList();

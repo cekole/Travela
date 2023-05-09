@@ -126,8 +126,13 @@ class DestinationsProvider with ChangeNotifier {
           id: city['city_id'].toString(),
           cityName: city['cityName'],
           countryName: city['countryName'] == null ? '' : city['countryName'],
+          description:
+              city['cityDescription'] == null ? '' : city['cityDescription'],
+          imageUrl: city['cityImageURL'] == null ? '' : city['cityImageURL'],
           activities: [...city['activities']],
           iataCode: city['iata_code'],
+          latitude: city['latitude'],
+          longitude: city['longitude'],
         ),
       );
     });
@@ -137,8 +142,8 @@ class DestinationsProvider with ChangeNotifier {
             id: city.id,
             country: city.countryName,
             city: city.cityName,
-            description: 'description',
-            imageUrl: 'assets/images/destinations/destination_1.jpeg',
+            description: city.description,
+            imageUrl: city.imageUrl,
             rating: 4.5,
             location: 'Europe',
             activities: city.activities,

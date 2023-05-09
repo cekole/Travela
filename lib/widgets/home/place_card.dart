@@ -42,7 +42,7 @@ class PlaceCard extends StatelessWidget {
                         height: MediaQuery.of(context).size.height * 0.4,
                         decoration: BoxDecoration(
                           image: DecorationImage(
-                            image: AssetImage(image),
+                            image: NetworkImage(image),
                             fit: BoxFit.cover,
                           ),
                         ),
@@ -186,7 +186,7 @@ class PlaceCard extends StatelessWidget {
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10),
                 image: DecorationImage(
-                  image: AssetImage(image),
+                  image: NetworkImage(image),
                   fit: BoxFit.cover,
                 ),
               ),

@@ -197,7 +197,8 @@ class _RegisterPageState extends State<RegisterPage> {
                             height: 20,
                           ),
                           ElevatedButton(
-                            onPressed: () => handleSignUp(),
+                            onPressed: () => Navigator.pushReplacementNamed(
+                                context, '/questionnaire'),
                             child: Text(
                               'Sign Up',
                               style: TextStyle(color: Colors.grey.shade700),

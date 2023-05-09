@@ -13,6 +13,7 @@ import 'package:travela_mobile/screens/hotel/hotel_page.dart';
 import 'package:travela_mobile/screens/maps/friends_map.dart';
 import 'package:travela_mobile/screens/maps/map_page.dart';
 import 'package:travela_mobile/screens/profile/edit_profile.dart';
+import 'package:travela_mobile/screens/register/questionnaire_page.dart';
 import 'package:travela_mobile/screens/search_options/search_options.dart';
 import 'package:travela_mobile/screens/search_options/transportation_options.dart';
 import 'package:travela_mobile/screens/travel_group/edit_travel_group.dart';
@@ -20,7 +21,7 @@ import 'package:travela_mobile/screens/friends/friends_page.dart';
 import 'package:travela_mobile/screens/home/home_page.dart';
 import 'package:travela_mobile/screens/login.dart';
 import 'package:travela_mobile/screens/home/popular_destinations.dart';
-import 'package:travela_mobile/screens/register.dart';
+import 'package:travela_mobile/screens/register/register.dart';
 
 void main() {
   runApp(const MyApp());
@@ -74,6 +75,7 @@ class MyApp extends StatelessWidget {
           '/login': (context) => const LoginPage(),
           '/home': (context) => HomePage(),
           '/register': (context) => const RegisterPage(),
+          '/questionnaire': (context) => const QuestionnarePage(),
           '/friends': (context) => const FriendsPage(),
           '/popular': (context) => const PopularDestinations(),
           '/map': (context) => const MapPage(),

@@ -12,6 +12,7 @@ class PopularPlaces extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final destinationsData = Provider.of<DestinationsProvider>(context);
+    destinationsData.fetchAndSetCities();
     return Column(
       children: [
         Row(
@@ -43,9 +44,6 @@ class PopularPlaces extends StatelessWidget {
             scrollDirection: Axis.horizontal,
             itemCount: destinationsData.destinations.length,
             itemBuilder: (context, index) {
-              final destinationData =
-                  Provider.of<DestinationsProvider>(context);
-              destinationData.fetchAndSetCities();
               return PlaceCard(
                 destination:
                     '${destinationsData.destinations[index].city}, ${destinationsData.destinations[index].country}',
