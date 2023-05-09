@@ -2,6 +2,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:travela_mobile/models/country.dart';
 import 'package:travela_mobile/models/user.dart';
 
+String userId = '';
 User currentUser = User(
   id: '',
   username: '',

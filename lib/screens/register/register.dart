@@ -263,7 +263,21 @@ class _RegisterPageState extends State<RegisterPage> {
       )
           .then((value) {
         if (value && usernameController.text != '') {
-          Navigator.pushReplacementNamed(context, '/questionnaire');
+          //login
+          authenticaticationData
+              .login(
+                email: emailController.text,
+                name: nameController.text,
+                username: usernameController.text,
+                password: passwordController.text,
+              )
+              .then((value) => {
+                    if (value)
+                      {
+                        Navigator.pushReplacementNamed(
+                            context, '/questionnaire'),
+                      }
+                  });
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(

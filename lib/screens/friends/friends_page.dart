@@ -53,10 +53,11 @@ class FriendsPage extends StatelessWidget {
                           TextButton(
                             onPressed: () {
                               print(currentUser.name);
+                              print('$userId');
                               final userData = Provider.of<UserProvider>(
                                   context,
                                   listen: false);
-                              userData.sendFriendRequest('17', '11');
+                              userData.sendFriendRequest('$userId', '11');
                               Navigator.of(context).pop();
                             },
                             child: Text('Send'),

@@ -2,9 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:provider/provider.dart';
+import 'package:travela_mobile/appConstant.dart';
 import 'package:travela_mobile/models/destination.dart';
+import 'package:travela_mobile/models/user.dart';
 import 'package:travela_mobile/providers/authentication_provider.dart';
 import 'package:travela_mobile/providers/destinations_provider.dart';
+import 'package:travela_mobile/providers/user_provider.dart';
 import 'package:travela_mobile/screens/friends/friends_page.dart';
 import 'package:travela_mobile/screens/maps/map_page.dart';
 import 'package:travela_mobile/screens/profile/profile_page.dart';
@@ -27,7 +30,12 @@ class _HomePageState extends State<HomePage> {
     super.initState();
     final authenticationData =
         Provider.of<AuthenticationProvider>(context, listen: false);
-    authenticationData.getCurrentUser();
+    final userData = Provider.of<UserProvider>(context, listen: false);
+    authenticationData.getCurrentUser().then(
+      (value) {
+        userId = userData.getUserIdByUsername(currentUser.username).toString();
+      },
+    );
   }
 
   @override

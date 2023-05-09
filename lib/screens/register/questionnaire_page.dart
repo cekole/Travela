@@ -3,16 +3,29 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:provider/provider.dart';
 import 'package:travela_mobile/models/destination.dart';
+import 'package:travela_mobile/providers/authentication_provider.dart';
 import 'package:travela_mobile/providers/destinations_provider.dart';
 
-class QuestionnarePage extends StatelessWidget {
+class QuestionnarePage extends StatefulWidget {
   QuestionnarePage({super.key});
 
+  @override
+  State<QuestionnarePage> createState() => _QuestionnarePageState();
+}
+
+class _QuestionnarePageState extends State<QuestionnarePage> {
   List<Destination> _selectedDestinations = [];
+  @override
+  void initState() {
+    final authenticationData =
+        Provider.of<AuthenticationProvider>(context, listen: false);
+    authenticationData.getCurrentUser();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     final destinatinationsData = Provider.of<DestinationsProvider>(context);
-
     destinatinationsData.fetchAndSetCities();
     return Scaffold(
       appBar: AppBar(

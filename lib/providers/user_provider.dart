@@ -30,6 +30,19 @@ class UserProvider with ChangeNotifier {
     }
   }
 
+  //getUserIdByUsername
+  getUserIdByUsername(String username) {
+    getAllUsers().then((value) {
+      for (var user in value) {
+        print(user['username']);
+        if (user['username'] == username) {
+          userId = user['user_id'].toString();
+        }
+      }
+      notifyListeners();
+    });
+  }
+
   Future updateUserInfo(
       String id, String name, String username, String email) async {
     final url = baseUrl + 'users/$id';
@@ -115,8 +128,30 @@ class UserProvider with ChangeNotifier {
       Uri.parse(url),
       headers: {
         'Authorization': 'Bearer  $bearerToken',
-        'Content-Type': 'application/json',
       },
     );
+  }
+
+  Future<void> setAvailableFrom(String id, String date) async {
+    final url = baseUrl + 'users/$id/setAvailableFrom/$date';
+    print(url);
+    final response = await http.put(
+      Uri.parse(url),
+      headers: {
+        'Authorization': 'Bearer  $bearerToken',
+      },
+    );
+  }
+
+  Future<void> setAvailableTo(String id, String date) async {
+    final url = baseUrl + 'users/$id/setAvailableTo/$date';
+    print(url);
+    final response = await http.put(
+      Uri.parse(url),
+      headers: {
+        'Authorization': 'Bearer  $bearerToken',
+      },
+    );
+    print('date' + date);
   }
 }

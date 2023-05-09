@@ -9,7 +9,7 @@ import 'package:http/http.dart' as http;
 class DestinationsProvider with ChangeNotifier {
   final destinationUrl = baseUrl + 'cities';
   List<Destination> _destinations = [
-    Destination(
+    /* Destination(
       id: '1',
       country: 'France',
       city: 'Paris',
@@ -98,7 +98,7 @@ class DestinationsProvider with ChangeNotifier {
         'Basel University',
       ],
       isPopular: true,
-    )
+    ) */
   ];
 
   List<Destination> get destinations {

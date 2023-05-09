@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 import 'package:table_calendar/table_calendar.dart';
@@ -10,6 +11,7 @@ import 'package:travela_mobile/appConstant.dart';
 import 'package:travela_mobile/models/travel_group.dart';
 import 'package:travela_mobile/providers/group_provider.dart';
 import 'package:travela_mobile/providers/travel_group_provider.dart';
+import 'package:travela_mobile/providers/user_provider.dart';
 import 'package:travela_mobile/screens/friends/friends_page.dart';
 import 'package:travela_mobile/screens/trips/trips_page.dart';
 import 'package:travela_mobile/providers/travel_group_provider.dart';
@@ -26,18 +28,30 @@ class GroupsPage extends StatefulWidget {
 
 class _GroupsPageState extends State<GroupsPage> {
   DateTime _currentStartDate = DateTime.now();
-  DateTime _currentEndDate = DateTime.now().add(const Duration(days: 365));
+  DateTime _currentEndDate = DateTime.now().add(const Duration(days: 7));
+  bool _isExpandedGroup = false;
+  bool _isExpandedCalendar = false;
+
+  DateRangePickerController _dateRangePickerController =
+      DateRangePickerController();
+  DateTime rangeStartDate = DateTime.now();
+  DateTime rangeEndDate = DateTime.now().add(const Duration(days: 7));
 
   void _onSelectionChanged(DateRangePickerSelectionChangedArgs args) {
+    _dateRangePickerController.selectedRange = PickerDateRange(
+        args.value.startDate, args.value.endDate ?? args.value.startDate);
+
+    print(args.value);
     if (args.value is PickerDateRange) {
-      final DateTime rangeStartDate = args.value.startDate;
-      final DateTime rangeEndDate = args.value.endDate;
+      setState(() {
+        rangeStartDate = args.value.startDate;
+        rangeEndDate = args.value.endDate;
+      });
     } else if (args.value is DateTime) {
-      final DateTime selectedDate = args.value;
-    } else if (args.value is List<DateTime>) {
-      final List<DateTime> selectedDates = args.value;
-    } else {
-      final List<PickerDateRange> selectedRanges = args.value;
+      setState(() {
+        rangeStartDate = args.value;
+        rangeEndDate = args.value;
+      });
     }
   }
 
@@ -47,12 +61,15 @@ class _GroupsPageState extends State<GroupsPage> {
       drawerEnableOpenDragGesture: false,
       drawer: CustomDrawer(),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      floatingActionButton: FloatingActionButton.extended(
-          backgroundColor: Theme.of(context).primaryColor,
-          onPressed: () {
-            formGroup(context);
-          },
-          label: Text('Form Group')),
+      floatingActionButton: Opacity(
+        opacity: _isExpandedCalendar || _isExpandedGroup ? 0.1 : 1,
+        child: FloatingActionButton.extended(
+            backgroundColor: Theme.of(context).primaryColor,
+            onPressed: () {
+              formGroup(context);
+            },
+            label: Text('Form Group')),
+      ),
       appBar: AppBar(
         title: Text('Groups'),
         backgroundColor: Theme.of(context).primaryColor,
@@ -111,6 +128,11 @@ class _GroupsPageState extends State<GroupsPage> {
                               Theme.of(context).primaryColor.withOpacity(0.2),
                         ),
                         child: ExpansionTileCard(
+                          onExpansionChanged: (value) {
+                            setState(() {
+                              _isExpandedGroup = value;
+                            });
+                          },
                           baseColor: Theme.of(context)
                               .backgroundColor
                               .withOpacity(0.2),
@@ -168,12 +190,41 @@ class _GroupsPageState extends State<GroupsPage> {
                   ),
                   margin: EdgeInsets.all(10),
                   child: ExpansionTileCard(
+                    onExpansionChanged: (value) {
+                      setState(() {
+                        _isExpandedCalendar = value;
+                      });
+                    },
                     borderRadius: BorderRadius.circular(10),
                     baseColor:
                         Theme.of(context).backgroundColor.withOpacity(0.2),
                     title: const Text('Select Date'),
                     children: [
+                      Container(
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: ListTile(
+                                title: Text(
+                                  'Start Date: ${DateFormat.yMMMd().format(rangeStartDate)}',
+                                ),
+                              ),
+                            ),
+                            Expanded(
+                              child: ListTile(
+                                title: Text(
+                                  'End Date: ${DateFormat.yMMMd().format(rangeEndDate)}',
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
                       SfDateRangePicker(
+                        controller: _dateRangePickerController,
+                        headerStyle: DateRangePickerHeaderStyle(
+                          textAlign: TextAlign.center,
+                        ),
                         enablePastDates: false,
                         onSelectionChanged: _onSelectionChanged,
                         selectionMode: DateRangePickerSelectionMode.range,
@@ -181,7 +232,38 @@ class _GroupsPageState extends State<GroupsPage> {
                           _currentStartDate,
                           _currentEndDate,
                         ),
+                        startRangeSelectionColor:
+                            Theme.of(context).primaryColor,
+                        endRangeSelectionColor: Theme.of(context).primaryColor,
                       ),
+                      Row(
+                        children: [
+                          Spacer(),
+                          TextButton(
+                            onPressed: () {
+                              final userData = Provider.of<UserProvider>(
+                                  context,
+                                  listen: false);
+                              //date format to 2023-05-12
+                              userData
+                                  .setAvailableFrom(
+                                userId,
+                                DateFormat('yyyy-MM-dd').format(rangeStartDate),
+                              )
+                                  .then(
+                                (value) {
+                                  userData.setAvailableTo(
+                                    userId,
+                                    DateFormat('yyyy-MM-dd')
+                                        .format(rangeEndDate),
+                                  );
+                                },
+                              );
+                            },
+                            child: Text('Apply'),
+                          ),
+                        ],
+                      )
                     ],
                   ),
                 ),
