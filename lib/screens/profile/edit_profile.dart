@@ -10,6 +10,9 @@ class EditProfile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final TextEditingController nameController = TextEditingController();
+    final TextEditingController emailController = TextEditingController();
+    final TextEditingController usernameController = TextEditingController();
     final userData = Provider.of<UserProvider>(context);
     return Scaffold(
       resizeToAvoidBottomInset: false,
@@ -70,6 +73,7 @@ class EditProfile extends StatelessWidget {
               ),
               SizedBox(height: 10),
               TextField(
+                controller: nameController,
                 decoration: InputDecoration(
                   labelText: 'Name',
                   hintText: 'Cenk Duran',
@@ -80,6 +84,18 @@ class EditProfile extends StatelessWidget {
               ),
               SizedBox(height: 10),
               TextField(
+                controller: usernameController,
+                decoration: InputDecoration(
+                  labelText: 'Username',
+                  hintText: 'cekoley',
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(50),
+                  ),
+                ),
+              ),
+              SizedBox(height: 10),
+              TextField(
+                controller: emailController,
                 decoration: InputDecoration(
                   labelText: 'Email',
                   hintText: 'cekoley@gmail.com',
@@ -88,10 +104,15 @@ class EditProfile extends StatelessWidget {
                   ),
                 ),
               ),
-              SizedBox(height: 10),
+              SizedBox(height: 20),
               ElevatedButton(
                 onPressed: () {
-                  userData.updateUserInfo(currentUser.id);
+                  userData
+                      .updateUserInfo(currentUser.id, nameController.text,
+                          emailController.text, usernameController.text)
+                      .then(
+                        (value) => Navigator.of(context).pushNamed('/profile'),
+                      );
                 },
                 child: Text('Save'),
               ),

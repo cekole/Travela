@@ -30,16 +30,17 @@ class UserProvider with ChangeNotifier {
     }
   }
 
-  Future updateUserInfo(String id) async {
+  Future updateUserInfo(
+      String id, String name, String username, String email) async {
     final url = baseUrl + 'users/$id';
     print(url);
     final response = await http.put(Uri.parse(url), headers: {
       'Authorization': 'Bearer  $bearerToken',
       'Content-Type': 'application/json',
     }, body: {
-      'firstName': 'John',
-      'lastName': 'Doe',
-      'email': ""
+      'name': name,
+      'username': username,
+      'email': email,
     });
     print(response.statusCode);
     if (response.statusCode == 200) {

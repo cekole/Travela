@@ -6,7 +6,9 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:provider/provider.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 import 'package:table_calendar/table_calendar.dart';
+import 'package:travela_mobile/appConstant.dart';
 import 'package:travela_mobile/models/travel_group.dart';
+import 'package:travela_mobile/providers/group_provider.dart';
 import 'package:travela_mobile/providers/travel_group_provider.dart';
 import 'package:travela_mobile/screens/trips/trips_page.dart';
 import 'package:travela_mobile/providers/travel_group_provider.dart';
@@ -174,6 +176,7 @@ class _GroupsPageState extends State<GroupsPage> {
 }
 
 void formGroup(BuildContext context) {
+  final groupData = Provider.of<GroupProvider>(context);
   final TextEditingController textController = TextEditingController();
   showModalBottomSheet(
     shape: const RoundedRectangleBorder(
@@ -214,6 +217,7 @@ void formGroup(BuildContext context) {
               onPressed: () {
                 String groupName = textController.text;
                 showAddFriendDialog(context);
+                groupData.addGroup(groupName, currentUser.id);
               },
               child: Text('Add Friends'),
             ),
@@ -225,6 +229,7 @@ void formGroup(BuildContext context) {
 }
 
 void showAddFriendDialog(BuildContext context) {
+  final groupData = Provider.of<GroupProvider>(context);
   showDialog(
       context: context,
       builder: (context) {
