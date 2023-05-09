@@ -52,7 +52,7 @@ class EditProfile extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          currentUser.name,
+                          currentUser.username,
                           style: TextStyle(
                             color: Colors.black,
                             fontSize: 20,

@@ -115,7 +115,8 @@ class DestinationsProvider with ChangeNotifier {
       Uri.parse(destinationUrl),
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': 'Bearer $bearerToken',
+        'Authorization':
+            'Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ5YWdtdXIiLCJpYXQiOjE2ODM2MTc2MTEsImV4cCI6MTY4MzY1MzYxMX0.8_wot6hZdNGGUlFcAFs7nCsS-XMXymg1YIQvev7murE',
       },
     );
     final extractedData = json.decode(response.body) as List<dynamic>;
@@ -125,7 +126,8 @@ class DestinationsProvider with ChangeNotifier {
         City(
           id: city['city_id'].toString(),
           cityName: city['cityName'],
-          countryName: city['countryName'] == null ? '' : city['countryName'],
+          countryName:
+              city['country'] == null ? '' : city['country']['countryName'],
           description:
               city['cityDescription'] == null ? '' : city['cityDescription'],
           imageUrl: city['cityImageURL'] == null ? '' : city['cityImageURL'],
