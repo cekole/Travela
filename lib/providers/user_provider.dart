@@ -33,13 +33,14 @@ class UserProvider with ChangeNotifier {
   Future updateUserInfo(String id) async {
     final url = baseUrl + 'users/$id';
     print(url);
-    final response = await http.put(
-      Uri.parse(url),
-      headers: {
-        'Authorization': 'Bearer  $bearerToken',
-        'Content-Type': 'application/json',
-      },
-    );
+    final response = await http.put(Uri.parse(url), headers: {
+      'Authorization': 'Bearer  $bearerToken',
+      'Content-Type': 'application/json',
+    }, body: {
+      'firstName': 'John',
+      'lastName': 'Doe',
+      'email': ""
+    });
     print(response.statusCode);
     if (response.statusCode == 200) {
       print('update user info success');
@@ -66,5 +67,53 @@ class UserProvider with ChangeNotifier {
     } else {
       print('delete user failed');
     }
+  }
+
+  Future sendFriendRequest(String id, String friendId) async {
+    final url = baseUrl + 'users/$id/sendFriendRequest/$friendId';
+    print(url);
+    final response = await http.put(
+      Uri.parse(url),
+      headers: {
+        'Authorization': 'Bearer  $bearerToken',
+        'Content-Type': 'application/json',
+      },
+    );
+  }
+
+  Future acceptFriendRequest(String id, String friendId) async {
+    final url = baseUrl + 'users/$id/acceptFriendRequest/$friendId';
+    print(url);
+    final response = await http.put(
+      Uri.parse(url),
+      headers: {
+        'Authorization': 'Bearer  $bearerToken',
+        'Content-Type': 'application/json',
+      },
+    );
+  }
+
+  Future rejectFriendRequest(String id, String friendId) async {
+    final url = baseUrl + 'users/$id/rejectFriendRequest/$friendId';
+    print(url);
+    final response = await http.put(
+      Uri.parse(url),
+      headers: {
+        'Authorization': 'Bearer  $bearerToken',
+        'Content-Type': 'application/json',
+      },
+    );
+  }
+
+  Future removeFriend(String id, String friendId) async {
+    final url = baseUrl + 'users/$id/removeFriend/$friendId';
+    print(url);
+    final response = await http.put(
+      Uri.parse(url),
+      headers: {
+        'Authorization': 'Bearer  $bearerToken',
+        'Content-Type': 'application/json',
+      },
+    );
   }
 }
