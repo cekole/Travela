@@ -115,8 +115,7 @@ class DestinationsProvider with ChangeNotifier {
       Uri.parse(destinationUrl),
       headers: {
         'Content-Type': 'application/json',
-        'Authorization':
-            'Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ5YWdtdXIiLCJpYXQiOjE2ODM2MTc2MTEsImV4cCI6MTY4MzY1MzYxMX0.8_wot6hZdNGGUlFcAFs7nCsS-XMXymg1YIQvev7murE',
+        'Authorization': 'Bearer $bearerToken',
       },
     );
     final extractedData = json.decode(response.body) as List<dynamic>;

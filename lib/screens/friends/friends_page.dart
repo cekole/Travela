@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:provider/provider.dart';
+import 'package:travela_mobile/appConstant.dart';
+import 'package:travela_mobile/providers/user_provider.dart';
 import 'package:travela_mobile/widgets/friend_card.dart';
 import 'package:travela_mobile/widgets/request_card.dart';
 
@@ -49,6 +52,11 @@ class FriendsPage extends StatelessWidget {
                           ),
                           TextButton(
                             onPressed: () {
+                              print(currentUser.name);
+                              final userData = Provider.of<UserProvider>(
+                                  context,
+                                  listen: false);
+                              userData.sendFriendRequest('17', '11');
                               Navigator.of(context).pop();
                             },
                             child: Text('Send'),

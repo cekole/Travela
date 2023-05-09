@@ -10,6 +10,7 @@ import 'package:travela_mobile/appConstant.dart';
 import 'package:travela_mobile/models/travel_group.dart';
 import 'package:travela_mobile/providers/group_provider.dart';
 import 'package:travela_mobile/providers/travel_group_provider.dart';
+import 'package:travela_mobile/screens/friends/friends_page.dart';
 import 'package:travela_mobile/screens/trips/trips_page.dart';
 import 'package:travela_mobile/providers/travel_group_provider.dart';
 import 'package:travela_mobile/widgets/home/popular_places.dart';
@@ -55,6 +56,25 @@ class _GroupsPageState extends State<GroupsPage> {
       appBar: AppBar(
         title: Text('Groups'),
         backgroundColor: Theme.of(context).primaryColor,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.people_alt_outlined),
+            onPressed: () {
+              showModalBottomSheet(
+                shape: const RoundedRectangleBorder(
+                  borderRadius: BorderRadius.vertical(
+                    top: Radius.circular(20),
+                  ),
+                ),
+                context: context,
+                builder: (context) => Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: const FriendsPage(),
+                ),
+              );
+            },
+          ),
+        ],
       ),
       body: SafeArea(
         child: ListView(
@@ -78,9 +98,9 @@ class _GroupsPageState extends State<GroupsPage> {
                         .travelGroups
                         .length,
                     itemBuilder: (context, index) {
-                      final travelGroup =
-                          Provider.of<TravelGroupProvider>(context)
-                              .travelGroups[index];
+                      final travelGroup = Provider.of<TravelGroupProvider>(
+                        context,
+                      ).travelGroups[index];
                       return Container(
                         margin: EdgeInsets.symmetric(horizontal: 10),
                         decoration: BoxDecoration(
@@ -175,7 +195,7 @@ class _GroupsPageState extends State<GroupsPage> {
 }
 
 void formGroup(BuildContext context) {
-  final groupData = Provider.of<GroupProvider>(context);
+  final groupData = Provider.of<GroupProvider>(context, listen: false);
   final TextEditingController textController = TextEditingController();
   showModalBottomSheet(
     shape: const RoundedRectangleBorder(
@@ -228,7 +248,7 @@ void formGroup(BuildContext context) {
 }
 
 void showAddFriendDialog(BuildContext context) {
-  final groupData = Provider.of<GroupProvider>(context);
+  final groupData = Provider.of<GroupProvider>(context, listen: false);
   showDialog(
       context: context,
       builder: (context) {

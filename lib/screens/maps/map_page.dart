@@ -19,25 +19,6 @@ class MapPage extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Theme.of(context).primaryColor,
         title: const Text('Map'),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.people_alt_outlined),
-            onPressed: () {
-              showModalBottomSheet(
-                shape: const RoundedRectangleBorder(
-                  borderRadius: BorderRadius.vertical(
-                    top: Radius.circular(20),
-                  ),
-                ),
-                context: context,
-                builder: (context) => Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: const FriendsPage(),
-                ),
-              );
-            },
-          ),
-        ],
       ),
       body: CarouselSlider(
         options: CarouselOptions(

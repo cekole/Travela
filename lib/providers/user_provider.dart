@@ -80,6 +80,8 @@ class UserProvider with ChangeNotifier {
         'Content-Type': 'application/json',
       },
     );
+    print(response.statusCode);
+    print(response.body);
   }
 
   Future acceptFriendRequest(String id, String friendId) async {

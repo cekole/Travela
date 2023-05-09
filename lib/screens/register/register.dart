@@ -197,8 +197,9 @@ class _RegisterPageState extends State<RegisterPage> {
                             height: 20,
                           ),
                           ElevatedButton(
-                            onPressed: () => Navigator.pushReplacementNamed(
-                                context, '/questionnaire'),
+                            onPressed: () {
+                              handleSignUp();
+                            },
                             child: Text(
                               'Sign Up',
                               style: TextStyle(color: Colors.grey.shade700),
@@ -261,8 +262,8 @@ class _RegisterPageState extends State<RegisterPage> {
         password: passwordController.text,
       )
           .then((value) {
-        if (value) {
-          Navigator.pushReplacementNamed(context, '/home');
+        if (value && usernameController.text != '') {
+          Navigator.pushReplacementNamed(context, '/questionnaire');
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
