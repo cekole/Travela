@@ -50,7 +50,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            currentUser.name,
+                            currentUser.username,
                             style: TextStyle(
                               color: Colors.white,
                               fontSize: 20,
@@ -112,22 +112,6 @@ class _ProfilePageState extends State<ProfilePage> {
                           ),
                           Text(
                             'Trips',
-                            style: TextStyle(color: Colors.white),
-                          ),
-                        ],
-                      ),
-                      Column(
-                        children: [
-                          Text(
-                            '7',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          Text(
-                            'Places',
                             style: TextStyle(color: Colors.white),
                           ),
                         ],

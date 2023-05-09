@@ -121,9 +121,8 @@ class _GroupsPageState extends State<GroupsPage> {
                                       ...travelGroup.participants
                                           .map(
                                             (member) => ListTile(
-                                              title: Text(member.name),
-                                              subtitle: Text(
-                                                  '${member.country.countryName}'),
+                                              title: Text(member.username),
+                                              subtitle: Text(member.email),
                                             ),
                                           )
                                           .toList(),

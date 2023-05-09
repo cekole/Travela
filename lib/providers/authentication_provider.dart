@@ -101,11 +101,18 @@ class AuthenticationProvider with ChangeNotifier {
         id: '',
         name: name!,
         email: email!,
-        messages: [],
-        country: Country(
-          countryName: 'Turkey',
-          cities: [],
-        ),
+        username: username!,
+        travelGroups: [],
+        incomingGroupInvitations: [],
+        tripsArchived: [],
+        tripsShared: [],
+        pastTrips: [],
+        friends: [],
+        incomingFriendRequests: [],
+        outgoingFriendRequests: [],
+        availableFrom: DateTime.now(),
+        availableTo: DateTime.now(),
+        visitedCities: [],
       );
     } else {
       print('token is null');
