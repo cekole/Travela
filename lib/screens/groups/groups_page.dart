@@ -231,87 +231,65 @@ void showAddFriendDialog(BuildContext context) {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10),
           ),
-          title: Text('Invite Members'),
+          title: Text('Add Members'),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              TextField(
-                decoration: InputDecoration(
-                  hintText: 'Enter username',
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(25),
-                  ),
-                ),
-              ),
               const SizedBox(
                 height: 10,
               ),
-              ExpansionTile(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
-                  side: BorderSide(
-                    color: Colors.grey,
-                  ),
-                ),
-                title: Text('Friends'),
-                children: [
-                  Container(
-                    width: double.maxFinite,
-                    height: MediaQuery.of(context).size.height * 0.15,
-                    child: ListView(
-                      children: [
-                        ListTile(
-                          leading: CircleAvatar(
-                            backgroundImage: NetworkImage(
-                                'https://images.unsplash.com/photo-1616166330073-8e1b5e1b5f1c?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60'),
-                          ),
-                          title: Text('Yağmur Eryılmaz'),
-                          trailing: IconButton(
-                            onPressed: () {},
-                            icon: Icon(Icons.add),
-                          ),
-                        ),
-                        ListTile(
-                          leading: CircleAvatar(
-                            backgroundImage: NetworkImage(
-                                'https://images.unsplash.com/photo-1616166330073-8e1b5e1b5f1c?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60'),
-                          ),
-                          title: Text('Efe Şaman'),
-                          trailing: IconButton(
-                            onPressed: () {},
-                            icon: Icon(Icons.add),
-                          ),
-                        ),
-                        ListTile(
-                          leading: CircleAvatar(
-                            backgroundImage: NetworkImage(
-                                'https://images.unsplash.com/photo-1616166330073-8e1b5e1b5f1c?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60'),
-                          ),
-                          title: Text('Çağla Ataoğlu'),
-                          trailing: IconButton(
-                            onPressed: () {},
-                            icon: Icon(Icons.add),
-                          ),
-                        ),
-                        ListTile(
-                          leading: CircleAvatar(
-                            backgroundImage: NetworkImage(
-                                'https://images.unsplash.com/photo-1616166330073-8e1b5e1b5f1c?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60'),
-                          ),
-                          title: Text('Efe Ertürk'),
-                          trailing: IconButton(
-                            onPressed: () {},
-                            icon: Icon(Icons.add),
-                          ),
-                        ),
-                      ],
+              Container(
+                width: double.maxFinite,
+                height: MediaQuery.of(context).size.height * 0.15,
+                child: ListView(
+                  children: [
+                    ListTile(
+                      leading: CircleAvatar(
+                        backgroundImage: NetworkImage(
+                            'https://images.unsplash.com/photo-1616166330073-8e1b5e1b5f1c?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60'),
+                      ),
+                      title: Text('Yağmur Eryılmaz'),
+                      trailing: IconButton(
+                        onPressed: () {},
+                        icon: Icon(Icons.add),
+                      ),
                     ),
-                  ),
-                ],
-              ),
-              const SizedBox(
-                height: 10,
+                    ListTile(
+                      leading: CircleAvatar(
+                        backgroundImage: NetworkImage(
+                            'https://images.unsplash.com/photo-1616166330073-8e1b5e1b5f1c?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60'),
+                      ),
+                      title: Text('Efe Şaman'),
+                      trailing: IconButton(
+                        onPressed: () {},
+                        icon: Icon(Icons.add),
+                      ),
+                    ),
+                    ListTile(
+                      leading: CircleAvatar(
+                        backgroundImage: NetworkImage(
+                            'https://images.unsplash.com/photo-1616166330073-8e1b5e1b5f1c?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60'),
+                      ),
+                      title: Text('Çağla Ataoğlu'),
+                      trailing: IconButton(
+                        onPressed: () {},
+                        icon: Icon(Icons.add),
+                      ),
+                    ),
+                    ListTile(
+                      leading: CircleAvatar(
+                        backgroundImage: NetworkImage(
+                            'https://images.unsplash.com/photo-1616166330073-8e1b5e1b5f1c?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60'),
+                      ),
+                      title: Text('Efe Ertürk'),
+                      trailing: IconButton(
+                        onPressed: () {},
+                        icon: Icon(Icons.add),
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ],
           ),
