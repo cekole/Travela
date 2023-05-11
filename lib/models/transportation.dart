@@ -1,13 +1,17 @@
+import 'package:travela_mobile/models/city.dart';
+
 class Transportation {
-  final String startCity;
-  final String endCity;
-  final String transportationType; //transportationType enum normali
+  final String id;
+  final City startCity;
+  final City endCity;
+  final String transportationType;
   final String link;
   final int price;
-  final String startDate; //private Instant start;
-  final double duration;
+  final DateTime startDate; //private Instant start;
+  final Duration duration;
 
   Transportation({
+    required this.id,
     required this.startCity,
     required this.endCity,
     required this.transportationType,

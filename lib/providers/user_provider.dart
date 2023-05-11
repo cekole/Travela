@@ -3,11 +3,15 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:travela_mobile/appConstant.dart';
 import 'package:http/http.dart' as http;
 import 'package:travela_mobile/models/country.dart';
+import 'package:travela_mobile/models/travel_group.dart';
+import 'package:travela_mobile/models/trip.dart';
 import 'package:travela_mobile/models/user.dart';
+import 'package:travela_mobile/providers/group_provider.dart';
 
 class UserProvider with ChangeNotifier {
   Future getAllUsers() async {
@@ -31,16 +35,22 @@ class UserProvider with ChangeNotifier {
   }
 
   //getUserIdByUsername
-  getUserIdByUsername(String username) {
-    getAllUsers().then((value) {
-      for (var user in value) {
-        print(user['username']);
-        if (user['username'] == username) {
+  Future<void> getUserIdByUsername(String username) async {
+    final value = await getAllUsers();
+    for (var user in value) {
+      if (user['username'] == username) {
+        print(user['user_id']);
+        //if username is currentUsername below, else set friendId
+        if (username == currentUser.username) {
+          print('you are the user');
           userId = user['user_id'].toString();
+        } else {
+          print('you are not the user');
+          friendId = user['user_id'].toString();
         }
       }
       notifyListeners();
-    });
+    }
   }
 
   Future updateUserInfo(
@@ -83,7 +93,7 @@ class UserProvider with ChangeNotifier {
     }
   }
 
-  Future sendFriendRequest(String id, String friendId) async {
+  Future<void> sendFriendRequest(String id, String friendId) async {
     final url = baseUrl + 'users/$id/sendFriendRequest/$friendId';
     print(url);
     final response = await http.put(

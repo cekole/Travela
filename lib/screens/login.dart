@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
-import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import 'package:travela_mobile/providers/authentication_provider.dart';
 

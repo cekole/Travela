@@ -290,12 +290,9 @@ class TripsPage extends StatelessWidget {
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10),
                         ),
-                        title: Text(travelGroup.name),
+                        title: Text(travelGroup.groupName),
                         subtitle: Text(
-                          travelGroup.destinations
-                              .map((destination) =>
-                                  '${destination.city}, ${destination.country}')
-                              .join(' | '),
+                          travelGroup.commonStartDate.toString(),
                           overflow: TextOverflow.ellipsis,
                         ),
                       ),

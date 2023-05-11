@@ -33,7 +33,7 @@ class _HomePageState extends State<HomePage> {
     final userData = Provider.of<UserProvider>(context, listen: false);
     authenticationData.getCurrentUser().then(
       (value) {
-        userId = userData.getUserIdByUsername(currentUser.username).toString();
+        userData.getUserIdByUsername(currentUser.username);
       },
     );
   }

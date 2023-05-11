@@ -56,6 +56,13 @@ class _GroupsPageState extends State<GroupsPage> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    final groupData = Provider.of<GroupProvider>(context, listen: false);
+    groupData.fetchAndSetGroups();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       drawerEnableOpenDragGesture: false,
@@ -111,13 +118,12 @@ class _GroupsPageState extends State<GroupsPage> {
                       height: 10,
                     ),
                     shrinkWrap: true,
-                    itemCount: Provider.of<TravelGroupProvider>(context)
-                        .travelGroups
-                        .length,
+                    itemCount:
+                        Provider.of<GroupProvider>(context).groups.length,
                     itemBuilder: (context, index) {
-                      final travelGroup = Provider.of<TravelGroupProvider>(
+                      final travelGroup = Provider.of<GroupProvider>(
                         context,
-                      ).travelGroups[index];
+                      ).groups[index];
                       return Container(
                         margin: EdgeInsets.symmetric(horizontal: 10),
                         decoration: BoxDecoration(
@@ -129,6 +135,8 @@ class _GroupsPageState extends State<GroupsPage> {
                         ),
                         child: ExpansionTileCard(
                           onExpansionChanged: (value) {
+                            print(currentUser.username);
+                            print(currentUser.travelGroups[0].groupName);
                             setState(() {
                               _isExpandedGroup = value;
                             });
@@ -148,12 +156,9 @@ class _GroupsPageState extends State<GroupsPage> {
                               },
                             ),
                           ),
-                          title: Text(travelGroup.name),
+                          title: Text(travelGroup.groupName),
                           subtitle: Text(
-                            travelGroup.destinations
-                                .map((destination) =>
-                                    '${destination.city}, ${destination.country}')
-                                .join(' | '),
+                            travelGroup.commonStartDate.toString(),
                             overflow: TextOverflow.ellipsis,
                           ),
                           children: [
@@ -244,7 +249,6 @@ class _GroupsPageState extends State<GroupsPage> {
                               final userData = Provider.of<UserProvider>(
                                   context,
                                   listen: false);
-                              //date format to 2023-05-12
                               userData
                                   .setAvailableFrom(
                                 userId,
@@ -318,7 +322,7 @@ void formGroup(BuildContext context) {
               onPressed: () {
                 String groupName = textController.text;
                 showAddFriendDialog(context);
-                groupData.addGroup(groupName, currentUser.id);
+                groupData.addGroup(groupName, userId);
               },
               child: Text('Add Friends'),
             ),

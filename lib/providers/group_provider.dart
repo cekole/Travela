@@ -7,9 +7,64 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:travela_mobile/appConstant.dart';
 import 'package:http/http.dart' as http;
 import 'package:travela_mobile/models/country.dart';
+import 'package:travela_mobile/models/travel_group.dart';
 import 'package:travela_mobile/models/user.dart';
 
 class GroupProvider with ChangeNotifier {
+  List<TravelGroup> _groups = [];
+
+  List<TravelGroup> get groups {
+    return [..._groups];
+  }
+
+  Future<void> fetchAndSetGroups() async {
+    final url = baseUrl + 'groups';
+    print(url);
+    final response = await http.get(
+      Uri.parse(url),
+      headers: {
+        'Authorization': 'Bearer  $bearerToken',
+      },
+    );
+    print(response.statusCode);
+    print(response.body);
+    final List<TravelGroup> loadedGroups = [];
+    final extractedData = json.decode(response.body) as List<dynamic>;
+    if (extractedData == null) {
+      return;
+    }
+
+    extractedData.forEach(
+      (group) {
+        loadedGroups.add(
+          TravelGroup(
+            id: group['group_id'].toString(),
+            groupName: group['groupName'],
+            participants: [], //TODO: add participants
+            commonStartDate: group['commonStartDate'] ?? '',
+            commonEndDate: group['commonEndDate'] ?? '',
+            trips: [], //TODO: add trips
+          ),
+        );
+      },
+    );
+    _groups = loadedGroups;
+    notifyListeners();
+  }
+
+  Future<void> getGroupById(String groupId) async {
+    final url = baseUrl + 'groups/$groupId';
+    print(url);
+    final response = await http.get(
+      Uri.parse(url),
+      headers: {
+        'Authorization': 'Bearer  $bearerToken',
+      },
+    );
+    print(response.statusCode);
+    print(response.body);
+  }
+
   Future addGroup(String groupName, String ownerId) async {
     final url = baseUrl + 'groups';
     print(url);
