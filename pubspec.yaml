@@ -45,9 +45,9 @@ dependencies:
   bubble: ^1.2.1
   syncfusion_flutter_datepicker: ^21.1.41
   shared_preferences: ^2.1.0
-  get: ^4.6.5
   jwt_decoder: ^2.0.1
   intl: ^0.17.0
+  shimmer: ^2.0.0
 
 dev_dependencies:
   flutter_test:
