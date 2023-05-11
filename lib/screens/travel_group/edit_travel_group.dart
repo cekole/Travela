@@ -33,7 +33,7 @@ class _EditTravelGroupState extends State<EditTravelGroup> {
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
         backgroundColor: Theme.of(context).primaryColor,
-        title: Text(travelGroup.name),
+        title: Text(travelGroup.groupName),
         actions: [],
       ),
       body: SafeArea(

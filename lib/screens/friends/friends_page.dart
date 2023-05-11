@@ -27,6 +27,7 @@ class FriendsPage extends StatelessWidget {
             padding: const EdgeInsets.only(bottom: 16.0),
             child: FloatingActionButton(
               onPressed: () {
+                TextEditingController _controller = TextEditingController();
                 showDialog(
                     context: context,
                     builder: (context) {
@@ -36,12 +37,16 @@ class FriendsPage extends StatelessWidget {
                         ),
                         title: Text('Send a friend request'),
                         content: TextField(
+                          controller: _controller,
                           decoration: InputDecoration(
                             hintText: 'Enter username',
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(25),
                             ),
                           ),
+                          onSubmitted: (value) {
+                            print(value);
+                          },
                         ),
                         actions: [
                           TextButton(
@@ -54,10 +59,20 @@ class FriendsPage extends StatelessWidget {
                             onPressed: () {
                               print(currentUser.name);
                               print('$userId');
+                              print('friend username' + _controller.text);
+
                               final userData = Provider.of<UserProvider>(
                                   context,
                                   listen: false);
-                              userData.sendFriendRequest('$userId', '11');
+                              userData
+                                  .getUserIdByUsername(_controller.text)
+                                  .then(
+                                (value) {
+                                  print('friend id' + friendId);
+                                  userData.sendFriendRequest(userId, friendId);
+                                },
+                              );
+
                               Navigator.of(context).pop();
                             },
                             child: Text('Send'),

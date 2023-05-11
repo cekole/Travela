@@ -1,5 +1,6 @@
 import 'package:expansion_tile_card/expansion_tile_card.dart';
 import 'package:flutter/material.dart';
+import 'package:travela_mobile/appConstant.dart';
 
 class RequestCard extends StatelessWidget {
   const RequestCard({
@@ -18,6 +19,7 @@ class RequestCard extends StatelessWidget {
         title: Text(title!),
         children: [
           Builder(builder: (context) {
+            print(currentUser.incomingFriendRequests);
             return ListTile(
               title: Text('Ahmet Yılmaz'),
               trailing: Row(
