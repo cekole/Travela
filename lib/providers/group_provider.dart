@@ -143,4 +143,118 @@ class GroupProvider with ChangeNotifier {
       print('removeUserFromGroup failed');
     }
   }
+
+  Future addTrip(String groupId, String cityId) async {
+    final url = baseUrl + 'groups/$groupId/trips/add/$cityId';
+    print(url);
+    final response = await http.put(
+      Uri.parse(url),
+      headers: {
+        'Authorization': 'Bearer  $bearerToken',
+        'Content-Type': 'application/json',
+      },
+    );
+    print(response.statusCode);
+    if (response.statusCode == 200) {
+      print('addTrip succeeded');
+      return json.decode(response.body);
+    } else {
+      print('addTrip failed');
+    }
+  }
+
+  Future getChat(String id) async {
+    final url = baseUrl + 'groups/$id/chat';
+    print(url);
+    final response = await http.get(
+      Uri.parse(url),
+      headers: {
+        'Authorization': 'Bearer  $bearerToken',
+        'Content-Type': 'application/json',
+      },
+    );
+    print(response.statusCode);
+    if (response.statusCode == 200) {
+      print('chat succeeded');
+      return json.decode(response.body);
+    } else {
+      print('chat failed');
+    }
+  }
+
+  Future sendMessage(String id) async {
+    final url = baseUrl + 'groups/$id/chat/send';
+    print(url);
+    final response = await http.put(
+      Uri.parse(url),
+      headers: {
+        'Authorization': 'Bearer  $bearerToken',
+        'Content-Type': 'application/json',
+      },
+    );
+    print(response.statusCode);
+    if (response.statusCode == 200) {
+      print('sendMessage succeeded');
+      return json.decode(response.body);
+    } else {
+      print('sendMessage failed');
+    }
+  }
+
+  Future getgetTripSuggestions(String id) async {
+    final url = baseUrl + 'groups/$id/trip-suggestions';
+    print(url);
+    final response = await http.get(
+      Uri.parse(url),
+      headers: {
+        'Authorization': 'Bearer  $bearerToken',
+        'Content-Type': 'application/json',
+      },
+    );
+    print(response.statusCode);
+    if (response.statusCode == 200) {
+      print('getgetTripSuggestions succeeded');
+      return json.decode(response.body);
+    } else {
+      print('getgetTripSuggestions failed');
+    }
+  }
+
+  Future updateCommonDates(String groupId) async {
+    final url = baseUrl + 'groups/$groupId/updateCommonDates';
+    print(url);
+    final response = await http.put(
+      Uri.parse(url),
+      headers: {
+        'Authorization': 'Bearer  $bearerToken',
+        'Content-Type': 'application/json',
+      },
+    );
+    print(response.statusCode);
+    if (response.statusCode == 200) {
+      print('updateCommonDates succeeded');
+      return json.decode(response.body);
+    } else {
+      print('updateCommonDates failed');
+    }
+  }
+
+  Future updateCommonCities(String groupId) async {
+    final url = baseUrl + 'groups/$groupId/updateCommonCities';
+    print(url);
+    final response = await http.put(
+      Uri.parse(url),
+      headers: {
+        'Authorization': 'Bearer  $bearerToken',
+        'Content-Type': 'application/json',
+      },
+    );
+    print(response.statusCode);
+    if (response.statusCode == 200) {
+      print('updateCommonCities succeeded');
+      return json.decode(response.body);
+    } else {
+      print('updateCommonCities failed');
+    }
+  }
 }
