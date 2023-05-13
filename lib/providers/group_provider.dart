@@ -286,8 +286,13 @@ class GroupProvider with ChangeNotifier {
     }
   }
 
-  Future sendMessage(String id) async {
-    final url = baseUrl + 'groups/$id/chat/send';
+  Future sendMessage(
+    String groupId,
+    String content,
+    String senderId,
+    DateTime timestamp,
+  ) async {
+    final url = baseUrl + 'groups/$groupId/chat/send';
     print(url);
     final response = await http.put(
       Uri.parse(url),
@@ -295,7 +300,15 @@ class GroupProvider with ChangeNotifier {
         'Authorization': 'Bearer  $bearerToken',
         'Content-Type': 'application/json',
       },
+      body: json.encode(
+        {
+          'content': content,
+          'senderId': senderId,
+          'timestamp': timestamp,
+        },
+      ),
     );
+
     print(response.statusCode);
     if (response.statusCode == 200) {
       print('sendMessage succeeded');
@@ -305,7 +318,7 @@ class GroupProvider with ChangeNotifier {
     }
   }
 
-  Future getgetTripSuggestions(String id) async {
+  Future<void> getTripSuggestions(String id) async {
     final url = baseUrl + 'groups/$id/trip-suggestions';
     print(url);
     final response = await http.get(
@@ -317,10 +330,20 @@ class GroupProvider with ChangeNotifier {
     );
     print(response.statusCode);
     if (response.statusCode == 200) {
-      print('getgetTripSuggestions succeeded');
-      return json.decode(response.body);
+      print('getTripSuggestions succeeded');
+      final extractedData = json.decode(response.body) as List<dynamic>;
+      if (extractedData == null) {
+        return;
+      }
+      final loadedSuggestions = [];
+      extractedData.forEach(
+        (suggestion) {
+          currentGroupSuggestions.add(suggestion);
+        },
+      );
+      notifyListeners();
     } else {
-      print('getgetTripSuggestions failed');
+      print('getTripSuggestions failed');
     }
   }
 
