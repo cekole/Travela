@@ -5,8 +5,10 @@ import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_chat_ui/flutter_chat_ui.dart';
 import 'package:provider/provider.dart';
+import 'package:travela_mobile/appConstant.dart';
 import 'package:travela_mobile/models/travel_group.dart';
 import 'package:travela_mobile/providers/destinations_provider.dart';
+import 'package:travela_mobile/providers/group_provider.dart';
 import 'package:travela_mobile/providers/recommendation_provider.dart';
 import 'package:travela_mobile/widgets/home/suggestions.dart';
 
@@ -19,13 +21,22 @@ class EditTravelGroup extends StatefulWidget {
 
 class _EditTravelGroupState extends State<EditTravelGroup> {
   TextEditingController _searchController = TextEditingController();
+  final TextEditingController chatController = TextEditingController();
   RangeValues _currentPriceRangeValues = const RangeValues(40, 80);
   RangeValues _currentRatingRangeValues = const RangeValues(3, 5);
   RangeValues _currentDistanceRangeValues = const RangeValues(0, 1000);
   String _currentSeason = 'Summer';
 
   @override
+  void dispose() {
+    chatController.dispose();
+    _searchController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final groupData = Provider.of<GroupProvider>(context, listen: false);
     final Size size = MediaQuery.of(context).size;
     final travelGroup =
         ModalRoute.of(context)!.settings.arguments as TravelGroup;
@@ -157,6 +168,7 @@ class _EditTravelGroupState extends State<EditTravelGroup> {
                   children: [
                     Expanded(
                       child: TextField(
+                        controller: chatController,
                         decoration: InputDecoration(
                           hintText: 'Type a message',
                           border: InputBorder.none,
@@ -167,7 +179,14 @@ class _EditTravelGroupState extends State<EditTravelGroup> {
                       ),
                     ),
                     IconButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        groupData.sendMessage(
+                          chatController.text,
+                          travelGroup.id,
+                          currentUser.id,
+                          DateTime.now(),
+                        );
+                      },
                       icon: Icon(Icons.send),
                     ),
                   ],
