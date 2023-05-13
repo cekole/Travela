@@ -10,7 +10,7 @@ import 'package:travela_mobile/models/travel_group.dart';
 import 'package:travela_mobile/providers/destinations_provider.dart';
 import 'package:travela_mobile/providers/group_provider.dart';
 import 'package:travela_mobile/providers/recommendation_provider.dart';
-import 'package:travela_mobile/widgets/home/suggestions.dart';
+import 'package:travela_mobile/widgets/group/suggestionsForGroup.dart';
 
 class EditTravelGroup extends StatefulWidget {
   const EditTravelGroup({Key? key}) : super(key: key);
@@ -193,7 +193,7 @@ class _EditTravelGroupState extends State<EditTravelGroup> {
                 ),
               ),
               SizedBox(height: 20),
-              SuggestionsForYou(),
+              SuggestionsForGroup(),
               Row(children: <Widget>[
                 Expanded(
                     child: Divider(

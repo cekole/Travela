@@ -338,7 +338,7 @@ class GroupProvider with ChangeNotifier {
       final loadedSuggestions = [];
       extractedData.forEach(
         (suggestion) {
-          currentSuggestions.add(suggestion);
+          currentGroupSuggestions.add(suggestion);
         },
       );
       notifyListeners();

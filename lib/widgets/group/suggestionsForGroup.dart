@@ -5,15 +5,15 @@ import 'package:travela_mobile/providers/destinations_provider.dart';
 import 'package:travela_mobile/providers/group_provider.dart';
 import 'package:travela_mobile/widgets/home/place_card.dart';
 
-class SuggestionsForYou extends StatelessWidget {
-  const SuggestionsForYou({
+class SuggestionsForGroup extends StatelessWidget {
+  const SuggestionsForGroup({
     Key? key,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final groupData = Provider.of<GroupProvider>(context, listen: true);
-    //groupData.getTripSuggestions(userId); //bunun user için olanı çağırılacak
+    groupData.getTripSuggestions(userId);
 
     return Column(
       children: [
@@ -44,12 +44,12 @@ class SuggestionsForYou extends StatelessWidget {
           height: MediaQuery.of(context).size.height * 0.25,
           child: ListView.builder(
             scrollDirection: Axis.horizontal,
-            itemCount: currentUserSuggestions.length,
+            itemCount: currentGroupSuggestions.length,
             itemBuilder: (context, index) {
               return PlaceCard(
                 destination:
-                    '${currentUserSuggestions[index].city}, ${currentUserSuggestions[index].country}',
-                image: currentUserSuggestions[index].imageUrl,
+                    '${currentGroupSuggestions[index].city}, ${currentGroupSuggestions[index].country}',
+                image: currentGroupSuggestions[index].imageUrl,
               );
             },
           ),

@@ -16,7 +16,8 @@ String currentGroupId = '';
 List currentGroupUsernames = [];
 List currentGroupTrips = [];
 
-List currentSuggestions = [];
+List currentGroupSuggestions = [];
+List currentUserSuggestions = [];
 
 User currentUser = User(
   id: '',

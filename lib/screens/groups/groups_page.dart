@@ -302,6 +302,23 @@ void formGroup(BuildContext context) {
             ElevatedButton(
               onPressed: () {
                 String groupName = textController.text;
+                if (groupName.isEmpty) {
+                  AlertDialog(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    title: Text('Error'),
+                    content: Text('Group name cannot be empty'),
+                    actions: [
+                      TextButton(
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                        child: Text('OK'),
+                      ),
+                    ],
+                  );
+                }
                 groupData
                     .addGroup(
                       groupName,

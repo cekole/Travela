@@ -38,7 +38,7 @@ class FriendsPage extends StatelessWidget {
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10),
                         ),
-                        title: Text('Send a friend request'),
+                        title: Text('Send friend request'),
                         content: TextField(
                           controller: _controller,
                           decoration: InputDecoration(
