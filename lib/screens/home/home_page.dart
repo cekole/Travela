@@ -33,7 +33,12 @@ class _HomePageState extends State<HomePage> {
     final userData = Provider.of<UserProvider>(context, listen: false);
     authenticationData.getCurrentUser().then(
       (value) {
-        userData.getUserIdByUsername(currentUser.username);
+        userData.getUserIdByUsername(currentUser.username).then(
+          (value) {
+            userData.getAllFriends();
+            userData.getAllIncomingRequests();
+          },
+        );
       },
     );
   }

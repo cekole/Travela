@@ -6,20 +6,16 @@ import 'package:travela_mobile/models/user.dart';
 String userId = '';
 String friendId = '';
 
-var currentUsername = '';
-var currentEmail = '';
-var currentName = '';
-List<TravelGroup> currentTravelGroups = [];
-var currentIncomingGroupInvitations = [];
-var currentTripsArchived = [];
-var currentTripsShared = [];
-var currentPastTrips = [];
-var currentFriends = [];
-var currentIncomingFriendRequests = [];
-var currentOutgoingFriendRequests = [];
-var currentAvailableFrom = '';
-var currentAvailableTo = '';
-var currentVisitedCities = [];
+List currentFriendIds = [];
+List currentFriendUsernames = [];
+
+List currentRequestUsernames = [];
+List currentRequestIds = [];
+
+String currentGroupId = '';
+List currentGroupUsernames = [];
+List currentGroupTrips = [];
+
 User currentUser = User(
   id: '',
   username: '',

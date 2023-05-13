@@ -130,7 +130,7 @@ class DestinationsProvider with ChangeNotifier {
           description:
               city['cityDescription'] == null ? '' : city['cityDescription'],
           imageUrl: city['cityImageURL'] == null ? '' : city['cityImageURL'],
-          activities: [...city['activities']],
+          activities: city['activities'] == null ? [] : city['activities'],
           iataCode: city['iata_code'],
           latitude: city['latitude'],
           longitude: city['longitude'],

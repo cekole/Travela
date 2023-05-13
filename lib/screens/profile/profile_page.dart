@@ -85,7 +85,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       Column(
                         children: [
                           Text(
-                            '12',
+                            currentFriendIds.length.toString(),
                             style: TextStyle(
                               color: Colors.white,
                               fontSize: 20,

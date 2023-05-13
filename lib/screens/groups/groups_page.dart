@@ -59,7 +59,7 @@ class _GroupsPageState extends State<GroupsPage> {
   void initState() {
     super.initState();
     final groupData = Provider.of<GroupProvider>(context, listen: false);
-    groupData.fetchAndSetGroups();
+    groupData.fetchAndSetGroupsByUserId(userId);
   }
 
   @override
@@ -100,181 +100,162 @@ class _GroupsPageState extends State<GroupsPage> {
           ),
         ],
       ),
-      body: SafeArea(
-        child: ListView(
-          children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+      body: ListView(
+        children: [
+          ListView.separated(
+            physics: NeverScrollableScrollPhysics(),
+            separatorBuilder: (context, index) => SizedBox(
+              height: 10,
+            ),
+            shrinkWrap: true,
+            itemCount: Provider.of<GroupProvider>(context).groups.length,
+            itemBuilder: (context, index) {
+              final travelGroup = Provider.of<GroupProvider>(
+                context,
+              ).groups[index];
+              return Container(
+                margin: EdgeInsets.symmetric(horizontal: 10),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(10),
+                  ),
+                  color: Theme.of(context).primaryColor.withOpacity(0.2),
+                ),
+                child: ExpansionTileCard(
+                  onExpansionChanged: (value) {
+                    final groupData = Provider.of<GroupProvider>(
+                      context,
+                      listen: false,
+                    );
+                    final groupNames =
+                        groupData.getParticipants(travelGroup.id).then((value) {
+                      print(currentGroupUsernames);
+                    });
+                    setState(() {
+                      _isExpandedGroup = value;
+                    });
+                  },
+                  baseColor: Theme.of(context).backgroundColor.withOpacity(0.2),
+                  leading: CircleAvatar(
+                    backgroundColor: Theme.of(context).backgroundColor,
+                    child: IconButton(
+                      icon: Icon(Icons.edit),
+                      onPressed: () {
+                        Navigator.of(context).pushNamed(
+                          '/edit_travel_group',
+                          arguments: travelGroup,
+                        );
+                      },
+                    ),
+                  ),
+                  title: Text(travelGroup.groupName),
+                  subtitle: Text(
+                    travelGroup.commonStartDate.toString(),
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  children: [
+                    Builder(
+                      builder: (context) {
+                        return SingleChildScrollView(
+                          child: Column(
+                            children: [
+                              ...currentGroupUsernames
+                                  .map((username) => ListTile(
+                                        title: Text(username),
+                                      ))
+                                  .toList(),
+                            ],
+                          ),
+                        );
+                      },
+                    ),
+                  ],
+                ),
+              );
+            },
+          ),
+          Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.all(
+                Radius.circular(5),
+              ),
+              color: Theme.of(context).primaryColor.withOpacity(0.2),
+            ),
+            margin: EdgeInsets.all(10),
+            child: ExpansionTileCard(
+              onExpansionChanged: (value) {
+                setState(() {
+                  _isExpandedCalendar = value;
+                });
+              },
+              borderRadius: BorderRadius.circular(10),
+              baseColor: Theme.of(context).backgroundColor.withOpacity(0.2),
+              title: const Text('Select Date'),
               children: [
-                Divider(
-                  height: 10,
-                  thickness: 2,
-                ),
-                MediaQuery.removePadding(
-                  context: context,
-                  removeTop: true,
-                  child: ListView.separated(
-                    separatorBuilder: (context, index) => SizedBox(
-                      height: 10,
-                    ),
-                    shrinkWrap: true,
-                    itemCount:
-                        Provider.of<GroupProvider>(context).groups.length,
-                    itemBuilder: (context, index) {
-                      final travelGroup = Provider.of<GroupProvider>(
-                        context,
-                      ).groups[index];
-                      return Container(
-                        margin: EdgeInsets.symmetric(horizontal: 10),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(10),
-                          ),
-                          color:
-                              Theme.of(context).primaryColor.withOpacity(0.2),
-                        ),
-                        child: ExpansionTileCard(
-                          onExpansionChanged: (value) {
-                            print(currentUser.username);
-                            print(currentUser.travelGroups[0].groupName);
-                            setState(() {
-                              _isExpandedGroup = value;
-                            });
-                          },
-                          baseColor: Theme.of(context)
-                              .backgroundColor
-                              .withOpacity(0.2),
-                          leading: CircleAvatar(
-                            backgroundColor: Theme.of(context).backgroundColor,
-                            child: IconButton(
-                              icon: Icon(Icons.edit),
-                              onPressed: () {
-                                Navigator.of(context).pushNamed(
-                                  '/edit_travel_group',
-                                  arguments: travelGroup,
-                                );
-                              },
-                            ),
-                          ),
-                          title: Text(travelGroup.groupName),
-                          subtitle: Text(
-                            travelGroup.commonStartDate.toString(),
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                          children: [
-                            Builder(
-                              builder: (context) {
-                                return SingleChildScrollView(
-                                  child: Column(
-                                    children: [
-                                      ...travelGroup.participants
-                                          .map(
-                                            (member) => ListTile(
-                                              title: Text(member.username),
-                                              subtitle: Text(member.email),
-                                            ),
-                                          )
-                                          .toList(),
-                                    ],
-                                  ),
-                                );
-                              },
-                            ),
-                          ],
-                        ),
-                      );
-                    },
-                  ),
-                ),
                 Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.all(
-                      Radius.circular(5),
-                    ),
-                    color: Theme.of(context).primaryColor.withOpacity(0.2),
-                  ),
-                  margin: EdgeInsets.all(10),
-                  child: ExpansionTileCard(
-                    onExpansionChanged: (value) {
-                      setState(() {
-                        _isExpandedCalendar = value;
-                      });
-                    },
-                    borderRadius: BorderRadius.circular(10),
-                    baseColor:
-                        Theme.of(context).backgroundColor.withOpacity(0.2),
-                    title: const Text('Select Date'),
+                  child: Row(
                     children: [
-                      Container(
-                        child: Row(
-                          children: [
-                            Expanded(
-                              child: ListTile(
-                                title: Text(
-                                  'Start Date: ${DateFormat.yMMMd().format(rangeStartDate)}',
-                                ),
-                              ),
-                            ),
-                            Expanded(
-                              child: ListTile(
-                                title: Text(
-                                  'End Date: ${DateFormat.yMMMd().format(rangeEndDate)}',
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      SfDateRangePicker(
-                        controller: _dateRangePickerController,
-                        headerStyle: DateRangePickerHeaderStyle(
-                          textAlign: TextAlign.center,
-                        ),
-                        enablePastDates: false,
-                        onSelectionChanged: _onSelectionChanged,
-                        selectionMode: DateRangePickerSelectionMode.range,
-                        initialSelectedRange: PickerDateRange(
-                          _currentStartDate,
-                          _currentEndDate,
-                        ),
-                        startRangeSelectionColor:
-                            Theme.of(context).primaryColor,
-                        endRangeSelectionColor: Theme.of(context).primaryColor,
-                      ),
-                      Row(
-                        children: [
-                          Spacer(),
-                          TextButton(
-                            onPressed: () {
-                              final userData = Provider.of<UserProvider>(
-                                  context,
-                                  listen: false);
-                              userData
-                                  .setAvailableFrom(
-                                userId,
-                                DateFormat('yyyy-MM-dd').format(rangeStartDate),
-                              )
-                                  .then(
-                                (value) {
-                                  userData.setAvailableTo(
-                                    userId,
-                                    DateFormat('yyyy-MM-dd')
-                                        .format(rangeEndDate),
-                                  );
-                                },
-                              );
-                            },
-                            child: Text('Apply'),
+                      Expanded(
+                        child: ListTile(
+                          title: Text(
+                            'Start Date: ${DateFormat.yMMMd().format(rangeStartDate)}',
                           ),
-                        ],
-                      )
+                        ),
+                      ),
+                      Expanded(
+                        child: ListTile(
+                          title: Text(
+                            'End Date: ${DateFormat.yMMMd().format(rangeEndDate)}',
+                          ),
+                        ),
+                      ),
                     ],
                   ),
                 ),
+                SfDateRangePicker(
+                  controller: _dateRangePickerController,
+                  headerStyle: DateRangePickerHeaderStyle(
+                    textAlign: TextAlign.center,
+                  ),
+                  enablePastDates: false,
+                  onSelectionChanged: _onSelectionChanged,
+                  selectionMode: DateRangePickerSelectionMode.range,
+                  initialSelectedRange: PickerDateRange(
+                    _currentStartDate,
+                    _currentEndDate,
+                  ),
+                  startRangeSelectionColor: Theme.of(context).primaryColor,
+                  endRangeSelectionColor: Theme.of(context).primaryColor,
+                ),
+                Row(
+                  children: [
+                    Spacer(),
+                    TextButton(
+                      onPressed: () {
+                        final userData =
+                            Provider.of<UserProvider>(context, listen: false);
+                        userData
+                            .setAvailableFrom(
+                          userId,
+                          DateFormat('yyyy-MM-dd').format(rangeStartDate),
+                        )
+                            .then(
+                          (value) {
+                            userData.setAvailableTo(
+                              userId,
+                              DateFormat('yyyy-MM-dd').format(rangeEndDate),
+                            );
+                          },
+                        );
+                      },
+                      child: Text('Apply'),
+                    ),
+                  ],
+                )
               ],
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
@@ -321,10 +302,16 @@ void formGroup(BuildContext context) {
             ElevatedButton(
               onPressed: () {
                 String groupName = textController.text;
-                showAddFriendDialog(context);
-                groupData.addGroup(groupName, userId);
+                groupData
+                    .addGroup(
+                      groupName,
+                      userId,
+                    )
+                    .then(
+                      (value) => showAddFriendDialog(context),
+                    );
               },
-              child: Text('Add Friends'),
+              child: Text('Create Group'),
             ),
           ],
         ),
@@ -334,7 +321,6 @@ void formGroup(BuildContext context) {
 }
 
 void showAddFriendDialog(BuildContext context) {
-  final groupData = Provider.of<GroupProvider>(context, listen: false);
   showDialog(
       context: context,
       builder: (context) {
@@ -353,71 +339,38 @@ void showAddFriendDialog(BuildContext context) {
               Container(
                 width: double.maxFinite,
                 height: MediaQuery.of(context).size.height * 0.15,
-                child: ListView(
-                  children: [
-                    ListTile(
-                      leading: CircleAvatar(
-                        backgroundImage: NetworkImage(
-                            'https://images.unsplash.com/photo-1616166330073-8e1b5e1b5f1c?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60'),
+                child: ListView.separated(
+                  separatorBuilder: (context, index) => SizedBox(height: 10),
+                  itemCount: currentFriendIds.length,
+                  itemBuilder: (context, index) {
+                    return ListTile(
+                      title: Text(
+                        currentFriendUsernames[index],
                       ),
-                      title: Text('Yağmur Eryılmaz'),
                       trailing: IconButton(
-                        onPressed: () {},
                         icon: Icon(Icons.add),
+                        onPressed: () {
+                          final groupData = Provider.of<GroupProvider>(
+                            context,
+                            listen: false,
+                          );
+                          groupData.getGroupByUserId(userId).then(
+                                (value) => groupData.addUserToGroup(
+                                  currentGroupId,
+                                  currentFriendIds[index].toString(),
+                                ),
+                              );
+
+                          /* groupData.addUserToGroup(
+                              groupData.groups.last.id, userId); */
+                        },
                       ),
-                    ),
-                    ListTile(
-                      leading: CircleAvatar(
-                        backgroundImage: NetworkImage(
-                            'https://images.unsplash.com/photo-1616166330073-8e1b5e1b5f1c?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60'),
-                      ),
-                      title: Text('Efe Şaman'),
-                      trailing: IconButton(
-                        onPressed: () {},
-                        icon: Icon(Icons.add),
-                      ),
-                    ),
-                    ListTile(
-                      leading: CircleAvatar(
-                        backgroundImage: NetworkImage(
-                            'https://images.unsplash.com/photo-1616166330073-8e1b5e1b5f1c?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60'),
-                      ),
-                      title: Text('Çağla Ataoğlu'),
-                      trailing: IconButton(
-                        onPressed: () {},
-                        icon: Icon(Icons.add),
-                      ),
-                    ),
-                    ListTile(
-                      leading: CircleAvatar(
-                        backgroundImage: NetworkImage(
-                            'https://images.unsplash.com/photo-1616166330073-8e1b5e1b5f1c?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60'),
-                      ),
-                      title: Text('Efe Ertürk'),
-                      trailing: IconButton(
-                        onPressed: () {},
-                        icon: Icon(Icons.add),
-                      ),
-                    ),
-                  ],
+                    );
+                  },
                 ),
               ),
             ],
           ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: Text('Cancel'),
-            ),
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: Text('Create'),
-            ),
-          ],
         );
       });
 }

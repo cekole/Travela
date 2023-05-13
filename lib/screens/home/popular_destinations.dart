@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:travela_mobile/models/destination.dart';
 import 'package:travela_mobile/widgets/home/place_card.dart';
 import 'package:travela_mobile/widgets/home/popular_places.dart';
 
@@ -9,71 +10,46 @@ class PopularDestinations extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final destinations =
+        ModalRoute.of(context)!.settings.arguments as Set<List<Destination>>;
+    //get the list of destinations from the arguments
+    final List<Destination> destinationList = destinations.toList()[0];
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).primaryColor,
-        title: const Text('Favorite Destinations'),
+        title: const Text('Popular Destinations'),
       ),
-      body: Column(
-        children: [
-          Row(
+      body: ListView.separated(
+        separatorBuilder: (context, index) => Divider(
+          color: Colors.grey,
+          thickness: 1,
+        ),
+        itemCount: destinationList.length,
+        itemBuilder: (context, index) {
+          return Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Container(
                 padding: const EdgeInsets.all(4.0),
                 height: MediaQuery.of(context).size.height * 0.25,
                 child: PlaceCard(
-                  destination: 'Paris, France',
-                  image: 'assets/images/destinations/destination_1.jpeg',
+                  destination:
+                      '${destinationList[index].city}, ${destinationList[index].country}',
+                  image: destinationList[index].imageUrl,
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.only(top: 16.0),
+              Expanded(
                 child: Text(
-                  'Paris is the capital city of France',
+                  destinationList[index].description,
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
             ],
-          ),
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Container(
-                padding: const EdgeInsets.all(4.0),
-                height: MediaQuery.of(context).size.height * 0.25,
-                child: PlaceCard(
-                  destination: 'London, UK',
-                  image: 'assets/images/destinations/destination_2.jpeg',
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(top: 16.0),
-                child: Text(
-                  'London is the capital city of the UK',
-                ),
-              ),
-            ],
-          ),
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Container(
-                padding: const EdgeInsets.all(4.0),
-                height: MediaQuery.of(context).size.height * 0.25,
-                child: PlaceCard(
-                  destination: 'New York, USA',
-                  image: 'assets/images/destinations/destination_3.jpeg',
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(top: 16.0),
-                child: Text(
-                  'New York is the capital city of USA',
-                ),
-              ),
-            ],
-          ),
-        ],
+          );
+        },
       ),
     );
   }

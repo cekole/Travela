@@ -14,15 +14,18 @@ class FriendsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       height: MediaQuery.of(context).size.height,
-      child: Column(
+      child: ListView(
         children: [
           FriendCard(
             title: 'Friends',
+            friendNames: currentFriendUsernames,
+            friendIds: currentFriendIds,
           ),
           RequestCard(
             title: 'Requests',
+            requestNames: currentRequestUsernames,
+            requestIds: currentRequestIds,
           ),
-          Spacer(),
           Padding(
             padding: const EdgeInsets.only(bottom: 16.0),
             child: FloatingActionButton(
@@ -69,11 +72,59 @@ class FriendsPage extends StatelessWidget {
                                   .then(
                                 (value) {
                                   print('friend id' + friendId);
-                                  userData.sendFriendRequest(userId, friendId);
+                                  userData
+                                      .sendFriendRequest(userId, friendId)
+                                      .then((value) {
+                                    Navigator.of(context).pop();
+                                    if (value) {
+                                      showDialog(
+                                          context: context,
+                                          builder: (context) {
+                                            return AlertDialog(
+                                              shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(10),
+                                              ),
+                                              title: Text('Success'),
+                                              content: Text(
+                                                  'Friend request sent successfully'),
+                                              actions: [
+                                                TextButton(
+                                                  onPressed: () {
+                                                    Navigator.of(context).pop();
+                                                  },
+                                                  child: Text('Ok'),
+                                                ),
+                                              ],
+                                            );
+                                          });
+                                    } else {
+                                      showDialog(
+                                          context: context,
+                                          builder: (context) {
+                                            return AlertDialog(
+                                              shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(10),
+                                              ),
+                                              title: Text('Error'),
+                                              content: Text(
+                                                  'An error occured while sending friend request'),
+                                              actions: [
+                                                TextButton(
+                                                  onPressed: () {
+                                                    Navigator.of(context).pop();
+                                                  },
+                                                  child: Text('Ok'),
+                                                ),
+                                              ],
+                                            );
+                                          });
+                                    }
+                                  });
                                 },
                               );
-
-                              Navigator.of(context).pop();
+                              //
                             },
                             child: Text('Send'),
                           ),

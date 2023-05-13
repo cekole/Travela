@@ -24,7 +24,6 @@ class UserProvider with ChangeNotifier {
         'Content-Type': 'application/json',
       },
     );
-    print(response.statusCode);
 
     if (response.statusCode == 200) {
       print('get all users success');
@@ -93,7 +92,69 @@ class UserProvider with ChangeNotifier {
     }
   }
 
-  Future<void> sendFriendRequest(String id, String friendId) async {
+  Future getAllFriends() async {
+    final url = baseUrl + 'users/$userId/friends';
+    print(url);
+    final response = await http.get(
+      Uri.parse(url),
+      headers: {
+        'Authorization': 'Bearer  $bearerToken',
+        'Content-Type': 'application/json',
+      },
+    );
+    print(response.statusCode);
+    print(response.body);
+    //extract username and id of friends and set to currentFriendIds and currentFriendUsernames
+
+    if (response.statusCode == 200) {
+      print('get all friends success');
+      final extractedData = json.decode(response.body) as List<dynamic>;
+      extractedData.forEach((friend) {
+        //if currentFriendIds contains friend['user_id'], do not add
+        if (currentFriendIds.contains(friend['user_id'])) {
+          print('friend not added');
+        } else {
+          currentFriendUsernames.add(friend['username']);
+          currentFriendIds.add(friend['user_id']);
+        }
+      });
+      notifyListeners();
+    } else {
+      print('get all friends failed');
+    }
+  }
+
+  Future getAllIncomingRequests() async {
+    final url = baseUrl + 'users/$userId/incomingfriendRequests';
+    print(url);
+    final response = await http.get(
+      Uri.parse(url),
+      headers: {
+        'Authorization': 'Bearer  $bearerToken',
+        'Content-Type': 'application/json',
+      },
+    );
+    print(response.statusCode);
+    print(response.body);
+
+    if (response.statusCode == 200) {
+      print('get all incoming requests success');
+      final extractedData = json.decode(response.body) as List<dynamic>;
+      extractedData.forEach((request) {
+        if (currentRequestIds.contains(request['user_id'])) {
+          print('request not added');
+        } else {
+          currentRequestIds.add(request['user_id']);
+          currentRequestUsernames.add(request['username']);
+        }
+      });
+      notifyListeners();
+    } else {
+      print('get all incoming requests failed');
+    }
+  }
+
+  Future<bool> sendFriendRequest(String id, String friendId) async {
     final url = baseUrl + 'users/$id/sendFriendRequest/$friendId';
     print(url);
     final response = await http.put(
@@ -105,6 +166,11 @@ class UserProvider with ChangeNotifier {
     );
     print(response.statusCode);
     print(response.body);
+    if (response.statusCode == 200) {
+      return true;
+    } else {
+      return false;
+    }
   }
 
   Future acceptFriendRequest(String id, String friendId) async {
@@ -117,6 +183,7 @@ class UserProvider with ChangeNotifier {
         'Content-Type': 'application/json',
       },
     );
+    print(response.statusCode);
   }
 
   Future rejectFriendRequest(String id, String friendId) async {
@@ -129,6 +196,7 @@ class UserProvider with ChangeNotifier {
         'Content-Type': 'application/json',
       },
     );
+    print(response.statusCode);
   }
 
   Future removeFriend(String id, String friendId) async {

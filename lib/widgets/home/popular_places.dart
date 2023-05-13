@@ -27,7 +27,9 @@ class PopularPlaces extends StatelessWidget {
             ),
             TextButton(
               onPressed: () {
-                Navigator.pushNamed(context, '/popular');
+                Navigator.pushNamed(context, '/popular', arguments: {
+                  destinationsData.destinations.toList(),
+                });
               },
               child: Text(
                 'See All',

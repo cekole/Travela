@@ -17,8 +17,8 @@ class GroupProvider with ChangeNotifier {
     return [..._groups];
   }
 
-  Future<void> fetchAndSetGroups() async {
-    final url = baseUrl + 'groups';
+  Future<void> fetchAndSetGroupsByUserId(String uId) async {
+    final url = baseUrl + 'groups/user/$uId';
     print(url);
     final response = await http.get(
       Uri.parse(url),
@@ -36,14 +36,16 @@ class GroupProvider with ChangeNotifier {
 
     extractedData.forEach(
       (group) {
+        currentGroupUsernames = group['participants'];
+        currentGroupTrips = group['trips'];
         loadedGroups.add(
           TravelGroup(
             id: group['group_id'].toString(),
             groupName: group['groupName'],
-            participants: [], //TODO: add participants
+            participants: [], //stored in currentGroupParticipants
             commonStartDate: group['commonStartDate'] ?? '',
             commonEndDate: group['commonEndDate'] ?? '',
-            trips: [], //TODO: add trips
+            trips: [], //stored in currentGroupTrips
           ),
         );
       },
@@ -62,19 +64,54 @@ class GroupProvider with ChangeNotifier {
       },
     );
     print(response.statusCode);
-    print(response.body);
   }
 
-  Future addGroup(String groupName, String ownerId) async {
+  Future<void> getGroupByUserId(String uId) async {
+    final url = baseUrl + 'groups/user/$uId';
+    print(url);
+    final response = await http.get(
+      Uri.parse(url),
+      headers: {
+        'Authorization': 'Bearer  $bearerToken',
+      },
+    );
+    print(response.statusCode);
+    print('getGroupByUserId');
+    print(response.body);
+    if (response.statusCode == 200) {
+      print('getGroupByUserId succeeded');
+      final extractedData = json.decode(response.body) as List<dynamic>;
+      if (extractedData == null) {
+        return;
+      }
+      currentGroupId = extractedData.last['group_id'].toString();
+      print('currentGroupId');
+      print(currentGroupId);
+
+      notifyListeners();
+
+      return json.decode(response.body);
+    } else {
+      print('getGroupByUserId failed');
+    }
+  }
+
+  Future<void> addGroup(String groupName, String ownerId) async {
     final url = baseUrl + 'groups';
     print(url);
-    final response = await http.post(Uri.parse(url), headers: {
-      'Authorization': 'Bearer  $bearerToken',
-      'Content-Type': 'application/json',
-    }, body: {
-      'groupName': groupName,
-      'ownerId': ownerId,
-    });
+    final response = await http.post(
+      Uri.parse(url),
+      headers: {
+        'Authorization': 'Bearer  $bearerToken',
+        'Content-Type': 'application/json',
+      },
+      body: json.encode(
+        {
+          'groupName': groupName,
+          'ownerId': ownerId,
+        },
+      ),
+    );
     print(response.statusCode);
     if (response.statusCode == 200) {
       print('addGroup succeeded');
@@ -141,42 +178,54 @@ class GroupProvider with ChangeNotifier {
     }
   }
 
-  Future getParticipants(String id) async {
-    final url = baseUrl + 'groups/$id/participants';
+  Future<void> getParticipants(String groupId) async {
+    final url = baseUrl + 'groups/$groupId/participants';
     print(url);
     final response = await http.get(
       Uri.parse(url),
       headers: {
         'Authorization': 'Bearer  $bearerToken',
-        'Content-Type': 'application/json',
       },
     );
     print(response.statusCode);
     if (response.statusCode == 200) {
       print('getParticipants succeeded');
+      final extractedData = json.decode(response.body) as List<dynamic>;
+      if (extractedData == null) {
+        return;
+      }
+      //get the participants username
+      final List<String> loadedParticipants = [];
+      extractedData.forEach(
+        (participant) {
+          loadedParticipants.add(participant['username']);
+        },
+      );
+      currentGroupUsernames = loadedParticipants;
+      notifyListeners();
       return json.decode(response.body);
     } else {
       print('getParticipants failed');
     }
   }
 
-  Future addUserToGroup(String groupId, String userId) async {
-    final url = baseUrl + 'groups/$groupId/addUser/$userId';
+  Future<bool> addUserToGroup(String groupId, String uId) async {
+    final url = baseUrl + 'groups/$groupId/addUser/$uId';
     print(url);
     final response = await http.put(
       Uri.parse(url),
       headers: {
         'Authorization': 'Bearer  $bearerToken',
-        'Content-Type': 'application/json',
       },
     );
     print(response.statusCode);
 
     if (response.statusCode == 200) {
       print('addUser succeeded');
-      return json.decode(response.body);
+      return true;
     } else {
       print('addUser failed');
+      return false;
     }
   }
 
