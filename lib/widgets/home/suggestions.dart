@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:travela_mobile/appConstant.dart';
 import 'package:travela_mobile/providers/destinations_provider.dart';
+import 'package:travela_mobile/providers/group_provider.dart';
 import 'package:travela_mobile/widgets/home/place_card.dart';
 
 class SuggestionsForYou extends StatelessWidget {
@@ -10,11 +12,10 @@ class SuggestionsForYou extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final destinationsData =
-        Provider.of<DestinationsProvider>(context, listen: true);
-    //TODO: Get the destinations from suggestions, ml model, etc.
-    final suggestedDestinations =
-        destinationsData.destinations.skip(2).toList();
+    final groupData = Provider.of<GroupProvider>(context, listen: true);
+    groupData.getTripSuggestions(userId);
+    print(currentSuggestions);
+
     return Column(
       children: [
         Row(
@@ -44,12 +45,12 @@ class SuggestionsForYou extends StatelessWidget {
           height: MediaQuery.of(context).size.height * 0.25,
           child: ListView.builder(
             scrollDirection: Axis.horizontal,
-            itemCount: suggestedDestinations.length,
+            itemCount: currentSuggestions.length,
             itemBuilder: (context, index) {
               return PlaceCard(
                 destination:
-                    '${suggestedDestinations[index].city}, ${suggestedDestinations[index].country}',
-                image: suggestedDestinations[index].imageUrl,
+                    '${currentSuggestions[index].city}, ${currentSuggestions[index].country}',
+                image: currentSuggestions[index].imageUrl,
               );
             },
           ),
