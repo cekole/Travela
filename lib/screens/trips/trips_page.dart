@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:provider/provider.dart';
+import 'package:travela_mobile/providers/group_provider.dart';
 import 'package:travela_mobile/providers/travel_group_provider.dart';
 import 'package:travela_mobile/screens/maps/previous_trips_map.dart';
 import 'package:travela_mobile/screens/home/popular_destinations.dart';
@@ -228,8 +229,7 @@ class TripsPage extends StatelessWidget {
   }
 
   Future<dynamic> _travelGroupModal(BuildContext context) {
-    final travelGroupData =
-        Provider.of<TravelGroupProvider>(context, listen: false);
+    final groupData = Provider.of<GroupProvider>(context, listen: false);
     return showModalBottomSheet(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(
@@ -272,7 +272,7 @@ class TripsPage extends StatelessWidget {
                     height: 10,
                   ),
                   itemBuilder: (context, index) {
-                    final travelGroup = travelGroupData.travelGroups[index];
+                    final travelGroup = groupData.groups[index];
                     return Container(
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.all(
@@ -282,6 +282,9 @@ class TripsPage extends StatelessWidget {
                       ),
                       child: ListTile(
                         onTap: () {
+                          final groupData = Provider.of<GroupProvider>(context,
+                              listen: false);
+                          groupData.getParticipants(travelGroup.id);
                           Navigator.of(context).pushNamed(
                             '/edit_travel_group',
                             arguments: travelGroup,
@@ -298,7 +301,7 @@ class TripsPage extends StatelessWidget {
                       ),
                     );
                   },
-                  itemCount: travelGroupData.travelGroups.length,
+                  itemCount: groupData.groups.length,
                 ),
               ),
               SizedBox(

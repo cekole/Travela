@@ -27,39 +27,12 @@ class GroupsPage extends StatefulWidget {
 }
 
 class _GroupsPageState extends State<GroupsPage> {
-  DateTime _currentStartDate = DateTime.now();
-  DateTime _currentEndDate = DateTime.now().add(const Duration(days: 7));
   bool _isExpandedGroup = false;
   bool _isExpandedCalendar = false;
-
-  DateRangePickerController _dateRangePickerController =
-      DateRangePickerController();
-  DateTime rangeStartDate = DateTime.now();
-  DateTime rangeEndDate = DateTime.now().add(const Duration(days: 7));
-
-  void _onSelectionChanged(DateRangePickerSelectionChangedArgs args) {
-    _dateRangePickerController.selectedRange = PickerDateRange(
-        args.value.startDate, args.value.endDate ?? args.value.startDate);
-
-    print(args.value);
-    if (args.value is PickerDateRange) {
-      setState(() {
-        rangeStartDate = args.value.startDate;
-        rangeEndDate = args.value.endDate;
-      });
-    } else if (args.value is DateTime) {
-      setState(() {
-        rangeStartDate = args.value;
-        rangeEndDate = args.value;
-      });
-    }
-  }
 
   @override
   void initState() {
     super.initState();
-    final groupData = Provider.of<GroupProvider>(context, listen: false);
-    groupData.fetchAndSetGroupsByUserId(userId);
   }
 
   @override
@@ -102,6 +75,9 @@ class _GroupsPageState extends State<GroupsPage> {
       ),
       body: ListView(
         children: [
+          SizedBox(
+            height: 10,
+          ),
           ListView.separated(
             physics: NeverScrollableScrollPhysics(),
             separatorBuilder: (context, index) => SizedBox(
@@ -141,10 +117,14 @@ class _GroupsPageState extends State<GroupsPage> {
                     child: IconButton(
                       icon: Icon(Icons.edit),
                       onPressed: () {
-                        Navigator.of(context).pushNamed(
-                          '/edit_travel_group',
-                          arguments: travelGroup,
-                        );
+                        final groupData =
+                            Provider.of<GroupProvider>(context, listen: false);
+                        groupData
+                            .getParticipants(travelGroup.id)
+                            .then((value) => Navigator.of(context).pushNamed(
+                                  '/edit_travel_group',
+                                  arguments: travelGroup,
+                                ));
                       },
                     ),
                   ),
@@ -173,87 +153,6 @@ class _GroupsPageState extends State<GroupsPage> {
                 ),
               );
             },
-          ),
-          Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.all(
-                Radius.circular(5),
-              ),
-              color: Theme.of(context).primaryColor.withOpacity(0.2),
-            ),
-            margin: EdgeInsets.all(10),
-            child: ExpansionTileCard(
-              onExpansionChanged: (value) {
-                setState(() {
-                  _isExpandedCalendar = value;
-                });
-              },
-              borderRadius: BorderRadius.circular(10),
-              baseColor: Theme.of(context).backgroundColor.withOpacity(0.2),
-              title: const Text('Select Date'),
-              children: [
-                Container(
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: ListTile(
-                          title: Text(
-                            'Start Date: ${DateFormat.yMMMd().format(rangeStartDate)}',
-                          ),
-                        ),
-                      ),
-                      Expanded(
-                        child: ListTile(
-                          title: Text(
-                            'End Date: ${DateFormat.yMMMd().format(rangeEndDate)}',
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                SfDateRangePicker(
-                  controller: _dateRangePickerController,
-                  headerStyle: DateRangePickerHeaderStyle(
-                    textAlign: TextAlign.center,
-                  ),
-                  enablePastDates: false,
-                  onSelectionChanged: _onSelectionChanged,
-                  selectionMode: DateRangePickerSelectionMode.range,
-                  initialSelectedRange: PickerDateRange(
-                    _currentStartDate,
-                    _currentEndDate,
-                  ),
-                  startRangeSelectionColor: Theme.of(context).primaryColor,
-                  endRangeSelectionColor: Theme.of(context).primaryColor,
-                ),
-                Row(
-                  children: [
-                    Spacer(),
-                    TextButton(
-                      onPressed: () {
-                        final userData =
-                            Provider.of<UserProvider>(context, listen: false);
-                        userData
-                            .setAvailableFrom(
-                          userId,
-                          DateFormat('yyyy-MM-dd').format(rangeStartDate),
-                        )
-                            .then(
-                          (value) {
-                            userData.setAvailableTo(
-                              userId,
-                              DateFormat('yyyy-MM-dd').format(rangeEndDate),
-                            );
-                          },
-                        );
-                      },
-                      child: Text('Apply'),
-                    ),
-                  ],
-                )
-              ],
-            ),
           ),
         ],
       ),
@@ -339,34 +238,79 @@ void showAddFriendDialog(BuildContext context) {
               Container(
                 width: double.maxFinite,
                 height: MediaQuery.of(context).size.height * 0.15,
-                child: ListView.separated(
-                  separatorBuilder: (context, index) => SizedBox(height: 10),
-                  itemCount: currentFriendIds.length,
-                  itemBuilder: (context, index) {
-                    return ListTile(
-                      title: Text(
-                        currentFriendUsernames[index],
-                      ),
-                      trailing: IconButton(
-                        icon: Icon(Icons.add),
-                        onPressed: () {
-                          final groupData = Provider.of<GroupProvider>(
-                            context,
-                            listen: false,
-                          );
-                          groupData.getGroupByUserId(userId).then(
-                                (value) => groupData.addUserToGroup(
-                                  currentGroupId,
-                                  currentFriendIds[index].toString(),
-                                ),
-                              );
+                child: Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    border: Border.all(
+                      color: Theme.of(context).primaryColor,
+                    ),
+                  ),
+                  child: ListView.separated(
+                    separatorBuilder: (context, index) => SizedBox(height: 10),
+                    itemCount: currentFriendIds.length,
+                    itemBuilder: (context, index) {
+                      return ListTile(
+                        title: Text(
+                          currentFriendUsernames[index],
+                        ),
+                        trailing: IconButton(
+                          icon: Icon(Icons.add),
+                          onPressed: () {
+                            final groupData = Provider.of<GroupProvider>(
+                              context,
+                              listen: false,
+                            );
+                            groupData.getGroupByUserId(userId).then(
+                                  (value) => groupData.addUserToGroup(
+                                    currentGroupId,
+                                    currentFriendIds[index].toString(),
+                                  ),
+                                );
 
-                          /* groupData.addUserToGroup(
-                              groupData.groups.last.id, userId); */
-                        },
-                      ),
-                    );
-                  },
+                            /* groupData.addUserToGroup(
+                                groupData.groups.last.id, userId); */
+                          },
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              ),
+              SizedBox(
+                height: 10,
+              ),
+              Row(
+                children: <Widget>[
+                  Expanded(
+                      child: Divider(
+                    color: Colors.grey.shade700,
+                    indent: 30,
+                    endIndent: 30,
+                    thickness: 1,
+                  )),
+                  Text("OR", style: TextStyle(color: Colors.grey.shade700)),
+                  Expanded(
+                    child: Divider(
+                      color: Colors.grey.shade700,
+                      indent: 30,
+                      endIndent: 30,
+                      thickness: 1,
+                    ),
+                  ),
+                ],
+              ),
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pushNamed('/create_travel_group');
+                },
+                child: Center(
+                  child: Text(
+                    'Arrange an Individual Trip',
+                    style: TextStyle(
+                      color: Theme.of(context).primaryColor,
+                      fontSize: 16,
+                    ),
+                  ),
                 ),
               ),
             ],

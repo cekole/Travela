@@ -4,9 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_chat_ui/flutter_chat_ui.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:syncfusion_flutter_datepicker/datepicker.dart';
+import 'package:travela_mobile/appConstant.dart';
 import 'package:travela_mobile/models/travel_group.dart';
 import 'package:travela_mobile/providers/destinations_provider.dart';
+import 'package:travela_mobile/providers/group_provider.dart';
 import 'package:travela_mobile/providers/recommendation_provider.dart';
 import 'package:travela_mobile/widgets/home/suggestions.dart';
 
@@ -27,8 +31,10 @@ class _EditTravelGroupState extends State<EditTravelGroup> {
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
+
     final travelGroup =
         ModalRoute.of(context)!.settings.arguments as TravelGroup;
+
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
@@ -94,7 +100,7 @@ class _EditTravelGroupState extends State<EditTravelGroup> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      travelGroup.participants[0].name,
+                                      currentGroupUsernames[0],
                                       style: TextStyle(
                                         color: Colors.blue,
                                       ),
@@ -120,7 +126,7 @@ class _EditTravelGroupState extends State<EditTravelGroup> {
                                   crossAxisAlignment: CrossAxisAlignment.end,
                                   children: [
                                     Text(
-                                      travelGroup.participants[1].name,
+                                      '',
                                       style: TextStyle(
                                         color: Colors.blue,
                                       ),
@@ -175,23 +181,28 @@ class _EditTravelGroupState extends State<EditTravelGroup> {
               ),
               SizedBox(height: 20),
               SuggestionsForYou(),
-              Row(children: <Widget>[
-                Expanded(
-                    child: Divider(
-                  color: Colors.grey.shade700,
-                  indent: 35,
-                  endIndent: 35,
-                  thickness: 1,
-                )),
-                Text("OR"),
-                Expanded(
-                    child: Divider(
-                  color: Colors.grey.shade700,
-                  indent: 35,
-                  endIndent: 35,
-                  thickness: 1,
-                )),
-              ]),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Row(
+                  children: <Widget>[
+                    Expanded(
+                        child: Divider(
+                      color: Colors.grey.shade700,
+                      indent: 35,
+                      endIndent: 35,
+                      thickness: 1,
+                    )),
+                    Text("OR"),
+                    Expanded(
+                        child: Divider(
+                      color: Colors.grey.shade700,
+                      indent: 35,
+                      endIndent: 35,
+                      thickness: 1,
+                    )),
+                  ],
+                ),
+              ),
 
               ElevatedButton(
                 onPressed: () {
@@ -206,7 +217,82 @@ class _EditTravelGroupState extends State<EditTravelGroup> {
               ),
               SizedBox(height: 20),
               ElevatedButton(
-                onPressed: () {},
+                onPressed: () {
+                  showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return Container(
+                          padding: EdgeInsets.all(10),
+                          margin: EdgeInsets.all(10),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: Material(
+                            color: Colors.white,
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                //close button
+                                Row(
+                                  children: [
+                                    Spacer(),
+                                    IconButton(
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                      },
+                                      icon: Icon(Icons.close),
+                                    ),
+                                  ],
+                                ),
+                                Text(
+                                  'Common Dates',
+                                  style: TextStyle(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                Divider(
+                                  color: Colors.grey,
+                                  thickness: 1,
+                                ),
+                                IgnorePointer(
+                                  child: SfDateRangePicker(
+                                    backgroundColor: Colors.white,
+                                    headerStyle: DateRangePickerHeaderStyle(
+                                      textAlign: TextAlign.center,
+                                    ),
+                                    selectionMode:
+                                        DateRangePickerSelectionMode.values[2],
+                                    initialSelectedRange: PickerDateRange(
+                                      DateTime.parse(
+                                          travelGroup.commonStartDate),
+                                      DateTime.parse(travelGroup.commonEndDate),
+                                    ),
+                                    startRangeSelectionColor:
+                                        Theme.of(context).primaryColor,
+                                    endRangeSelectionColor:
+                                        Theme.of(context).primaryColor,
+                                  ),
+                                ),
+                                SizedBox(height: 20),
+                                Text(
+                                  'Start Date: ${DateFormat.yMMMd().format(
+                                    DateTime.parse(travelGroup.commonStartDate),
+                                  )}\nEnd Date: ${DateFormat.yMMMd().format(
+                                    DateTime.parse(travelGroup.commonEndDate),
+                                  )}',
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        );
+                      });
+                },
                 child: Text('Show Common Dates'),
               ),
             ],
@@ -340,87 +426,6 @@ class _EditTravelGroupState extends State<EditTravelGroup> {
                           Divider(),
                           Row(
                             children: [
-                              Text('Rating (0-5)'),
-                              Expanded(
-                                child: Row(
-                                  children: [
-                                    RangeSlider(
-                                      activeColor:
-                                          Theme.of(context).primaryColor,
-                                      values: _currentRatingRangeValues,
-                                      max: 5,
-                                      labels: RangeLabels(
-                                        _currentRatingRangeValues.start
-                                            .round()
-                                            .toString(),
-                                        _currentRatingRangeValues.end
-                                            .round()
-                                            .toString(),
-                                      ),
-                                      onChanged: (value) {
-                                        setState(() {
-                                          _currentRatingRangeValues = value;
-                                        });
-                                      },
-                                    ),
-                                    Spacer(),
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        Column(
-                                          children: [
-                                            Container(
-                                              padding: EdgeInsets.all(5),
-                                              decoration: BoxDecoration(
-                                                border: Border.all(
-                                                  color: Theme.of(context)
-                                                      .primaryColor,
-                                                ),
-                                                borderRadius:
-                                                    BorderRadius.circular(5),
-                                              ),
-                                              child: Text(
-                                                _currentRatingRangeValues.start
-                                                    .round()
-                                                    .toString(),
-                                              ),
-                                            ),
-                                            Text('Min'),
-                                          ],
-                                        ),
-                                        VerticalDivider(),
-                                        Column(
-                                          children: [
-                                            Container(
-                                              padding: EdgeInsets.all(5),
-                                              decoration: BoxDecoration(
-                                                border: Border.all(
-                                                  color: Theme.of(context)
-                                                      .primaryColor,
-                                                ),
-                                                borderRadius:
-                                                    BorderRadius.circular(5),
-                                              ),
-                                              child: Text(
-                                                _currentRatingRangeValues.end
-                                                    .round()
-                                                    .toString(),
-                                              ),
-                                            ),
-                                            Text('Max'),
-                                          ],
-                                        ),
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                          Divider(),
-                          Row(
-                            children: [
                               Text('Distance(km)'),
                               Expanded(
                                 child: RangeSlider(
@@ -489,43 +494,6 @@ class _EditTravelGroupState extends State<EditTravelGroup> {
                                     ],
                                   ),
                                 ],
-                              ),
-                            ],
-                          ),
-                          Divider(),
-                          Row(
-                            children: [
-                              Text('Season'),
-                              Spacer(),
-                              StatefulBuilder(
-                                builder: (context, setState) {
-                                  return DropdownButton(
-                                    value: _currentSeason,
-                                    items: [
-                                      DropdownMenuItem(
-                                        child: Text('Winter'),
-                                        value: 'Winter',
-                                      ),
-                                      DropdownMenuItem(
-                                        child: Text('Summer'),
-                                        value: 'Summer',
-                                      ),
-                                      DropdownMenuItem(
-                                        child: Text('Spring'),
-                                        value: 'Spring',
-                                      ),
-                                      DropdownMenuItem(
-                                        child: Text('Autumn'),
-                                        value: 'Autumn',
-                                      ),
-                                    ],
-                                    onChanged: (value) {
-                                      setState(() {
-                                        _currentSeason = value.toString();
-                                      });
-                                    },
-                                  );
-                                },
                               ),
                             ],
                           ),

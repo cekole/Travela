@@ -34,7 +34,6 @@ class _HomeBodyState extends State<HomeBody> {
         (value) => Future.delayed(Duration(seconds: 1)),
       ),
       builder: (context, snapshot) {
-        print('user ıddd' + userId);
         if (snapshot.connectionState == ConnectionState.waiting) {
           return buildBodyShimmer(context);
         } else

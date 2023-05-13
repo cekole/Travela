@@ -7,6 +7,7 @@ import 'package:travela_mobile/models/destination.dart';
 import 'package:travela_mobile/models/user.dart';
 import 'package:travela_mobile/providers/authentication_provider.dart';
 import 'package:travela_mobile/providers/destinations_provider.dart';
+import 'package:travela_mobile/providers/group_provider.dart';
 import 'package:travela_mobile/providers/user_provider.dart';
 import 'package:travela_mobile/screens/friends/friends_page.dart';
 import 'package:travela_mobile/screens/maps/map_page.dart';
@@ -31,12 +32,14 @@ class _HomePageState extends State<HomePage> {
     final authenticationData =
         Provider.of<AuthenticationProvider>(context, listen: false);
     final userData = Provider.of<UserProvider>(context, listen: false);
+    final groupData = Provider.of<GroupProvider>(context, listen: false);
     authenticationData.getCurrentUser().then(
       (value) {
         userData.getUserIdByUsername(currentUser.username).then(
           (value) {
             userData.getAllFriends();
             userData.getAllIncomingRequests();
+            groupData.fetchAndSetGroupsByUserId(userId);
           },
         );
       },

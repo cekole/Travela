@@ -3,13 +3,16 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:travela_mobile/appConstant.dart';
 import 'package:travela_mobile/models/travel_group.dart';
 import 'package:travela_mobile/providers/authentication_provider.dart';
 import 'package:travela_mobile/providers/travel_group_provider.dart';
+import 'package:travela_mobile/providers/user_provider.dart';
 import 'package:travela_mobile/screens/trips/trips_page.dart';
 
 class ProfilePage extends StatefulWidget {
@@ -23,6 +26,32 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   void initState() {
     super.initState();
+  }
+
+  DateTime _currentStartDate = DateTime.now();
+  DateTime _currentEndDate = DateTime.now().add(const Duration(days: 7));
+
+  DateRangePickerController _dateRangePickerController =
+      DateRangePickerController();
+  DateTime rangeStartDate = DateTime.now();
+  DateTime rangeEndDate = DateTime.now().add(const Duration(days: 7));
+
+  void _onSelectionChanged(DateRangePickerSelectionChangedArgs args) {
+    _dateRangePickerController.selectedRange = PickerDateRange(
+        args.value.startDate, args.value.endDate ?? args.value.startDate);
+
+    print(args.value);
+    if (args.value is PickerDateRange) {
+      setState(() {
+        rangeStartDate = args.value.startDate;
+        rangeEndDate = args.value.endDate;
+      });
+    } else if (args.value is DateTime) {
+      setState(() {
+        rangeStartDate = args.value;
+        rangeEndDate = args.value;
+      });
+    }
   }
 
   @override
@@ -171,60 +200,89 @@ class _ProfilePageState extends State<ProfilePage> {
                 ),
                 title: Text('Privacy'),
               ),
-              Padding(
-                padding: EdgeInsets.only(left: 8.0, top: 8.0),
-                child: Text(
-                  'Settings',
-                  style: TextStyle(
-                    fontSize: 20,
+              SizedBox(height: 20),
+              Container(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.only(left: 8.0),
+                      child: Text(
+                        'Current Available Dates',
+                        style: TextStyle(fontSize: 20),
+                      ),
+                    ),
+                    Divider(
+                      height: 20,
+                      thickness: 2,
+                    ),
+                    Column(
+                      children: [
+                        ListTile(
+                          title: Text(
+                            'Start Date: ${DateFormat.yMMMd().format(_currentStartDate)}\nEnd Date: ${DateFormat.yMMMd().format(_currentEndDate)}',
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+              Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(5),
                   ),
+                  color: Theme.of(context).primaryColor.withOpacity(0.2),
                 ),
-              ),
-              Divider(
-                height: 20,
-                thickness: 2,
-              ),
-              ListTile(
-                leading: Icon(
-                  Icons.policy,
+                margin: EdgeInsets.all(10),
+                child: ExpansionTileCard(
+                  borderRadius: BorderRadius.circular(10),
+                  baseColor: Theme.of(context).backgroundColor.withOpacity(0.2),
+                  title: const Text('Select Date Range'),
+                  children: [
+                    SfDateRangePicker(
+                      controller: _dateRangePickerController,
+                      headerStyle: DateRangePickerHeaderStyle(
+                        textAlign: TextAlign.center,
+                      ),
+                      enablePastDates: false,
+                      onSelectionChanged: _onSelectionChanged,
+                      selectionMode: DateRangePickerSelectionMode.range,
+                      initialSelectedRange: PickerDateRange(
+                        _currentStartDate,
+                        _currentEndDate,
+                      ),
+                      startRangeSelectionColor: Theme.of(context).primaryColor,
+                      endRangeSelectionColor: Theme.of(context).primaryColor,
+                    ),
+                    Row(
+                      children: [
+                        Spacer(),
+                        TextButton(
+                          onPressed: () {
+                            final userData = Provider.of<UserProvider>(context,
+                                listen: false);
+                            userData
+                                .setAvailableFrom(
+                              userId,
+                              DateFormat('yyyy-MM-dd').format(rangeStartDate),
+                            )
+                                .then(
+                              (value) {
+                                userData.setAvailableTo(
+                                  userId,
+                                  DateFormat('yyyy-MM-dd').format(rangeEndDate),
+                                );
+                              },
+                            );
+                          },
+                          child: Text('Submit'),
+                        ),
+                      ],
+                    )
+                  ],
                 ),
-                title: Text('Legal & Policies'),
-              ),
-              Divider(
-                height: 1,
-              ),
-              ListTile(
-                leading: Icon(
-                  Icons.settings_outlined,
-                ),
-                title: Text('Preferences'),
-              ),
-              Divider(
-                height: 1,
-              ),
-              Padding(
-                padding: EdgeInsets.only(left: 8.0, top: 8.0),
-                child: Text(
-                  'Resources',
-                  style: TextStyle(
-                    fontSize: 20,
-                  ),
-                ),
-              ),
-              Divider(
-                height: 20,
-                thickness: 2,
-              ),
-              ListTile(
-                leading: Icon(Icons.support),
-                title: Text('Support'),
-              ),
-              Divider(
-                height: 1,
-              ),
-              ListTile(
-                leading: Icon(Icons.info_outline),
-                title: Text('About'),
               ),
             ],
           ),

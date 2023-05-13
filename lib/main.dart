@@ -19,7 +19,7 @@ import 'package:travela_mobile/screens/profile/edit_profile.dart';
 import 'package:travela_mobile/screens/register/questionnaire_page.dart';
 import 'package:travela_mobile/screens/search_options/search_options.dart';
 import 'package:travela_mobile/screens/search_options/transportation_options.dart';
-import 'package:travela_mobile/screens/travel_group/edit_travel_group.dart';
+import 'package:travela_mobile/screens/groups/edit_travel_group.dart';
 import 'package:travela_mobile/screens/friends/friends_page.dart';
 import 'package:travela_mobile/screens/home/home_page.dart';
 import 'package:travela_mobile/screens/login.dart';
