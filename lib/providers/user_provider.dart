@@ -219,6 +219,12 @@ class UserProvider with ChangeNotifier {
         'Authorization': 'Bearer  $bearerToken',
       },
     );
+    if (response.statusCode == 200) {
+      currentAvailableFrom = date;
+      notifyListeners();
+    } else {
+      print('date not set');
+    }
   }
 
   Future<void> setAvailableTo(String id, String date) async {
@@ -230,6 +236,30 @@ class UserProvider with ChangeNotifier {
         'Authorization': 'Bearer  $bearerToken',
       },
     );
-    print('date' + date);
+    if (response.statusCode == 200) {
+      currentAvailableTo = date;
+      notifyListeners();
+    } else {
+      print('date not set');
+    }
+  }
+
+  void resetCurrentValues() {
+    userId = '';
+    friendId = '';
+
+    currentFriendIds = [];
+    currentFriendUsernames = [];
+
+    currentRequestUsernames = [];
+    currentRequestIds = [];
+
+    currentGroupId = '';
+    currentGroupUsernames = [];
+    currentGroupTrips = [];
+
+    currentGroupSuggestions = [];
+    currentUserSuggestions = [];
+    notifyListeners();
   }
 }

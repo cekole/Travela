@@ -3,6 +3,7 @@ import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:provider/provider.dart';
 import 'package:travela_mobile/providers/authentication_provider.dart';
+import 'package:travela_mobile/providers/user_provider.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -124,6 +125,10 @@ class _LoginPageState extends State<LoginPage> {
                               )
                                   .then((value) {
                                 if (value) {
+                                  final userData = Provider.of<UserProvider>(
+                                      context,
+                                      listen: false);
+                                  userData.resetCurrentValues();
                                   Navigator.pushReplacementNamed(
                                       context, '/home');
                                 } else {

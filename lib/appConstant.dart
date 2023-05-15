@@ -19,6 +19,9 @@ List currentGroupTrips = [];
 List currentGroupSuggestions = [];
 List currentUserSuggestions = [];
 
+String currentAvailableFrom = '';
+String currentAvailableTo = '';
+
 User currentUser = User(
   id: '',
   username: '',

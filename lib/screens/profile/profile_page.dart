@@ -220,7 +220,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       children: [
                         ListTile(
                           title: Text(
-                            'Start Date: ${DateFormat.yMMMd().format(_currentStartDate)}\nEnd Date: ${DateFormat.yMMMd().format(_currentEndDate)}',
+                            'Start Date: ${currentAvailableFrom}\nEnd Date: ${currentAvailableTo}',
                           ),
                         ),
                       ],
@@ -276,6 +276,8 @@ class _ProfilePageState extends State<ProfilePage> {
                                 );
                               },
                             );
+                            _currentStartDate = rangeStartDate;
+                            _currentEndDate = rangeEndDate;
                           },
                           child: Text('Submit'),
                         ),

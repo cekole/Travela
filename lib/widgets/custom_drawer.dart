@@ -3,6 +3,8 @@ import 'dart:io';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:travela_mobile/providers/user_provider.dart';
 
 class CustomDrawer extends StatelessWidget {
   const CustomDrawer({
@@ -65,6 +67,10 @@ class CustomDrawer extends StatelessWidget {
                                 child: Text('Logout'),
                                 onPressed: () {
                                   Navigator.popAndPushNamed(context, '/login');
+                                  final userData = Provider.of<UserProvider>(
+                                      context,
+                                      listen: false);
+                                  userData.resetCurrentValues();
                                 },
                               ),
                             ],
@@ -91,6 +97,10 @@ class CustomDrawer extends StatelessWidget {
                                     onPressed: () {
                                       Navigator.popAndPushNamed(
                                           context, '/login');
+                                      final userData =
+                                          Provider.of<UserProvider>(context,
+                                              listen: false);
+                                      userData.resetCurrentValues();
                                     },
                                   ),
                                 ],
