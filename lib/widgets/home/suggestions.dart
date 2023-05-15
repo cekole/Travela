@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:travela_mobile/appConstant.dart';
-import 'package:travela_mobile/providers/destinations_provider.dart';
-import 'package:travela_mobile/providers/group_provider.dart';
+import 'package:travela_mobile/providers/user_provider.dart';
 import 'package:travela_mobile/widgets/home/place_card.dart';
 
 class SuggestionsForYou extends StatelessWidget {
@@ -12,8 +11,8 @@ class SuggestionsForYou extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final groupData = Provider.of<GroupProvider>(context, listen: true);
-    //groupData.getTripSuggestions(userId); //bunun user için olanı çağırılacak
+    final userData = Provider.of<UserProvider>(context, listen: true);
+    userData.getTripSuggestions(userId);
 
     return Column(
       children: [

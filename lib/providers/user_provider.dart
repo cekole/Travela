@@ -244,6 +244,128 @@ class UserProvider with ChangeNotifier {
     }
   }
 
+  Future<void> addFavouriteCity(String id, String cityId) async {
+    final url = baseUrl + 'users/$id/addFavouriteCity/$cityId';
+    print(url);
+    final response = await http.put(
+      Uri.parse(url),
+      headers: {
+        'Authorization': 'Bearer  $bearerToken',
+      },
+    );
+    if (response.statusCode == 200) {
+      print('add favorite city succeeded');
+      notifyListeners();
+    } else {
+      print('add favorite city failed');
+    }
+  }
+
+  Future<void> removeFavouriteCity(String id, String cityId) async {
+    final url = baseUrl + 'users/$id/removeFavouriteCity/$cityId';
+    print(url);
+    final response = await http.put(
+      Uri.parse(url),
+      headers: {
+        'Authorization': 'Bearer  $bearerToken',
+      },
+    );
+    if (response.statusCode == 200) {
+      print('removeFavouriteCity succeeded');
+      notifyListeners();
+    } else {
+      print('removeFavouriteCity failed');
+    }
+  }
+
+  Future<void> getTripSuggestions(String id) async {
+    final url = baseUrl + 'groups/$id/trip-suggestions';
+    print(url);
+    final response = await http.get(
+      Uri.parse(url),
+      headers: {
+        'Authorization': 'Bearer  $bearerToken',
+        'Content-Type': 'application/json',
+      },
+    );
+    print(response.statusCode);
+    if (response.statusCode == 200) {
+      print('getTripSuggestions for users succeeded');
+      final extractedData = json.decode(response.body) as List<dynamic>;
+      if (extractedData == null) {
+        return;
+      }
+      extractedData.forEach(
+        (suggestion) {
+          currentUserSuggestions.add(suggestion);
+        },
+      );
+      notifyListeners();
+    } else {
+      print('getTripSuggestions for users failed');
+    }
+  }
+
+  Future getTripDrafts(String userId) async {
+    final url = baseUrl + 'users/$userId/trips-draft';
+    print(url);
+    final response = await http.get(
+      Uri.parse(url),
+      headers: {
+        'Authorization': 'Bearer  $bearerToken',
+        'Content-Type': 'application/json',
+      },
+    );
+    print(response.statusCode);
+    print(response.body);
+
+    if (response.statusCode == 200) {
+      print('get trip drafts success');
+      final extractedData = json.decode(response.body) as List<dynamic>;
+      if (extractedData == null) {
+        return;
+      }
+      extractedData.forEach(
+        (trip) {
+          currentTripDrafts.add(trip);
+        },
+      );
+      notifyListeners();
+    } else {
+      print('get trip drafts failed');
+    }
+  }
+
+  Future getUpcomingTrips(String userId) async {
+    final url = baseUrl + 'users/$userId/trips/shared';
+    print(url);
+    final response = await http.get(
+      Uri.parse(url),
+      headers: {
+        'Authorization': 'Bearer  $bearerToken',
+        'Content-Type': 'application/json',
+      },
+    );
+    print(response.statusCode);
+    print(response.body);
+
+    if (response.statusCode == 200) {
+      print('getUpcomingTrips success');
+      final extractedData = json.decode(response.body) as List<dynamic>;
+      if (extractedData == null) {
+        return;
+      }
+      extractedData.forEach(
+        (trip) {
+          currentTripDrafts.add(trip);
+        },
+      );
+      notifyListeners();
+    } else {
+      print('getUpcomingTrips failed');
+    }
+  }
+
   void resetCurrentValues() {
     userId = '';
     friendId = '';

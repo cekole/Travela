@@ -1,7 +1,9 @@
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:travela_mobile/models/country.dart';
+import 'package:travela_mobile/models/city.dart';
 import 'package:travela_mobile/models/travel_group.dart';
 import 'package:travela_mobile/models/user.dart';
+import 'package:travela_mobile/models/trip.dart';
 
 String userId = '';
 String friendId = '';
@@ -21,6 +23,9 @@ List currentUserSuggestions = [];
 
 String currentAvailableFrom = '';
 String currentAvailableTo = '';
+
+List<City> favouriteCities = [];
+List<Trip> currentTripDrafts = [];
 
 User currentUser = User(
   id: '',

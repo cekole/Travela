@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:travela_mobile/appConstant.dart';
 import 'package:travela_mobile/providers/activities_provider.dart';
+import 'package:travela_mobile/providers/user_provider.dart';
 import 'package:travela_mobile/providers/destinations_provider.dart';
 
 class PlaceCard extends StatelessWidget {
@@ -17,6 +19,7 @@ class PlaceCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final userData = Provider.of<UserProvider>(context, listen: true);
     return GestureDetector(
       onTap: () {
         final destinationsData =
@@ -73,7 +76,21 @@ class PlaceCard extends StatelessWidget {
                         top: 20,
                         right: 20,
                         child: IconButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            userData.addFavouriteCity(
+                                userId, selectedDestination.id);
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text(
+                                  'Added to favourites',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                  ),
+                                ),
+                                backgroundColor: Colors.green,
+                              ),
+                            );
+                          },
                           icon: Icon(
                             Icons.favorite_border,
                             color: Colors.white,

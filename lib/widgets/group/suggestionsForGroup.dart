@@ -13,7 +13,7 @@ class SuggestionsForGroup extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final groupData = Provider.of<GroupProvider>(context, listen: true);
-    groupData.getTripSuggestions(userId);
+    //groupData.getTripSuggestions(userId); // group Id yazılacak userId yerine
 
     return Column(
       children: [
