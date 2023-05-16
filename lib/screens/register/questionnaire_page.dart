@@ -112,15 +112,25 @@ class _QuestionnarePageState extends State<QuestionnarePage> {
                         label: Text('Submit'),
                         icon: Icon(Icons.arrow_back),
                         onPressed: () {
+                          final userData =
+                              Provider.of<UserProvider>(context, listen: false);
                           for (var destination in _selectedDestinations) {
                             print(destination.city);
-                            final userData = Provider.of<UserProvider>(context,
-                                listen: false);
 
                             print('user id is ${userId}');
                             print('destination id is ${destination.id}');
                             userData.addVisitedCity(userId, destination.id);
                           }
+                          userData.setAvailableFrom(
+                              userId, DateTime.now().toString());
+                          userData.setAvailableTo(
+                              userId,
+                              DateTime.now()
+                                  .add(
+                                    Duration(days: 7),
+                                  )
+                                  .toString());
+
                           Navigator.of(context).pushNamed('/home');
                         },
                       ),
