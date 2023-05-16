@@ -366,6 +366,62 @@ class UserProvider with ChangeNotifier {
     }
   }
 
+  Future getAllFriendsVisitedCities(String userId, String friendId) async {
+    final url = baseUrl + 'users/$userId/friendsVisitedCities/$friendId';
+    print(url);
+    final response = await http.get(
+      Uri.parse(url),
+      headers: {
+        'Authorization': 'Bearer  $bearerToken',
+        'Content-Type': 'application/json',
+      },
+    );
+    print(response.statusCode);
+    print(response.body);
+
+    if (response.statusCode == 200) {
+      print('getAllFriendsVisitedCities success');
+      final extractedData = json.decode(response.body) as List<dynamic>;
+      if (extractedData == null) {
+        return;
+      }
+      ;
+      notifyListeners();
+    } else {
+      print('getAllFriendsVisitedCities failed');
+    }
+  }
+
+  Future getAllFriendsVisitedCitiesById(String userId) async {
+    final url = baseUrl + 'users/$userId/friendsVisitedCities';
+    print(url);
+    final response = await http.get(
+      Uri.parse(url),
+      headers: {
+        'Authorization': 'Bearer  $bearerToken',
+        'Content-Type': 'application/json',
+      },
+    );
+    print(response.statusCode);
+    print(response.body);
+
+    if (response.statusCode == 200) {
+      print('getAllFriendsVisitedCities success');
+      final extractedData = json.decode(response.body) as List<dynamic>;
+      if (extractedData == null) {
+        return;
+      }
+      extractedData.forEach(
+        (trip) {
+          friendsVisitedCities.add(trip);
+        },
+      );
+      notifyListeners();
+    } else {
+      print('getAllFriendsVisitedCities failed');
+    }
+  }
+
   void resetCurrentValues() {
     userId = '';
     friendId = '';
