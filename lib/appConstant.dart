@@ -33,6 +33,9 @@ List<City> friendsVisitedCities = [];
 String profilePic = '';
 List<String> tripPhotos = [];
 
+List<Trip> upcomingTrips = [];
+List<Trip> pastTrips = [];
+
 User currentUser = User(
   id: '',
   username: '',
@@ -50,7 +53,7 @@ User currentUser = User(
   availableTo: DateTime.now(),
   visitedCities: [],
 );
-String baseUrl = "http://16.16.214.40:8081/";
+String baseUrl = "http://13.53.60.148:8081/";
 //for local testing
 //String baseUrl = "http://localhost:8081/";
 

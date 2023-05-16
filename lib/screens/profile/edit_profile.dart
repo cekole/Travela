@@ -3,6 +3,7 @@ import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:provider/provider.dart';
 import 'package:travela_mobile/appConstant.dart';
+import 'package:travela_mobile/providers/file_storage_provider.dart';
 import 'package:travela_mobile/providers/user_provider.dart';
 
 class EditProfile extends StatelessWidget {
@@ -37,7 +38,12 @@ class EditProfile extends StatelessWidget {
                             AssetImage('assets/images/profile.jpg'),
                       ),
                       IconButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          final fileStorageData =
+                              Provider.of<FileStorageProvider>(context,
+                                  listen: false);
+                          fileStorageData.uploadProfilePic(userId);
+                        },
                         icon: Icon(
                           Icons.camera_alt,
                           color: Colors.grey,
