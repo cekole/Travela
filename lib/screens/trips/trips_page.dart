@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:provider/provider.dart';
+import 'package:travela_mobile/appConstant.dart';
 import 'package:travela_mobile/providers/group_provider.dart';
 import 'package:travela_mobile/providers/travel_group_provider.dart';
 import 'package:travela_mobile/screens/maps/previous_trips_map.dart';
@@ -328,7 +329,7 @@ class TripsPage extends StatelessWidget {
               ),
               TextButton(
                 onPressed: () {
-                  Navigator.of(context).pushNamed('/create_travel_group');
+                  formGroup(context);
                 },
                 child: Text(
                   'Arrange an Individual Trip',
@@ -342,6 +343,102 @@ class TripsPage extends StatelessWidget {
           ),
         );
       },
+    );
+  }
+
+  void formGroup(BuildContext context) {
+    final groupData = Provider.of<GroupProvider>(context, listen: false);
+    final TextEditingController textController = TextEditingController();
+    showModalBottomSheet(
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(
+          top: Radius.circular(20),
+        ),
+      ),
+      context: context,
+      builder: (context) => Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: SafeArea(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                'Form Travel Group',
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              TextField(
+                controller: textController,
+                decoration: InputDecoration(
+                  labelText: 'Group Name',
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(50),
+                  ),
+                ),
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  String groupName = textController.text;
+                  if (groupName.isEmpty) {
+                    AlertDialog(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      title: Text('Error'),
+                      content: Text('Group name cannot be empty'),
+                      actions: [
+                        TextButton(
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                          child: Text('OK'),
+                        ),
+                      ],
+                    );
+                  } else {
+                    groupData
+                        .addGroup(
+                      groupName,
+                      userId,
+                    )
+                        .then((value) {
+                      showDialog(
+                        context: context,
+                        builder: (context) => AlertDialog(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          title: Text('Success'),
+                          content: Text('Group created successfully'),
+                          actions: [
+                            TextButton(
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                                Navigator.of(context).pop();
+                                Navigator.of(context).pop();
+                              },
+                              child: Text('OK'),
+                            ),
+                          ],
+                        ),
+                      );
+                    });
+                  }
+                },
+                child: Text('Create Group'),
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }

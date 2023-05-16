@@ -12,6 +12,7 @@ import 'package:travela_mobile/models/travel_group.dart';
 import 'package:travela_mobile/providers/destinations_provider.dart';
 import 'package:travela_mobile/providers/group_provider.dart';
 import 'package:travela_mobile/providers/recommendation_provider.dart';
+import 'package:travela_mobile/widgets/group/suggestionsForGroup.dart';
 import 'package:travela_mobile/widgets/home/suggestions.dart';
 
 class EditTravelGroup extends StatefulWidget {
@@ -34,6 +35,8 @@ class _EditTravelGroupState extends State<EditTravelGroup> {
 
     final travelGroup =
         ModalRoute.of(context)!.settings.arguments as TravelGroup;
+
+    currentGroupIdForSuggestions = travelGroup.id;
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
@@ -180,7 +183,7 @@ class _EditTravelGroupState extends State<EditTravelGroup> {
                 ),
               ),
               SizedBox(height: 20),
-              SuggestionsForYou(),
+              SuggestionsForGroup(),
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Row(

@@ -250,8 +250,8 @@ class _ProfilePageState extends State<ProfilePage> {
                       onSelectionChanged: _onSelectionChanged,
                       selectionMode: DateRangePickerSelectionMode.range,
                       initialSelectedRange: PickerDateRange(
-                        _currentStartDate,
-                        _currentEndDate,
+                        DateTime.parse(currentAvailableFrom),
+                        DateTime.parse(currentAvailableTo),
                       ),
                       startRangeSelectionColor: Theme.of(context).primaryColor,
                       endRangeSelectionColor: Theme.of(context).primaryColor,
