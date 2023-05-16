@@ -17,7 +17,7 @@ class PopularDestinations extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).primaryColor,
-        title: const Text('Popular Destinations'),
+        title: const Text('Destinations'),
       ),
       body: ListView.separated(
         separatorBuilder: (context, index) => Divider(

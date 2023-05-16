@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:provider/provider.dart';
+import 'package:travela_mobile/appConstant.dart';
 import 'package:travela_mobile/models/destination.dart';
 import 'package:travela_mobile/providers/authentication_provider.dart';
 import 'package:travela_mobile/providers/destinations_provider.dart';
+import 'package:travela_mobile/providers/user_provider.dart';
 
 class QuestionnarePage extends StatefulWidget {
   QuestionnarePage({super.key});
@@ -19,7 +21,12 @@ class _QuestionnarePageState extends State<QuestionnarePage> {
   void initState() {
     final authenticationData =
         Provider.of<AuthenticationProvider>(context, listen: false);
-    authenticationData.getCurrentUser();
+    final userData = Provider.of<UserProvider>(context, listen: false);
+    authenticationData.getCurrentUser().then(
+      (value) {
+        userData.getUserIdByUsername(currentUser.username);
+      },
+    );
     super.initState();
   }
 
@@ -107,6 +114,12 @@ class _QuestionnarePageState extends State<QuestionnarePage> {
                         onPressed: () {
                           for (var destination in _selectedDestinations) {
                             print(destination.city);
+                            final userData = Provider.of<UserProvider>(context,
+                                listen: false);
+
+                            print('user id is ${userId}');
+                            print('destination id is ${destination.id}');
+                            userData.addVisitedCity(userId, destination.id);
                           }
                           Navigator.of(context).pushNamed('/home');
                         },

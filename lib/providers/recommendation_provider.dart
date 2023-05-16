@@ -29,8 +29,6 @@ class RecommendationProvider with ChangeNotifier {
       final response = await http.get(url, headers: {
         'Authorization': 'Bearer $amadeusBearer',
       });
-      print(response.body);
-
       final extractedData = json.decode(response.body) as Map<String, dynamic>;
       final List<String> loadedLocations = [];
       extractedData['data'].forEach((locationData) {
@@ -58,7 +56,6 @@ class RecommendationProvider with ChangeNotifier {
         'client_id': amadeusClientId,
         'client_secret': amadeusClient,
       });
-      print(response.body);
 
       final extractedData = json.decode(response.body) as Map<String, dynamic>;
       amadeusBearer = extractedData['access_token'];

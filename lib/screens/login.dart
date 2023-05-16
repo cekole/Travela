@@ -128,9 +128,11 @@ class _LoginPageState extends State<LoginPage> {
                                   final userData = Provider.of<UserProvider>(
                                       context,
                                       listen: false);
-                                  userData.resetCurrentValues();
-                                  Navigator.pushReplacementNamed(
-                                      context, '/home');
+                                  userData.resetCurrentValues().then(
+                                        (value) =>
+                                            Navigator.pushReplacementNamed(
+                                                context, '/home'),
+                                      );
                                 } else {
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     SnackBar(

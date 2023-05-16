@@ -15,6 +15,7 @@ List currentRequestUsernames = [];
 List currentRequestIds = [];
 
 String currentGroupId = '';
+String currentGroupIdForSuggestions = '';
 List currentGroupUsernames = [];
 List currentGroupTrips = [];
 

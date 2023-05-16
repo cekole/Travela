@@ -33,6 +33,12 @@ class _GroupsPageState extends State<GroupsPage> {
   @override
   void initState() {
     super.initState();
+    _refreshGroups();
+  }
+
+  Future<void> _refreshGroups() async {
+    final groupData = Provider.of<GroupProvider>(context, listen: false);
+    await groupData.fetchAndSetGroupsByUserId(userId);
   }
 
   @override
@@ -73,88 +79,93 @@ class _GroupsPageState extends State<GroupsPage> {
           ),
         ],
       ),
-      body: ListView(
-        children: [
-          SizedBox(
-            height: 10,
-          ),
-          ListView.separated(
-            physics: NeverScrollableScrollPhysics(),
-            separatorBuilder: (context, index) => SizedBox(
+      body: RefreshIndicator(
+        onRefresh: _refreshGroups,
+        child: ListView(
+          children: [
+            SizedBox(
               height: 10,
             ),
-            shrinkWrap: true,
-            itemCount: Provider.of<GroupProvider>(context).groups.length,
-            itemBuilder: (context, index) {
-              final travelGroup = Provider.of<GroupProvider>(
-                context,
-              ).groups[index];
-              return Container(
-                margin: EdgeInsets.symmetric(horizontal: 10),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.all(
-                    Radius.circular(10),
-                  ),
-                  color: Theme.of(context).primaryColor.withOpacity(0.2),
-                ),
-                child: ExpansionTileCard(
-                  onExpansionChanged: (value) {
-                    final groupData = Provider.of<GroupProvider>(
-                      context,
-                      listen: false,
-                    );
-                    final groupNames =
-                        groupData.getParticipants(travelGroup.id).then((value) {
-                      print(currentGroupUsernames);
-                    });
-                    setState(() {
-                      _isExpandedGroup = value;
-                    });
-                  },
-                  baseColor: Theme.of(context).backgroundColor.withOpacity(0.2),
-                  leading: CircleAvatar(
-                    backgroundColor: Theme.of(context).backgroundColor,
-                    child: IconButton(
-                      icon: Icon(Icons.edit),
-                      onPressed: () {
-                        final groupData =
-                            Provider.of<GroupProvider>(context, listen: false);
-                        groupData
-                            .getParticipants(travelGroup.id)
-                            .then((value) => Navigator.of(context).pushNamed(
-                                  '/edit_travel_group',
-                                  arguments: travelGroup,
-                                ));
-                      },
+            ListView.separated(
+              physics: NeverScrollableScrollPhysics(),
+              separatorBuilder: (context, index) => SizedBox(
+                height: 10,
+              ),
+              shrinkWrap: true,
+              itemCount: Provider.of<GroupProvider>(context).groups.length,
+              itemBuilder: (context, index) {
+                final travelGroup = Provider.of<GroupProvider>(
+                  context,
+                ).groups[index];
+                return Container(
+                  margin: EdgeInsets.symmetric(horizontal: 10),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(10),
                     ),
+                    color: Theme.of(context).primaryColor.withOpacity(0.2),
                   ),
-                  title: Text(travelGroup.groupName),
-                  subtitle: Text(
-                    travelGroup.commonStartDate.toString(),
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  children: [
-                    Builder(
-                      builder: (context) {
-                        return SingleChildScrollView(
-                          child: Column(
-                            children: [
-                              ...currentGroupUsernames
-                                  .map((username) => ListTile(
-                                        title: Text(username),
-                                      ))
-                                  .toList(),
-                            ],
-                          ),
-                        );
-                      },
+                  child: ExpansionTileCard(
+                    onExpansionChanged: (value) {
+                      final groupData = Provider.of<GroupProvider>(
+                        context,
+                        listen: false,
+                      );
+                      final groupNames = groupData
+                          .getParticipants(travelGroup.id)
+                          .then((value) {
+                        print(currentGroupUsernames);
+                      });
+                      setState(() {
+                        _isExpandedGroup = value;
+                      });
+                    },
+                    baseColor:
+                        Theme.of(context).backgroundColor.withOpacity(0.2),
+                    leading: CircleAvatar(
+                      backgroundColor: Theme.of(context).backgroundColor,
+                      child: IconButton(
+                        icon: Icon(Icons.edit),
+                        onPressed: () {
+                          final groupData = Provider.of<GroupProvider>(context,
+                              listen: false);
+                          groupData
+                              .getParticipants(travelGroup.id)
+                              .then((value) => Navigator.of(context).pushNamed(
+                                    '/edit_travel_group',
+                                    arguments: travelGroup,
+                                  ));
+                        },
+                      ),
                     ),
-                  ],
-                ),
-              );
-            },
-          ),
-        ],
+                    title: Text(travelGroup.groupName),
+                    subtitle: Text(
+                      travelGroup.commonStartDate.toString(),
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    children: [
+                      Builder(
+                        builder: (context) {
+                          return SingleChildScrollView(
+                            child: Column(
+                              children: [
+                                ...currentGroupUsernames
+                                    .map((username) => ListTile(
+                                          title: Text(username),
+                                        ))
+                                    .toList(),
+                              ],
+                            ),
+                          );
+                        },
+                      ),
+                    ],
+                  ),
+                );
+              },
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -217,15 +228,16 @@ void formGroup(BuildContext context) {
                       ),
                     ],
                   );
+                } else {
+                  groupData
+                      .addGroup(
+                        groupName,
+                        userId,
+                      )
+                      .then(
+                        (value) => showAddFriendDialog(context),
+                      );
                 }
-                groupData
-                    .addGroup(
-                      groupName,
-                      userId,
-                    )
-                    .then(
-                      (value) => showAddFriendDialog(context),
-                    );
               },
               child: Text('Create Group'),
             ),

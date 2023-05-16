@@ -6,15 +6,22 @@ import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:travela_mobile/appConstant.dart';
 import 'package:http/http.dart' as http;
+import 'package:travela_mobile/models/city.dart';
 import 'package:travela_mobile/models/country.dart';
+import 'package:travela_mobile/models/destination.dart';
 import 'package:travela_mobile/models/travel_group.dart';
 import 'package:travela_mobile/models/user.dart';
 
 class GroupProvider with ChangeNotifier {
   List<TravelGroup> _groups = [];
+  List<Destination> _groupTripSuggestions = [];
 
   List<TravelGroup> get groups {
     return [..._groups];
+  }
+
+  List<Destination> get groupTripSuggestions {
+    return [..._groupTripSuggestions];
   }
 
   Future<void> fetchAndSetGroupsByUserId(String uId) async {
@@ -27,7 +34,6 @@ class GroupProvider with ChangeNotifier {
       },
     );
     print(response.statusCode);
-    print(response.body);
     final List<TravelGroup> loadedGroups = [];
     final extractedData = json.decode(response.body) as List<dynamic>;
     if (extractedData == null) {
@@ -76,8 +82,6 @@ class GroupProvider with ChangeNotifier {
       },
     );
     print(response.statusCode);
-    print('getGroupByUserId');
-    print(response.body);
     if (response.statusCode == 200) {
       print('getGroupByUserId succeeded');
       final extractedData = json.decode(response.body) as List<dynamic>;
@@ -325,26 +329,43 @@ class GroupProvider with ChangeNotifier {
       Uri.parse(url),
       headers: {
         'Authorization': 'Bearer  $bearerToken',
-        'Content-Type': 'application/json',
       },
     );
-    print(response.statusCode);
-    if (response.statusCode == 200) {
-      print('getTripSuggestions succeeded');
-      final extractedData = json.decode(response.body) as List<dynamic>;
-      if (extractedData == null) {
-        return;
-      }
-      final loadedSuggestions = [];
-      extractedData.forEach(
-        (suggestion) {
-          currentGroupSuggestions.add(suggestion);
-        },
+    final extractedData = json.decode(response.body) as List<dynamic>;
+    final List<City> loadedCities = [];
+    extractedData.forEach((city) {
+      loadedCities.add(
+        City(
+          id: city['city_id'].toString(),
+          cityName: city['cityName'],
+          countryName:
+              city['country'] == null ? '' : city['country']['countryName'],
+          description:
+              city['cityDescription'] == null ? '' : city['cityDescription'],
+          imageUrl: city['cityImageURL'] == null ? '' : city['cityImageURL'],
+          activities: city['activities'] == null ? [] : city['activities'],
+          iataCode: city['iata_code'],
+          latitude: city['latitude'],
+          longitude: city['longitude'],
+        ),
       );
-      notifyListeners();
-    } else {
-      print('getTripSuggestions failed');
-    }
+    });
+    _groupTripSuggestions = loadedCities
+        .map(
+          (city) => Destination(
+            id: city.id,
+            country: city.countryName,
+            city: city.cityName,
+            description: city.description,
+            imageUrl: city.imageUrl,
+            rating: 4.5,
+            location: 'Europe',
+            activities: city.activities,
+            isPopular: false,
+          ),
+        )
+        .toList();
+    notifyListeners();
   }
 
   Future updateCommonDates(String groupId) async {

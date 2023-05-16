@@ -7,13 +7,21 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:travela_mobile/appConstant.dart';
 import 'package:http/http.dart' as http;
+import 'package:travela_mobile/models/city.dart';
 import 'package:travela_mobile/models/country.dart';
+import 'package:travela_mobile/models/destination.dart';
 import 'package:travela_mobile/models/travel_group.dart';
 import 'package:travela_mobile/models/trip.dart';
 import 'package:travela_mobile/models/user.dart';
 import 'package:travela_mobile/providers/group_provider.dart';
 
 class UserProvider with ChangeNotifier {
+  List<Destination> _suggestedDestinations = [];
+
+  List<Destination> get suggestedDestinations {
+    return [..._suggestedDestinations];
+  }
+
   Future getAllUsers() async {
     final url = baseUrl + 'users';
     print(url);
@@ -43,6 +51,8 @@ class UserProvider with ChangeNotifier {
         if (username == currentUser.username) {
           print('you are the user');
           userId = user['user_id'].toString();
+          currentAvailableFrom = user['availableFrom'];
+          currentAvailableTo = user['availableTo'];
         } else {
           print('you are not the user');
           friendId = user['user_id'].toString();
@@ -278,32 +288,69 @@ class UserProvider with ChangeNotifier {
     }
   }
 
-  Future<void> getTripSuggestions(String id) async {
-    final url = baseUrl + 'groups/$id/trip-suggestions';
+  Future<bool> addVisitedCity(String uId, String cityId) async {
+    final url = baseUrl + 'users/$uId/addVisitedCity/$cityId';
     print(url);
+    final response = await http.put(
+      Uri.parse(url),
+      headers: {
+        'Authorization': 'Bearer $bearerToken',
+      },
+    );
+    if (response.statusCode == 200) {
+      print('add visited city succeeded');
+      notifyListeners();
+      return true;
+    } else {
+      print('add visited city failed');
+      return false;
+    }
+  }
+
+  Future<void> getTripSuggestions(String id) async {
+    final url = baseUrl + 'users/$id/trip-suggestions';
     final response = await http.get(
       Uri.parse(url),
       headers: {
-        'Authorization': 'Bearer  $bearerToken',
         'Content-Type': 'application/json',
+        'Authorization': 'Bearer $bearerToken',
       },
     );
-    print(response.statusCode);
-    if (response.statusCode == 200) {
-      print('getTripSuggestions for users succeeded');
-      final extractedData = json.decode(response.body) as List<dynamic>;
-      if (extractedData == null) {
-        return;
-      }
-      extractedData.forEach(
-        (suggestion) {
-          currentUserSuggestions.add(suggestion);
-        },
+    final extractedData = json.decode(response.body) as List<dynamic>;
+    final List<City> loadedCities = [];
+    extractedData.forEach((city) {
+      loadedCities.add(
+        City(
+          id: city['city_id'].toString(),
+          cityName: city['cityName'],
+          countryName:
+              city['country'] == null ? '' : city['country']['countryName'],
+          description:
+              city['cityDescription'] == null ? '' : city['cityDescription'],
+          imageUrl: city['cityImageURL'] == null ? '' : city['cityImageURL'],
+          activities: city['activities'] == null ? [] : city['activities'],
+          iataCode: city['iata_code'],
+          latitude: city['latitude'],
+          longitude: city['longitude'],
+        ),
       );
-      notifyListeners();
-    } else {
-      print('getTripSuggestions for users failed');
-    }
+    });
+    _suggestedDestinations = loadedCities
+        .map(
+          (city) => Destination(
+            id: city.id,
+            country: city.countryName,
+            city: city.cityName,
+            description: city.description,
+            imageUrl: city.imageUrl,
+            rating: 4.5,
+            location: 'Europe',
+            activities: city.activities,
+            isPopular: false,
+          ),
+        )
+        .toList();
+    notifyListeners();
   }
 
   Future getTripDrafts(String userId) async {
@@ -366,7 +413,7 @@ class UserProvider with ChangeNotifier {
     }
   }
 
-  void resetCurrentValues() {
+  Future<void> resetCurrentValues() async {
     userId = '';
     friendId = '';
 
@@ -377,11 +424,18 @@ class UserProvider with ChangeNotifier {
     currentRequestIds = [];
 
     currentGroupId = '';
+    currentGroupIdForSuggestions = '';
     currentGroupUsernames = [];
     currentGroupTrips = [];
 
     currentGroupSuggestions = [];
     currentUserSuggestions = [];
+
+    currentAvailableFrom = '';
+    currentAvailableTo = '';
+
+    favouriteCities = [];
+    currentTripDrafts = [];
     notifyListeners();
   }
 }

@@ -1,6 +1,9 @@
+import 'dart:collection';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:travela_mobile/appConstant.dart';
+import 'package:travela_mobile/models/destination.dart';
 import 'package:travela_mobile/providers/user_provider.dart';
 import 'package:travela_mobile/widgets/home/place_card.dart';
 
@@ -13,6 +16,9 @@ class SuggestionsForYou extends StatelessWidget {
   Widget build(BuildContext context) {
     final userData = Provider.of<UserProvider>(context, listen: true);
     userData.getTripSuggestions(userId);
+    List<Destination> suggestedDestinations = userData.suggestedDestinations;
+    Set<List<Destination>> destinationSet = {};
+    destinationSet.add(suggestedDestinations);
 
     return Column(
       children: [
@@ -28,7 +34,11 @@ class SuggestionsForYou extends StatelessWidget {
             ),
             TextButton(
               onPressed: () {
-                Navigator.pushNamed(context, '/popular');
+                Navigator.pushNamed(
+                  context,
+                  '/popular',
+                  arguments: destinationSet,
+                );
               },
               child: Text(
                 'See All',
@@ -43,12 +53,12 @@ class SuggestionsForYou extends StatelessWidget {
           height: MediaQuery.of(context).size.height * 0.25,
           child: ListView.builder(
             scrollDirection: Axis.horizontal,
-            itemCount: currentUserSuggestions.length,
+            itemCount: userData.suggestedDestinations.length,
             itemBuilder: (context, index) {
               return PlaceCard(
                 destination:
-                    '${currentUserSuggestions[index].city}, ${currentUserSuggestions[index].country}',
-                image: currentUserSuggestions[index].imageUrl,
+                    '${userData.suggestedDestinations[index].city}, ${userData.suggestedDestinations[index].country}',
+                image: userData.suggestedDestinations[index].imageUrl,
               );
             },
           ),
