@@ -9,7 +9,7 @@ class FavoritesPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final userData = Provider.of<UserProvider>(context, listen: false);
-    //userData.getFavouriteCities(userId); // method gelince ekle
+    userData.getFavouriteCities(userId);
     return Scaffold(
       appBar: AppBar(
         title: Text('Favorites'),
@@ -24,10 +24,10 @@ class FavoritesPage extends StatelessWidget {
             itemBuilder: (context, index) {
               return ListTile(
                 leading: Icon(Icons.favorite),
-                //title: Text(
-                //'${favouriteCities[index].city}, ${favouriteCities[index].country}'),
-                //subtitle: Text(
-                //'${favouriteCities[index].city}, ${favouriteCities[index].country}'),
+                title: Text(
+                    '${favouriteCities[index].cityName}, ${favouriteCities[index].countryName}'),
+                subtitle: Text(
+                    '${favouriteCities[index].description}, ${favouriteCities[index].activities}'),
               );
             },
           ),

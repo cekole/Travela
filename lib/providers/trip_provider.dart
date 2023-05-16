@@ -131,4 +131,44 @@ class TripProvider with ChangeNotifier {
       print('get all locations failed');
     }
   }
+
+  Future getStartDate(String id) async {
+    final url = baseUrl + 'trips/$id/startDate';
+    print(url);
+    final response = await http.get(
+      Uri.parse(url),
+      headers: {
+        'Authorization': 'Bearer  $bearerToken',
+        'Content-Type': 'application/json',
+      },
+    );
+    print(response.statusCode);
+
+    if (response.statusCode == 200) {
+      print('getStartDate success');
+      return json.decode(response.body);
+    } else {
+      print('getStartDate failed');
+    }
+  }
+
+  Future getEndDate(String id) async {
+    final url = baseUrl + 'trips/$id/endDate';
+    print(url);
+    final response = await http.get(
+      Uri.parse(url),
+      headers: {
+        'Authorization': 'Bearer  $bearerToken',
+        'Content-Type': 'application/json',
+      },
+    );
+    print(response.statusCode);
+
+    if (response.statusCode == 200) {
+      print('getEndDate success');
+      return json.decode(response.body);
+    } else {
+      print('getEndDate failed');
+    }
+  }
 }

@@ -469,6 +469,36 @@ class UserProvider with ChangeNotifier {
     }
   }
 
+  Future getFavouriteCities(String userId) async {
+    final url = baseUrl + 'users/$userId/favouriteCities';
+    print(url);
+    final response = await http.get(
+      Uri.parse(url),
+      headers: {
+        'Authorization': 'Bearer  $bearerToken',
+        'Content-Type': 'application/json',
+      },
+    );
+    print(response.statusCode);
+    print(response.body);
+
+    if (response.statusCode == 200) {
+      print('getFavouriteCities success');
+      final extractedData = json.decode(response.body) as List<dynamic>;
+      if (extractedData == null) {
+        return;
+      }
+      extractedData.forEach(
+        (trip) {
+          favouriteCities.add(trip);
+        },
+      );
+      notifyListeners();
+    } else {
+      print('getFavouriteCities failed');
+    }
+  }
+
   Future<void> resetCurrentValues() async {
     userId = '';
     friendId = '';

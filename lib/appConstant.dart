@@ -30,6 +30,9 @@ List<Trip> currentTripDrafts = [];
 
 List<City> friendsVisitedCities = [];
 
+String profilePic = '';
+List<String> tripPhotos = [];
+
 User currentUser = User(
   id: '',
   username: '',

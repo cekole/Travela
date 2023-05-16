@@ -271,6 +271,25 @@ class GroupProvider with ChangeNotifier {
     }
   }
 
+  Future addLocationToTrip(String groupId, String tripId, String cityId) async {
+    final url = baseUrl + 'groups/$groupId/trips/$tripId/add/$cityId';
+    print(url);
+    final response = await http.put(
+      Uri.parse(url),
+      headers: {
+        'Authorization': 'Bearer  $bearerToken',
+        'Content-Type': 'application/json',
+      },
+    );
+    print(response.statusCode);
+    if (response.statusCode == 200) {
+      print('addLocationToTrip succeeded');
+      return json.decode(response.body);
+    } else {
+      print('addLocationToTrip failed');
+    }
+  }
+
   Future getChat(String id) async {
     final url = baseUrl + 'groups/$id/chat';
     print(url);
