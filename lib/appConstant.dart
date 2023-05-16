@@ -28,6 +28,8 @@ String currentAvailableTo = '';
 List<City> favouriteCities = [];
 List<Trip> currentTripDrafts = [];
 
+List<City> friendsVisitedCities = [];
+
 User currentUser = User(
   id: '',
   username: '',
