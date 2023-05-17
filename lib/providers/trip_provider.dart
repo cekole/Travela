@@ -180,7 +180,12 @@ class TripProvider with ChangeNotifier {
 
     if (response.statusCode == 200) {
       print('getStartDate success');
-      return json.decode(response.body);
+      final extractedData = json.decode(response.body) as Map<String, dynamic>;
+      if (extractedData == null) {
+        return;
+      }
+      endDate = extractedData['startDate'];
+      notifyListeners();
     } else {
       print('getStartDate failed');
     }
@@ -196,11 +201,16 @@ class TripProvider with ChangeNotifier {
         'Content-Type': 'application/json',
       },
     );
-    print(response.statusCode);
 
+    print(response.statusCode);
     if (response.statusCode == 200) {
       print('getEndDate success');
-      return json.decode(response.body);
+      final extractedData = json.decode(response.body) as Map<String, dynamic>;
+      if (extractedData == null) {
+        return;
+      }
+      endDate = extractedData['endDate'];
+      notifyListeners();
     } else {
       print('getEndDate failed');
     }

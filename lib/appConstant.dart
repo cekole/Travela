@@ -27,6 +27,9 @@ List currentUserSuggestions = [];
 String currentAvailableFrom = '';
 String currentAvailableTo = '';
 
+DateTime endDate = DateTime.now();
+DateTime startDate = DateTime.now();
+
 List<City> favouriteCities = [];
 List<Trip> currentTripDrafts = [];
 

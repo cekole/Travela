@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -422,6 +421,36 @@ class GroupProvider with ChangeNotifier {
       return json.decode(response.body);
     } else {
       print('updateCommonCities failed');
+    }
+  }
+
+  Future getUpcomingTrips(String userId) async {
+    final url = baseUrl + 'users/$userId/trips/upcoming';
+    print(url);
+    final response = await http.get(
+      Uri.parse(url),
+      headers: {
+        'Authorization': 'Bearer  $bearerToken',
+        'Content-Type': 'application/json',
+      },
+    );
+    print(response.statusCode);
+    print(response.body);
+
+    if (response.statusCode == 200) {
+      print('getUpcomingTrips success');
+      final extractedData = json.decode(response.body) as List<dynamic>;
+      if (extractedData == null) {
+        return;
+      }
+      extractedData.forEach(
+        (trip) {
+          upcomingTrips.add(trip);
+        },
+      );
+      notifyListeners();
+    } else {
+      print('getUpcomingTrips failed');
     }
   }
 }
