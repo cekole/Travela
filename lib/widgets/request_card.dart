@@ -56,7 +56,8 @@ class RequestCard extends StatelessWidget {
                                 TextButton(
                                     onPressed: () {
                                       //requestNames.removeAt(index);
-                                      Navigator.of(context).pop();
+                                      Navigator.of(context)
+                                          .pushReplacementNamed('/groups');
                                     },
                                     child: Text('Ok'))
                               ],

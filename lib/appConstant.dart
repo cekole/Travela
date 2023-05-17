@@ -5,6 +5,8 @@ import 'package:travela_mobile/models/travel_group.dart';
 import 'package:travela_mobile/models/user.dart';
 import 'package:travela_mobile/models/trip.dart';
 
+int pageNum = 0;
+
 String userId = '';
 String friendId = '';
 
@@ -47,7 +49,7 @@ User currentUser = User(
   availableTo: DateTime.now(),
   visitedCities: [],
 );
-String baseUrl = "http://16.16.214.40:8081/";
+String baseUrl = "http://13.48.206.213:8081/";
 //for local testing
 //String baseUrl = "http://localhost:8081/";
 

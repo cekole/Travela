@@ -12,6 +12,7 @@ import 'package:travela_mobile/providers/travel_group_provider.dart';
 import 'package:travela_mobile/screens/destination/destination_detail.dart';
 import 'package:travela_mobile/screens/destination/destination_list.dart';
 import 'package:travela_mobile/screens/favorites/favorite_page.dart';
+import 'package:travela_mobile/screens/groups/groups_page.dart';
 import 'package:travela_mobile/screens/hotel/hotel_page.dart';
 import 'package:travela_mobile/screens/maps/friends_map.dart';
 import 'package:travela_mobile/screens/maps/map_page.dart';
@@ -85,6 +86,7 @@ class MyApp extends StatelessWidget {
           '/friends': (context) => const FriendsPage(),
           '/popular': (context) => const PopularDestinations(),
           '/map': (context) => const MapPage(),
+          '/groups': (context) => GroupsPage(),
           '/friends-map': (context) => const FriendsMap(),
           '/edit_profile': (context) => const EditProfile(),
           '/edit_travel_group': (context) => const EditTravelGroup(),
