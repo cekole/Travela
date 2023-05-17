@@ -3,6 +3,7 @@ import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:provider/provider.dart';
 import 'package:travela_mobile/providers/authentication_provider.dart';
+import 'package:email_validator/email_validator.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({Key? key}) : super(key: key);
@@ -19,6 +20,16 @@ class _RegisterPageState extends State<RegisterPage> {
   final TextEditingController confirmPasswordController =
       TextEditingController();
   bool passwordCheck = false;
+
+  @override
+  void dispose() {
+    emailController.dispose();
+    nameController.dispose();
+    usernameController.dispose();
+    passwordController.dispose();
+    confirmPasswordController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -198,6 +209,20 @@ class _RegisterPageState extends State<RegisterPage> {
                           ),
                           ElevatedButton(
                             onPressed: () {
+                              if (!EmailValidator.validate(
+                                  emailController.text))
+                                AlertDialog(
+                                  title: Text('Invalid Email'),
+                                  content: Text('Please enter a valid email'),
+                                  actions: [
+                                    TextButton(
+                                      onPressed: () {
+                                        Navigator.pop(context);
+                                      },
+                                      child: Text('OK'),
+                                    ),
+                                  ],
+                                );
                               handleSignUp();
                             },
                             child: Text(
@@ -279,6 +304,18 @@ class _RegisterPageState extends State<RegisterPage> {
                       }
                   });
         } else {
+          AlertDialog(
+            title: Text('Could not register. Please try again.'),
+            content: Text('Could not register. Please try again.'),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: Text('OK'),
+              ),
+            ],
+          );
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text('Could not register. Please try again.'),
@@ -287,10 +324,17 @@ class _RegisterPageState extends State<RegisterPage> {
         }
       });
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Passwords do not match.'),
-        ),
+      AlertDialog(
+        title: Text('Passwords do not match'),
+        content: Text('Please enter matching passwords'),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            child: Text('OK'),
+          ),
+        ],
       );
     }
   }

@@ -18,7 +18,7 @@ List currentRequestIds = [];
 
 String currentGroupId = '';
 String currentGroupIdForSuggestions = '';
-List currentGroupUsernames = [];
+List<String> currentGroupUsernames = [];
 List currentGroupTrips = [];
 
 List currentGroupSuggestions = [];
@@ -31,6 +31,14 @@ List<City> favouriteCities = [];
 List<Trip> currentTripDrafts = [];
 
 List<City> friendsVisitedCities = [];
+
+String profilePic = '';
+List<String> tripPhotos = [];
+
+List<Trip> upcomingTrips = [];
+List<Trip> pastTrips = [];
+
+String currentTripId = '';
 
 User currentUser = User(
   id: '',

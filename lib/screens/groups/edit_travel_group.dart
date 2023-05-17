@@ -31,7 +31,9 @@ class _EditTravelGroupState extends State<EditTravelGroup> {
 
   @override
   Widget build(BuildContext context) {
+    final groupData = Provider.of<GroupProvider>(context, listen: false);
     final Size size = MediaQuery.of(context).size;
+    TextEditingController groupNameController = TextEditingController();
 
     final travelGroup =
         ModalRoute.of(context)!.settings.arguments as TravelGroup;
@@ -297,6 +299,94 @@ class _EditTravelGroupState extends State<EditTravelGroup> {
                       });
                 },
                 child: Text('Show Common Dates'),
+              ),
+              SizedBox(height: 20),
+              ElevatedButton(
+                onPressed: () {
+                  // show modal to change group name with a text field
+                  showModalBottomSheet(
+                    context: context,
+                    builder: (context) => Container(
+                      margin: EdgeInsets.all(8.0),
+                      padding: EdgeInsets.all(8.0),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: Material(
+                        color: Colors.white,
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            //close button
+                            Row(
+                              children: [
+                                Spacer(),
+                                IconButton(
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                  icon: Icon(Icons.close),
+                                ),
+                              ],
+                            ),
+                            Text(
+                              'Change Group Name',
+                              style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            Divider(
+                              color: Colors.grey,
+                              thickness: 1,
+                            ),
+                            TextField(
+                              controller: groupNameController,
+                              decoration: InputDecoration(
+                                hintText: 'Enter new group name',
+                                border: InputBorder.none,
+                                contentPadding: EdgeInsets.only(
+                                  left: 15,
+                                ),
+                              ),
+                            ),
+                            SizedBox(height: 20),
+                            ElevatedButton(
+                              onPressed: () {
+                                groupData.updateGroup(currentGroupId,
+                                    groupNameController.text, "group name");
+                                Navigator.of(context).pop();
+                              },
+                              child: Text('Update Group Name'),
+                            ),
+                            SizedBox(height: 20),
+                          ],
+                        ),
+                      ),
+                    ),
+                  );
+                },
+                child: Text('Update Group Info'),
+              ),
+              SizedBox(height: 20),
+              ElevatedButton(
+                onPressed: () {
+                  groupData.deleteGroup(travelGroup.id);
+                  AlertDialog(
+                    title: Text('Group Deleted'),
+                    content: Text('Group has been deleted'),
+                    actions: [
+                      TextButton(
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                        child: Text('Ok'),
+                      ),
+                    ],
+                  );
+                },
+                child: Text('Delete Group'),
               ),
             ],
           ),

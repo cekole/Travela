@@ -386,7 +386,7 @@ class UserProvider with ChangeNotifier {
   }
 
   Future getUpcomingTrips(String userId) async {
-    final url = baseUrl + 'users/$userId/trips/shared';
+    final url = baseUrl + 'users/$userId/trips/upcoming';
     print(url);
     final response = await http.get(
       Uri.parse(url),
@@ -406,12 +406,42 @@ class UserProvider with ChangeNotifier {
       }
       extractedData.forEach(
         (trip) {
-          currentTripDrafts.add(trip);
+          upcomingTrips.add(trip);
         },
       );
       notifyListeners();
     } else {
       print('getUpcomingTrips failed');
+    }
+  }
+
+  Future getPastTrips(String userId) async {
+    final url = baseUrl + 'users/$userId/trips/past';
+    print(url);
+    final response = await http.get(
+      Uri.parse(url),
+      headers: {
+        'Authorization': 'Bearer  $bearerToken',
+        'Content-Type': 'application/json',
+      },
+    );
+    print(response.statusCode);
+    print(response.body);
+
+    if (response.statusCode == 200) {
+      print('getPastTrips success');
+      final extractedData = json.decode(response.body) as List<dynamic>;
+      if (extractedData == null) {
+        return;
+      }
+      extractedData.forEach(
+        (trip) {
+          pastTrips.add(trip);
+        },
+      );
+      notifyListeners();
+    } else {
+      print('getPastTrips failed');
     }
   }
 
@@ -468,6 +498,36 @@ class UserProvider with ChangeNotifier {
       notifyListeners();
     } else {
       print('getAllFriendsVisitedCities failed');
+    }
+  }
+
+  Future getFavouriteCities(String userId) async {
+    final url = baseUrl + 'users/$userId/favouriteCities';
+    print(url);
+    final response = await http.get(
+      Uri.parse(url),
+      headers: {
+        'Authorization': 'Bearer  $bearerToken',
+        'Content-Type': 'application/json',
+      },
+    );
+    print(response.statusCode);
+    print(response.body);
+
+    if (response.statusCode == 200) {
+      print('getFavouriteCities success');
+      final extractedData = json.decode(response.body) as List<dynamic>;
+      if (extractedData == null) {
+        return;
+      }
+      extractedData.forEach(
+        (trip) {
+          favouriteCities.add(trip);
+        },
+      );
+      notifyListeners();
+    } else {
+      print('getFavouriteCities failed');
     }
   }
 

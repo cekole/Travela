@@ -5,7 +5,9 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:provider/provider.dart';
 import 'package:travela_mobile/appConstant.dart';
 import 'package:travela_mobile/providers/group_provider.dart';
+import 'package:travela_mobile/providers/user_provider.dart';
 import 'package:travela_mobile/providers/travel_group_provider.dart';
+import 'package:travela_mobile/providers/trip_provider.dart';
 import 'package:travela_mobile/screens/maps/previous_trips_map.dart';
 import 'package:travela_mobile/screens/home/popular_destinations.dart';
 import 'package:travela_mobile/widgets/custom_drawer.dart';
@@ -15,6 +17,15 @@ class TripsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    TextEditingController _groupNameController = TextEditingController();
+    TextEditingController _groupDescriptionController = TextEditingController();
+    TextEditingController _groupDestinationController = TextEditingController();
+    TextEditingController _groupPeriodController = TextEditingController();
+
+    final userData = Provider.of<UserProvider>(context, listen: false);
+    userData.getUpcomingTrips(userId);
+    userData.getPastTrips(userId);
+
     return Scaffold(
       drawerEnableOpenDragGesture: false,
       drawer: CustomDrawer(),
@@ -59,8 +70,12 @@ class TripsPage extends StatelessWidget {
                       backgroundColor: Theme.of(context).backgroundColor,
                       child: Icon(Icons.directions_boat),
                     ),
-                    title: Text('Greek Islands'),
-                    subtitle: Text('July 13 - 20, 2023'),
+                    title: Text(upcomingTrips.length > 0
+                        ? upcomingTrips[0].name
+                        : 'No Upcoming Trips'),
+                    subtitle: upcomingTrips.length > 0
+                        ? Text(upcomingTrips[0].period)
+                        : Text(''),
                     children: [
                       Divider(
                         thickness: 1,
@@ -68,84 +83,104 @@ class TripsPage extends StatelessWidget {
                       ),
                       ListTile(
                         title: Text('Locations'),
-                        subtitle: Text('Mykonos, Santorini, Crete'),
+                        subtitle: upcomingTrips.length > 0
+                            ? Text(
+                                upcomingTrips.map((e) => e.locations).join(','))
+                            : Text(''),
                         leading: Icon(Icons.location_on),
                       ),
                       ListTile(
                         title: Text('Travelers'),
-                        subtitle: Text('You, John Wayne, Emma Watson'),
+                        subtitle: Text(upcomingTrips.length > 0
+                            ? upcomingTrips.map((e) => e.travelGroup).join(',')
+                            : ''),
                         leading: Icon(Icons.people),
                       ),
                       ListTile(
                         title: Text('Transportation'),
-                        subtitle: Text(
-                            'Ferry \n7/13/2023 12:00 PM - 7/20/2023 12:00 PM'),
+                        subtitle: Text(upcomingTrips.length > 0
+                            ? upcomingTrips
+                                .map((e) => e.transportation)
+                                .join(',')
+                            : ''),
                         leading: Icon(Icons.mode_of_travel_sharp),
                       ),
                       ListTile(
                         title: Text('Accomodation'),
-                        subtitle: Text('Ferry Cabin'),
+                        subtitle: upcomingTrips.length > 0
+                            ? Text(upcomingTrips
+                                .map((e) => e.accomodation)
+                                .join(','))
+                            : Text(''),
                         leading: Icon(Icons.hotel),
                       ),
                       ListTile(
-                        title: Text('Quick Notes'),
-                        subtitle: Text('Bring sunscreen, bathing suit, etc.'),
+                        title: Text('Description'),
+                        subtitle: upcomingTrips.length > 0
+                            ? Text(upcomingTrips
+                                .map((e) => e.description)
+                                .join(','))
+                            : Text(''),
                         leading: Icon(Icons.note),
                       ),
                       ListTile(
                         trailing: IconButton(
-                          onPressed: () {},
-                          icon: Icon(Icons.edit),
-                        ),
-                      )
-                    ],
-                  ),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  ExpansionTileCard(
-                    baseColor: Theme.of(context).primaryColor.withOpacity(0.2),
-                    expandedColor: Theme.of(context).backgroundColor,
-                    leading: CircleAvatar(
-                      backgroundColor: Theme.of(context).backgroundColor,
-                      child: Icon(Icons.flight),
-                    ),
-                    title: Text('Aurora Borealis'),
-                    subtitle: Text('March 13 - 20, 2023'),
-                    children: [
-                      Divider(
-                        thickness: 1,
-                        height: 1,
-                      ),
-                      ListTile(
-                        title: Text('Locations'),
-                        subtitle: Text('Iceland'),
-                        leading: Icon(Icons.location_on),
-                      ),
-                      ListTile(
-                        title: Text('Travelers'),
-                        subtitle: Text('You, Wayne Gretzky, Emily Blunt'),
-                        leading: Icon(Icons.people),
-                      ),
-                      ListTile(
-                        title: Text('Transportation'),
-                        subtitle: Text(
-                            'Plane \n3/13/2023 12:00 PM - 3/20/2023 12:00 PM'),
-                        leading: Icon(Icons.mode_of_travel_sharp),
-                      ),
-                      ListTile(
-                        title: Text('Accomodation'),
-                        subtitle: Text('Igloo Hotel'),
-                        leading: Icon(Icons.hotel),
-                      ),
-                      ListTile(
-                        title: Text('Quick Notes'),
-                        subtitle: Text('Bring sunscreen, bathing suit, etc.'),
-                        leading: Icon(Icons.note),
-                      ),
-                      ListTile(
-                        trailing: IconButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            // create a modal to change the trip info
+                            showModalBottomSheet(
+                              context: context,
+                              builder: (context) => Container(
+                                height: 300,
+                                child: Column(
+                                  children: [
+                                    SizedBox(
+                                      height: 20,
+                                    ),
+                                    Text(
+                                      'Edit Trip Info',
+                                      style: TextStyle(
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    TextField(
+                                      decoration: InputDecoration(
+                                        hintText: 'Trip Name',
+                                      ),
+                                      onChanged: (value) {
+                                        _groupNameController.text = value;
+                                      },
+                                    ),
+                                    TextField(
+                                      decoration: InputDecoration(
+                                        hintText: 'Trip Description',
+                                      ),
+                                      onChanged: (value) {
+                                        _groupDescriptionController.text =
+                                            value;
+                                      },
+                                    ),
+                                    SizedBox(
+                                      height: 20,
+                                    ),
+                                    ElevatedButton(
+                                      onPressed: () {
+                                        final tripData =
+                                            Provider.of<TripProvider>(context,
+                                                listen: false);
+                                        tripData.updateTrip(
+                                            currentTripId, // buraya trip id gelecek bu çalışmaz şu an
+                                            _groupNameController.text,
+                                            _groupDescriptionController.text,
+                                            currentGroupId);
+                                      },
+                                      child: Text('Update Trip'),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            );
+                          },
                           icon: Icon(Icons.edit),
                         ),
                       )
@@ -184,8 +219,11 @@ class TripsPage extends StatelessWidget {
                       backgroundColor: Theme.of(context).backgroundColor,
                       child: Icon(Icons.directions_car),
                     ),
-                    title: Text('Paris Road Trip'),
-                    subtitle: Text('August 20 - 24, 2021'),
+                    title: // çağla ekleyecek
+                        Text("buraya çağlaekleyince gelecek"),
+                    subtitle: pastTrips.length > 0
+                        ? Text(pastTrips[0].period)
+                        : Text(''),
                     children: [
                       Divider(
                         thickness: 1,
@@ -193,11 +231,13 @@ class TripsPage extends StatelessWidget {
                       ),
                       ListTile(
                         title: Text('Locations'),
-                        subtitle: Text('Paris, Versailles, Giverny'),
+                        subtitle: pastTrips.length > 0
+                            ? Text(pastTrips.map((e) => e.locations).join(','))
+                            : Text(''),
                         leading: Icon(Icons.location_on),
                       ),
                       ListTile(
-                        title: Text('Parisiens'),
+                        title: Text('Travelers'),
                         subtitle: Text(
                             'You, Yağmur Eryılmaz, Efe Şaman, Çağla Ataoğlu, Efe Ertürk'),
                         leading: Icon(Icons.people),
@@ -210,13 +250,11 @@ class TripsPage extends StatelessWidget {
                       ),
                       ListTile(
                         title: Text('Accomodation'),
-                        subtitle: Text('Hotel'),
+                        subtitle: pastTrips.length > 0
+                            ? Text(
+                                pastTrips.map((e) => e.accomodation).join(','))
+                            : Text(''),
                         leading: Icon(Icons.hotel),
-                      ),
-                      ListTile(
-                        title: Text('Quick Notes'),
-                        subtitle: Text('Don\'t forget to bring your camera !'),
-                        leading: Icon(Icons.note),
                       ),
                     ],
                   ),

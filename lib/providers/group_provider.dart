@@ -144,6 +144,25 @@ class GroupProvider with ChangeNotifier {
     }
   }
 
+  Future removeUserFromGroup(String groupId, String userId) async {
+    final url = baseUrl + 'groups/$groupId/removeUser/$userId';
+    print(url);
+    final response = await http.put(
+      Uri.parse(url),
+      headers: {
+        'Authorization': 'Bearer  $bearerToken',
+        'Content-Type': 'application/json',
+      },
+    );
+    print(response.statusCode);
+    if (response.statusCode == 200) {
+      print('removeUserFromGroup succeeded');
+      return json.decode(response.body);
+    } else {
+      print('removeUserFromGroup failed');
+    }
+  }
+
   Future updateGroup(String id, String groupName, String ownerId) async {
     final url = baseUrl + 'groups/$id';
     print(url);
@@ -233,25 +252,6 @@ class GroupProvider with ChangeNotifier {
     }
   }
 
-  Future removeUserFromGroup(String groupId, String userId) async {
-    final url = baseUrl + 'groups/$groupId/removeUser/$userId';
-    print(url);
-    final response = await http.put(
-      Uri.parse(url),
-      headers: {
-        'Authorization': 'Bearer  $bearerToken',
-        'Content-Type': 'application/json',
-      },
-    );
-    print(response.statusCode);
-    if (response.statusCode == 200) {
-      print('removeUserFromGroup succeeded');
-      return json.decode(response.body);
-    } else {
-      print('removeUserFromGroup failed');
-    }
-  }
-
   Future addTrip(String groupId, String cityId) async {
     final url = baseUrl + 'groups/$groupId/trips/add/$cityId';
     print(url);
@@ -268,6 +268,25 @@ class GroupProvider with ChangeNotifier {
       return json.decode(response.body);
     } else {
       print('addTrip failed');
+    }
+  }
+
+  Future addLocationToTrip(String groupId, String tripId, String cityId) async {
+    final url = baseUrl + 'groups/$groupId/trips/$tripId/add/$cityId';
+    print(url);
+    final response = await http.put(
+      Uri.parse(url),
+      headers: {
+        'Authorization': 'Bearer  $bearerToken',
+        'Content-Type': 'application/json',
+      },
+    );
+    print(response.statusCode);
+    if (response.statusCode == 200) {
+      print('addLocationToTrip succeeded');
+      return json.decode(response.body);
+    } else {
+      print('addLocationToTrip failed');
     }
   }
 

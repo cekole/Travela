@@ -33,27 +33,7 @@ class TravelGroupProvider with ChangeNotifier {
           availableTo: DateTime.now(),
         ),
       ],
-      trips: [
-        Trip(
-          id: '1',
-          period: 'August 2022',
-          locations: ['Zurich', 'Bern', 'Geneva'],
-          imageUrl: 'assets/images/travel_groups/travel_group_1.jpeg',
-          accomodation: Accomodation(
-            name: 'Hotel Schweizerhof',
-            price: '100.000',
-            link:
-                'https://www.booking.com/hotel/ch/schweizerhof-zurich.en-gb.html',
-            address: 'Schweizerhofstrasse 1, 8001 Zurich, Switzerland',
-            description:
-                'Hotel Schweizerhof is located in the heart of Zurich, just 200 metres from the main train station. It offers a restaurant, a bar and free WiFi.',
-            type: 'Hotel',
-            rating: '4.2',
-            image: 'assets/images/accomodations/accomodation_1.jpeg',
-          ),
-          quickNotes: 'We will meet at the airport.',
-        ),
-      ],
+      trips: [],
     ),
     TravelGroup(
       id: '2',
@@ -147,26 +127,7 @@ class TravelGroupProvider with ChangeNotifier {
           availableTo: DateTime.now(),
         ),
       ],
-      trips: [
-        Trip(
-          id: '1',
-          period: 'June 2022',
-          locations: ['Berlin'],
-          imageUrl: 'assets/images/travel_groups/travel_group_2.jpeg',
-          accomodation: Accomodation(
-            name: 'Hotel Berlin',
-            price: '100.000',
-            link: 'https://www.booking.com/hotel/de/berlin.en-gb.html',
-            address: 'Berlinstrasse 1, 8001 Berlin, Germany',
-            description:
-                'Hotel Berlin is located in the heart of Berlin, just 200 metres from the main train station. It offers a restaurant, a bar and free WiFi.',
-            type: 'Hotel',
-            rating: '4.2',
-            image: 'assets/images/accomodations/accomodation_2.jpeg',
-          ),
-          quickNotes: 'We will meet at the airport.',
-        ),
-      ],
+      trips: [],
     ),
   ];
 
