@@ -36,6 +36,7 @@ class PopularDestinations extends StatelessWidget {
                   destination:
                       '${destinationList[index].city}, ${destinationList[index].country}',
                   image: destinationList[index].imageUrl,
+                  isArranged: false,
                 ),
               ),
               Expanded(

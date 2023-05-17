@@ -7,8 +7,10 @@ import 'package:travela_mobile/widgets/home/place_card.dart';
 class PopularPlaces extends StatelessWidget {
   const PopularPlaces({
     Key? key,
+    required this.isArranged,
   }) : super(key: key);
 
+  final bool? isArranged;
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -57,6 +59,7 @@ class PopularPlaces extends StatelessWidget {
                         return PlaceCard(
                           destination: 'Loading...',
                           image: 'assets/images/placeholder.png',
+                          isArranged: isArranged,
                         );
                       },
                     );
@@ -69,6 +72,7 @@ class PopularPlaces extends StatelessWidget {
                           destination:
                               '${destinationsData.destinations[index].city}, ${destinationsData.destinations[index].country}',
                           image: destinationsData.destinations[index].imageUrl,
+                          isArranged: isArranged,
                         );
                       },
                     );

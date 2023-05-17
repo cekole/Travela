@@ -11,8 +11,10 @@ import 'package:travela_mobile/widgets/home/place_card.dart';
 class SuggestionsForYou extends StatelessWidget {
   const SuggestionsForYou({
     Key? key,
+    required this.isArranged,
   }) : super(key: key);
 
+  final bool? isArranged;
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -67,6 +69,7 @@ class SuggestionsForYou extends StatelessWidget {
                           destination:
                               '${userData.suggestedDestinations[index].city}, ${userData.suggestedDestinations[index].country}',
                           image: userData.suggestedDestinations[index].imageUrl,
+                          isArranged: isArranged,
                         );
                       },
                     );

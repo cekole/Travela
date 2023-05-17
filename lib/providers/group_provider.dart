@@ -42,7 +42,7 @@ class GroupProvider with ChangeNotifier {
     extractedData.forEach(
       (group) {
         currentGroupUsernames = group['participants'];
-        currentGroupTrips = group['trips'];
+        currentGroupTrips = group['trips'] ?? [];
         loadedGroups.add(
           TravelGroup(
             id: group['group_id'].toString(),
@@ -124,7 +124,7 @@ class GroupProvider with ChangeNotifier {
     }
   }
 
-  Future deleteGroup(String id) async {
+  Future<bool> deleteGroup(String id) async {
     final url = baseUrl + 'groups/$id';
     print(url);
     final response = await http.delete(
@@ -137,9 +137,10 @@ class GroupProvider with ChangeNotifier {
     print(response.statusCode);
     if (response.statusCode == 200) {
       print('deleteGroup succeeded');
-      return json.decode(response.body);
+      return true;
     } else {
       print('deleteGroup failed');
+      return false;
     }
   }
 

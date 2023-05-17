@@ -112,7 +112,9 @@ class _HomeBodyState extends State<HomeBody> {
                   highlightColor: Colors.grey[100]!,
                   child: Padding(
                     padding: EdgeInsets.all(8),
-                    child: PopularPlaces(),
+                    child: PopularPlaces(
+                      isArranged: false,
+                    ),
                   ),
                 ),
                 Divider(),
@@ -121,7 +123,9 @@ class _HomeBodyState extends State<HomeBody> {
                   highlightColor: Colors.grey[100]!,
                   child: Padding(
                     padding: EdgeInsets.all(8),
-                    child: SuggestionsForYou(),
+                    child: SuggestionsForYou(
+                      isArranged: false,
+                    ),
                   ),
                 ),
               ],
@@ -199,12 +203,16 @@ class _HomeBodyState extends State<HomeBody> {
                 ),
                 Padding(
                   padding: EdgeInsets.all(8),
-                  child: PopularPlaces(),
+                  child: PopularPlaces(
+                    isArranged: false,
+                  ),
                 ),
                 Divider(),
                 Padding(
                   padding: EdgeInsets.all(8),
-                  child: SuggestionsForYou(),
+                  child: SuggestionsForYou(
+                    isArranged: false,
+                  ),
                 ),
               ],
             ),
