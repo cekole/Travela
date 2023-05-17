@@ -210,7 +210,7 @@ class _RegisterPageState extends State<RegisterPage> {
                           ElevatedButton(
                             onPressed: () {
                               if (!EmailValidator.validate(
-                                  emailController.text))
+                                  emailController.text)) {
                                 AlertDialog(
                                   title: Text('Invalid Email'),
                                   content: Text('Please enter a valid email'),
@@ -223,6 +223,8 @@ class _RegisterPageState extends State<RegisterPage> {
                                     ),
                                   ],
                                 );
+                              }
+
                               handleSignUp();
                             },
                             child: Text(
