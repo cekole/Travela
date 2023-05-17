@@ -1,19 +1,44 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:travela_mobile/appConstant.dart';
 import 'package:travela_mobile/providers/file_storage_provider.dart';
 import 'package:travela_mobile/providers/user_provider.dart';
 
-class EditProfile extends StatelessWidget {
+class EditProfile extends StatefulWidget {
   const EditProfile({Key? key}) : super(key: key);
 
   @override
+  State<EditProfile> createState() => _EditProfileState();
+}
+
+class _EditProfileState extends State<EditProfile> {
+  final TextEditingController nameController = TextEditingController();
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController usernameController = TextEditingController();
+
+  File? image;
+
+  Future pickImage() async {
+    try {
+      final image = await ImagePicker().pickImage(source: ImageSource.gallery);
+
+      final imageTemporary = File(image!.path);
+      setState(() {
+        this.image = imageTemporary;
+      });
+    } on PlatformException catch (e) {
+      print(e);
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final TextEditingController nameController = TextEditingController();
-    final TextEditingController emailController = TextEditingController();
-    final TextEditingController usernameController = TextEditingController();
     final userData = Provider.of<UserProvider>(context);
     return Scaffold(
       resizeToAvoidBottomInset: false,
@@ -35,15 +60,11 @@ class EditProfile extends StatelessWidget {
                       CircleAvatar(
                         radius: 40,
                         backgroundImage:
-                            AssetImage('assets/images/profile.jpg'),
+                            image == null ? null : FileImage(image!),
                       ),
                       IconButton(
                         onPressed: () {
-                          final fileStorageData =
-                              Provider.of<FileStorageProvider>(context,
-                                  listen: false);
-
-                          fileStorageData.uploadProfilePic(userId);
+                          pickImage();
                         },
                         icon: Icon(
                           Icons.camera_alt,
@@ -114,8 +135,11 @@ class EditProfile extends StatelessWidget {
               SizedBox(height: 20),
               ElevatedButton(
                 onPressed: () {
+                  final fileStorage =
+                      Provider.of<FileStorageProvider>(context, listen: false);
+                  fileStorage.uploadProfilePic(image!.path, userId);
                   userData
-                      .updateUserInfo(currentUser.id, nameController.text,
+                      .updateUserInfo(userId, nameController.text,
                           emailController.text, usernameController.text)
                       .then(
                         (value) => Navigator.of(context).pushNamed('/profile'),

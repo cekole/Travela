@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
@@ -13,19 +14,29 @@ import 'package:travela_mobile/models/travel_group.dart';
 import 'package:travela_mobile/models/user.dart';
 
 class FileStorageProvider with ChangeNotifier {
-  Future<void> uploadProfilePic(String uId) async {
+  Future<void> uploadProfilePic(String filePath, String uId) async {
     final url = baseUrl + 'files/uploadProfilePicToUser/$uId';
     print(url);
-    final response = await http.post(
-      Uri.parse(url),
-      headers: {
-        'Authorization': 'Bearer  $bearerToken',
-      },
+    final response = http.MultipartRequest('POST', Uri.parse(url));
+
+    var file = File(filePath);
+    var stream = http.ByteStream(file.openRead());
+    var length = await file.length();
+
+    var multipartFile = http.MultipartFile(
+      'file',
+      stream,
+      length,
+      filename: file.path,
     );
-    print(response.statusCode);
-    if (response.statusCode == 200) {
+
+    response.files.add(multipartFile);
+
+    final res = await response.send();
+    print(res.statusCode);
+
+    if (res.statusCode == 200) {
       print('uploadProfilePic success');
-      return json.decode(response.body);
     } else {
       print('uploadProfilePic failed');
     }
