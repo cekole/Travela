@@ -309,12 +309,7 @@ class GroupProvider with ChangeNotifier {
     }
   }
 
-  Future sendMessage(
-    String groupId,
-    String content,
-    String senderId,
-    DateTime timestamp,
-  ) async {
+  Future<void> sendMessage(String groupId, String content) async {
     final url = baseUrl + 'groups/$groupId/chat/send';
     print(url);
     final response = await http.put(
@@ -326,14 +321,14 @@ class GroupProvider with ChangeNotifier {
       body: json.encode(
         {
           'content': content,
-          'senderId': senderId,
-          'timestamp': timestamp,
+          'senderId': userId,
+          'timestamp': DateTime.now().toIso8601String() + 'Z',
         },
       ),
     );
-
     print(response.statusCode);
     if (response.statusCode == 200) {
+      print(response.body);
       print('sendMessage succeeded');
       return json.decode(response.body);
     } else {

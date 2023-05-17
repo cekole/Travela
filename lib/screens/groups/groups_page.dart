@@ -34,11 +34,19 @@ class _GroupsPageState extends State<GroupsPage> {
   void initState() {
     super.initState();
     _refreshGroups();
+    _getParticipants();
   }
 
   Future<void> _refreshGroups() async {
     final groupData = Provider.of<GroupProvider>(context, listen: false);
     await groupData.fetchAndSetGroupsByUserId(userId);
+  }
+
+  Future<void> _getParticipants() async {
+    final groupData = Provider.of<GroupProvider>(context, listen: false);
+    for (TravelGroup group in groupData.groups) {
+      await groupData.getParticipants(group.id);
+    }
   }
 
   @override

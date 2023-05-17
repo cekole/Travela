@@ -311,6 +311,7 @@ class UserProvider with ChangeNotifier {
 
   Future<void> getTripSuggestions(String id) async {
     final url = baseUrl + 'users/$id/trip-suggestions';
+    print(url);
     final response = await http.get(
       Uri.parse(url),
       headers: {
