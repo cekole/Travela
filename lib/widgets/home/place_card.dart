@@ -76,20 +76,50 @@ class PlaceCard extends StatelessWidget {
                         top: 20,
                         right: 20,
                         child: IconButton(
-                          onPressed: () {
-                            userData.addFavouriteCity(
-                                userId, selectedDestination.id);
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text(
-                                  'Added to favourites',
-                                  style: TextStyle(
-                                    color: Colors.white,
+                          onPressed: () async {
+                            try {
+                              bool success = await userData.addFavouriteCity(
+                                  userId, selectedDestination.id);
+                              if (success) {
+                                showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) =>
+                                      AlertDialog(
+                                    title: Text('Added to Favorites'),
+                                    actions: [
+                                      TextButton(
+                                        onPressed: () {
+                                          Navigator.pop(context);
+                                        },
+                                        child: Text('OK'),
+                                      ),
+                                    ],
                                   ),
-                                ),
-                                backgroundColor: Colors.green,
-                              ),
-                            );
+                                );
+                              } else {
+                                // Handle the case when the method returns false
+                                showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) =>
+                                      AlertDialog(
+                                    title: Text('Error'),
+                                    content: Text(
+                                        'An error occurred while adding to favorites'),
+                                    actions: [
+                                      TextButton(
+                                        onPressed: () {
+                                          Navigator.pop(context);
+                                        },
+                                        child: Text('OK'),
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              }
+                            } catch (error) {
+                              // Handle any errors that occurred during the addFavouriteCity operation
+                              print('Error: $error');
+                            }
                           },
                           icon: Icon(
                             Icons.favorite_border,

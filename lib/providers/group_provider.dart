@@ -270,6 +270,25 @@ class GroupProvider with ChangeNotifier {
     }
   }
 
+  Future acceptDraftTrip(String groupId, String tripId) async {
+    final url = baseUrl + 'groups/$groupId/trips/add/$tripId';
+    print(url);
+    final response = await http.put(
+      Uri.parse(url),
+      headers: {
+        'Authorization': 'Bearer  $bearerToken',
+        'Content-Type': 'application/json',
+      },
+    );
+    print(response.statusCode);
+    if (response.statusCode == 200) {
+      print('acceptDraftTrip succeeded');
+      return json.decode(response.body);
+    } else {
+      print('addTracceptDraftTripip failed');
+    }
+  }
+
   Future addLocationToTrip(String groupId, String tripId, String cityId) async {
     final url = baseUrl + 'groups/$groupId/trips/$tripId/add/$cityId';
     print(url);

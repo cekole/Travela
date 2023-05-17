@@ -256,7 +256,7 @@ class UserProvider with ChangeNotifier {
     }
   }
 
-  Future<void> addFavouriteCity(String id, String cityId) async {
+  Future<bool> addFavouriteCity(String id, String cityId) async {
     final url = baseUrl + 'users/$id/addFavouriteCity/$cityId';
     print(url);
     final response = await http.put(
@@ -268,8 +268,10 @@ class UserProvider with ChangeNotifier {
     if (response.statusCode == 200) {
       print('add favorite city succeeded');
       notifyListeners();
+      return true;
     } else {
       print('add favorite city failed');
+      return false;
     }
   }
 
@@ -522,10 +524,11 @@ class UserProvider with ChangeNotifier {
         return;
       }
       extractedData.forEach(
-        (trip) {
-          favouriteCities.add(trip);
+        (city) {
+          favouriteCities.add(city);
         },
       );
+
       notifyListeners();
     } else {
       print('getFavouriteCities failed');

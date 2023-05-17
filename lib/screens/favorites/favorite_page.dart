@@ -24,10 +24,9 @@ class FavoritesPage extends StatelessWidget {
             itemBuilder: (context, index) {
               return ListTile(
                 leading: Icon(Icons.favorite),
-                title: Text(
-                    '${favouriteCities[index].cityName}, ${favouriteCities[index].countryName}'),
-                subtitle: Text(
-                    '${favouriteCities[index].description}, ${favouriteCities[index].activities}'),
+                title: Text('${favouriteCities[index]['cityName']}'),
+                subtitle:
+                    Text('${favouriteCities[index]['country']['countryName']}'),
               );
             },
           ),
