@@ -55,9 +55,10 @@ class RequestCard extends StatelessWidget {
                               actions: [
                                 TextButton(
                                     onPressed: () {
-                                      //requestNames.removeAt(index);
                                       Navigator.of(context)
-                                          .pushReplacementNamed('/groups');
+                                          .pushNamedAndRemoveUntil(
+                                              '/home', (route) => false);
+                                      pageNum = 2;
                                     },
                                     child: Text('Ok'))
                               ],

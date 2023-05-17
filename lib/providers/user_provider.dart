@@ -532,6 +532,8 @@ class UserProvider with ChangeNotifier {
   }
 
   Future<void> resetCurrentValues() async {
+    pageNum = 0;
+
     userId = '';
     friendId = '';
 
