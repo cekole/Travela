@@ -51,8 +51,10 @@ class UserProvider with ChangeNotifier {
         if (username == currentUser.username) {
           print('you are the user');
           userId = user['user_id'].toString();
-          currentAvailableFrom = user['availableFrom'];
-          currentAvailableTo = user['availableTo'];
+          currentAvailableFrom =
+              user['availableFrom'] ?? DateTime.now().toString().split(' ')[0];
+          currentAvailableTo = user['availableTo'] ??
+              DateTime.now().add(Duration(days: 1)).toString().split(' ')[0];
         } else {
           print('you are not the user');
           friendId = user['user_id'].toString();

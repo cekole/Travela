@@ -2,6 +2,7 @@ import 'dart:collection';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shimmer/shimmer.dart';
 import 'package:travela_mobile/appConstant.dart';
 import 'package:travela_mobile/models/destination.dart';
 import 'package:travela_mobile/providers/user_provider.dart';
@@ -14,12 +15,6 @@ class SuggestionsForYou extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final userData = Provider.of<UserProvider>(context, listen: true);
-    userData.getTripSuggestions(userId);
-    List<Destination> suggestedDestinations = userData.suggestedDestinations;
-    Set<List<Destination>> destinationSet = {};
-    destinationSet.add(suggestedDestinations);
-
     return Column(
       children: [
         Row(
@@ -34,6 +29,13 @@ class SuggestionsForYou extends StatelessWidget {
             ),
             TextButton(
               onPressed: () {
+                final userData =
+                    Provider.of<UserProvider>(context, listen: false);
+                userData.getTripSuggestions(userId);
+                List<Destination> suggestedDestinations =
+                    userData.suggestedDestinations;
+                Set<List<Destination>> destinationSet = {};
+                destinationSet.add(suggestedDestinations);
                 Navigator.pushNamed(
                   context,
                   '/popular',
@@ -51,17 +53,26 @@ class SuggestionsForYou extends StatelessWidget {
         ),
         SizedBox(
           height: MediaQuery.of(context).size.height * 0.25,
-          child: ListView.builder(
-            scrollDirection: Axis.horizontal,
-            itemCount: userData.suggestedDestinations.length,
-            itemBuilder: (context, index) {
-              return PlaceCard(
-                destination:
-                    '${userData.suggestedDestinations[index].city}, ${userData.suggestedDestinations[index].country}',
-                image: userData.suggestedDestinations[index].imageUrl,
-              );
-            },
-          ),
+          child: FutureBuilder(
+              future: Provider.of<UserProvider>(context, listen: false)
+                  .getTripSuggestions(userId),
+              builder: (context, snapshot) {
+                return Consumer<UserProvider>(
+                  builder: (context, userData, child) {
+                    return ListView.builder(
+                      scrollDirection: Axis.horizontal,
+                      itemCount: userData.suggestedDestinations.length,
+                      itemBuilder: (context, index) {
+                        return PlaceCard(
+                          destination:
+                              '${userData.suggestedDestinations[index].city}, ${userData.suggestedDestinations[index].country}',
+                          image: userData.suggestedDestinations[index].imageUrl,
+                        );
+                      },
+                    );
+                  },
+                );
+              }),
         ),
       ],
     );

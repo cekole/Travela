@@ -11,8 +11,6 @@ class PopularPlaces extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final destinationsData = Provider.of<DestinationsProvider>(context);
-    destinationsData.fetchAndSetCities();
     return Column(
       children: [
         Row(
@@ -27,6 +25,9 @@ class PopularPlaces extends StatelessWidget {
             ),
             TextButton(
               onPressed: () {
+                final destinationsData =
+                    Provider.of<DestinationsProvider>(context, listen: false);
+                destinationsData.fetchAndSetCities();
                 Navigator.pushNamed(context, '/popular', arguments: {
                   destinationsData.destinations.toList(),
                 });
@@ -42,14 +43,37 @@ class PopularPlaces extends StatelessWidget {
         ),
         Container(
           height: MediaQuery.of(context).size.height * 0.25,
-          child: ListView.builder(
-            scrollDirection: Axis.horizontal,
-            itemCount: destinationsData.destinations.length,
-            itemBuilder: (context, index) {
-              return PlaceCard(
-                destination:
-                    '${destinationsData.destinations[index].city}, ${destinationsData.destinations[index].country}',
-                image: destinationsData.destinations[index].imageUrl,
+          child: FutureBuilder(
+            future: Provider.of<DestinationsProvider>(context, listen: false)
+                .fetchAndSetCities(),
+            builder: (context, snapshot) {
+              return Consumer<DestinationsProvider>(
+                builder: (context, destinationsData, child) {
+                  if (destinationsData.destinations.isEmpty) {
+                    return ListView.builder(
+                      scrollDirection: Axis.horizontal,
+                      itemCount: 5,
+                      itemBuilder: (context, index) {
+                        return PlaceCard(
+                          destination: 'Loading...',
+                          image: 'assets/images/placeholder.png',
+                        );
+                      },
+                    );
+                  } else {
+                    return ListView.builder(
+                      scrollDirection: Axis.horizontal,
+                      itemCount: destinationsData.destinations.length,
+                      itemBuilder: (context, index) {
+                        return PlaceCard(
+                          destination:
+                              '${destinationsData.destinations[index].city}, ${destinationsData.destinations[index].country}',
+                          image: destinationsData.destinations[index].imageUrl,
+                        );
+                      },
+                    );
+                  }
+                },
               );
             },
           ),

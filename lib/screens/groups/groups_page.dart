@@ -290,10 +290,60 @@ void showAddFriendDialog(BuildContext context) {
                               listen: false,
                             );
                             groupData.getGroupByUserId(userId).then(
-                                  (value) => groupData.addUserToGroup(
+                                  (value) => groupData
+                                      .addUserToGroup(
                                     currentGroupId,
                                     currentFriendIds[index].toString(),
-                                  ),
+                                  )
+                                      .then((value) {
+                                    if (value) {
+                                      showDialog(
+                                        context: context,
+                                        builder: (context) => AlertDialog(
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(10),
+                                          ),
+                                          title: Text('Success'),
+                                          content: Text(
+                                              'Added ${currentFriendUsernames[index]} to group'),
+                                          actions: [
+                                            TextButton(
+                                                onPressed: () {
+                                                  Navigator.of(context)
+                                                      .pushReplacementNamed(
+                                                          '/home');
+                                                  pageNum = 2;
+                                                },
+                                                child: Text('OK'))
+                                          ],
+                                        ),
+                                      );
+                                    } else {
+                                      showDialog(
+                                        context: context,
+                                        builder: (context) => AlertDialog(
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(10),
+                                          ),
+                                          title: Text('Error'),
+                                          content: Text(
+                                              'Failed to add ${currentFriendUsernames[index]} to group'),
+                                          actions: [
+                                            TextButton(
+                                                onPressed: () {
+                                                  Navigator.of(context)
+                                                      .pushReplacementNamed(
+                                                          '/home');
+                                                  pageNum = 2;
+                                                },
+                                                child: Text('OK'))
+                                          ],
+                                        ),
+                                      );
+                                    }
+                                  }),
                                 );
 
                             /* groupData.addUserToGroup(

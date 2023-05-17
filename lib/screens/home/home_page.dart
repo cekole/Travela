@@ -25,7 +25,6 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  int pageNum = 0;
   @override
   void initState() {
     super.initState();

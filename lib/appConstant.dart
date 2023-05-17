@@ -5,6 +5,8 @@ import 'package:travela_mobile/models/travel_group.dart';
 import 'package:travela_mobile/models/user.dart';
 import 'package:travela_mobile/models/trip.dart';
 
+int pageNum = 0;
+
 String userId = '';
 String friendId = '';
 

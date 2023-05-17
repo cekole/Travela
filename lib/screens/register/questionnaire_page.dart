@@ -122,14 +122,19 @@ class _QuestionnarePageState extends State<QuestionnarePage> {
                             userData.addVisitedCity(userId, destination.id);
                           }
                           userData.setAvailableFrom(
-                              userId, DateTime.now().toString());
+                            userId,
+                            DateTime.now().toString().split(' ')[0].toString(),
+                          );
+                          //DateTime split to get date only
+
                           userData.setAvailableTo(
-                              userId,
-                              DateTime.now()
-                                  .add(
-                                    Duration(days: 7),
-                                  )
-                                  .toString());
+                            userId,
+                            DateTime.now()
+                                .add(Duration(days: 1))
+                                .toString()
+                                .split(' ')[0]
+                                .toString(),
+                          );
 
                           Navigator.of(context).pushNamed('/home');
                         },

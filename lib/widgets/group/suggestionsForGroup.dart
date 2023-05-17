@@ -16,7 +16,7 @@ class SuggestionsForGroup extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final groupData = Provider.of<GroupProvider>(context, listen: true);
-    groupData.getTripSuggestions(currentGroupIdForSuggestions);
+    //groupData.getTripSuggestions(currentGroupIdForSuggestions);
     List<Destination> suggestedDestinations = groupData.groupTripSuggestions;
     Set<List<Destination>> destinationSet = {};
     destinationSet.add(suggestedDestinations);
