@@ -30,7 +30,7 @@ String currentAvailableTo = '';
 DateTime endDate = DateTime.now();
 DateTime startDate = DateTime.now();
 
-List<City> favouriteCities = [];
+List favouriteCities = [];
 List<Trip> currentTripDrafts = [];
 
 List<City> friendsVisitedCities = [];

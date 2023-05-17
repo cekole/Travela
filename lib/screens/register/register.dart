@@ -211,17 +211,21 @@ class _RegisterPageState extends State<RegisterPage> {
                             onPressed: () {
                               if (!EmailValidator.validate(
                                   emailController.text)) {
-                                AlertDialog(
-                                  title: Text('Invalid Email'),
-                                  content: Text('Please enter a valid email'),
-                                  actions: [
-                                    TextButton(
-                                      onPressed: () {
-                                        Navigator.pop(context);
-                                      },
-                                      child: Text('OK'),
-                                    ),
-                                  ],
+                                showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) =>
+                                      AlertDialog(
+                                    title: Text('Invalid Email'),
+                                    content: Text('Please enter a valid email'),
+                                    actions: [
+                                      TextButton(
+                                        onPressed: () {
+                                          Navigator.pop(context);
+                                        },
+                                        child: Text('OK'),
+                                      ),
+                                    ],
+                                  ),
                                 );
                               }
 
@@ -306,7 +310,7 @@ class _RegisterPageState extends State<RegisterPage> {
                       }
                   });
         } else {
-          AlertDialog(
+          return AlertDialog(
             title: Text('Could not register. Please try again.'),
             content: Text('Could not register. Please try again.'),
             actions: [
@@ -318,15 +322,10 @@ class _RegisterPageState extends State<RegisterPage> {
               ),
             ],
           );
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text('Could not register. Please try again.'),
-            ),
-          );
         }
       });
     } else {
-      AlertDialog(
+      return AlertDialog(
         title: Text('Passwords do not match'),
         content: Text('Please enter matching passwords'),
         actions: [
