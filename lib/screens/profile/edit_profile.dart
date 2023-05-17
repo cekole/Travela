@@ -42,6 +42,7 @@ class EditProfile extends StatelessWidget {
                           final fileStorageData =
                               Provider.of<FileStorageProvider>(context,
                                   listen: false);
+
                           fileStorageData.uploadProfilePic(userId);
                         },
                         icon: Icon(
