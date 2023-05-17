@@ -253,6 +253,16 @@ void showAddFriendDialog(BuildContext context) {
       context: context,
       builder: (context) {
         return AlertDialog(
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context)
+                    .pushNamedAndRemoveUntil('/home', (route) => false);
+                pageNum = 2;
+              },
+              child: Text('OK'),
+            ),
+          ],
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10),
           ),
@@ -310,10 +320,7 @@ void showAddFriendDialog(BuildContext context) {
                                           actions: [
                                             TextButton(
                                                 onPressed: () {
-                                                  Navigator.of(context)
-                                                      .pushReplacementNamed(
-                                                          '/home');
-                                                  pageNum = 2;
+                                                  Navigator.pop(context);
                                                 },
                                                 child: Text('OK'))
                                           ],
@@ -333,10 +340,7 @@ void showAddFriendDialog(BuildContext context) {
                                           actions: [
                                             TextButton(
                                                 onPressed: () {
-                                                  Navigator.of(context)
-                                                      .pushReplacementNamed(
-                                                          '/home');
-                                                  pageNum = 2;
+                                                  Navigator.pop(context);
                                                 },
                                                 child: Text('OK'))
                                           ],

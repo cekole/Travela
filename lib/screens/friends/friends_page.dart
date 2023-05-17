@@ -91,7 +91,11 @@ class FriendsPage extends StatelessWidget {
                                               actions: [
                                                 TextButton(
                                                   onPressed: () {
-                                                    Navigator.of(context).pop();
+                                                    Navigator.of(context)
+                                                        .pushNamedAndRemoveUntil(
+                                                            '/home',
+                                                            (route) => false);
+                                                    pageNum = 2;
                                                   },
                                                   child: Text('Ok'),
                                                 ),

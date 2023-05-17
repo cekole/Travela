@@ -45,7 +45,202 @@ class _EditTravelGroupState extends State<EditTravelGroup> {
       appBar: AppBar(
         backgroundColor: Theme.of(context).primaryColor,
         title: Text(travelGroup.groupName),
-        actions: [],
+        actions: [
+          PopupMenuButton(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10),
+            ),
+            onSelected: (value) {
+              if (value == 'arrange_trip') {
+                searchDialog(context);
+              } else if (value == 'create_poll') {
+                // Add functionality for create_poll button
+              } else if (value == 'show_common_dates') {
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return Container(
+                      padding: EdgeInsets.all(10),
+                      margin: EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: Material(
+                        color: Colors.white,
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            //close button
+                            Row(
+                              children: [
+                                Spacer(),
+                                IconButton(
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                  icon: Icon(Icons.close),
+                                ),
+                              ],
+                            ),
+                            Text(
+                              'Common Dates',
+                              style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            Divider(
+                              color: Colors.grey,
+                              thickness: 1,
+                            ),
+                            IgnorePointer(
+                              child: SfDateRangePicker(
+                                backgroundColor: Colors.white,
+                                headerStyle: DateRangePickerHeaderStyle(
+                                  textAlign: TextAlign.center,
+                                ),
+                                selectionMode:
+                                    DateRangePickerSelectionMode.values[2],
+                                initialSelectedRange: PickerDateRange(
+                                  DateTime.parse(travelGroup.commonStartDate),
+                                  DateTime.parse(travelGroup.commonEndDate),
+                                ),
+                                startRangeSelectionColor:
+                                    Theme.of(context).primaryColor,
+                                endRangeSelectionColor:
+                                    Theme.of(context).primaryColor,
+                              ),
+                            ),
+                            SizedBox(height: 20),
+                            Text(
+                              'Start Date: ${DateFormat.yMMMd().format(
+                                DateTime.parse(travelGroup.commonStartDate),
+                              )}\nEnd Date: ${DateFormat.yMMMd().format(
+                                DateTime.parse(travelGroup.commonEndDate),
+                              )}',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                fontSize: 18,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  },
+                );
+              } else if (value == 'update_group_info') {
+                showModalBottomSheet(
+                  context: context,
+                  builder: (context) {
+                    return Container(
+                      margin: EdgeInsets.all(8.0),
+                      padding: EdgeInsets.all(8.0),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: Material(
+                        color: Colors.white,
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            //close button
+                            Row(
+                              children: [
+                                Spacer(),
+                                IconButton(
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                  icon: Icon(Icons.close),
+                                ),
+                              ],
+                            ),
+                            Text(
+                              'Change Group Name',
+                              style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            Divider(
+                              color: Colors.grey,
+                              thickness: 1,
+                            ),
+                            TextField(
+                              controller: groupNameController,
+                              decoration: InputDecoration(
+                                hintText: 'Enter new group name',
+                                border: InputBorder.none,
+                                contentPadding: EdgeInsets.only(
+                                  left: 15,
+                                ),
+                              ),
+                            ),
+                            SizedBox(height: 20),
+                            ElevatedButton(
+                              onPressed: () {
+                                groupData.updateGroup(currentGroupId,
+                                    groupNameController.text, "group name");
+                                Navigator.of(context).pop();
+                              },
+                              child: Text('Update Group Name'),
+                            ),
+                            SizedBox(height: 20),
+                          ],
+                        ),
+                      ),
+                    );
+                  },
+                );
+              } else if (value == 'delete_group') {
+                groupData.deleteGroup(travelGroup.id);
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      title: Text('Group Deleted'),
+                      content: Text('Group has been deleted'),
+                      actions: [
+                        TextButton(
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                          child: Text('Ok'),
+                        ),
+                      ],
+                    );
+                  },
+                );
+              }
+            },
+            itemBuilder: (BuildContext context) => [
+              PopupMenuItem(
+                value: 'arrange_trip',
+                child: Text('Arrange Trip'),
+              ),
+              PopupMenuItem(
+                value: 'create_poll',
+                child: Text('Create Poll'),
+              ),
+              PopupMenuItem(
+                value: 'show_common_dates',
+                child: Text('Show Common Dates'),
+              ),
+              PopupMenuItem(
+                value: 'update_group_info',
+                child: Text('Update Group Info'),
+              ),
+              PopupMenuItem(
+                value: 'delete_group',
+                child: Text('Delete Group'),
+              ),
+            ],
+            icon: Icon(Icons.more_vert),
+          ),
+        ],
       ),
       body: SafeArea(
         child: Container(
@@ -186,208 +381,6 @@ class _EditTravelGroupState extends State<EditTravelGroup> {
               ),
               SizedBox(height: 20),
               SuggestionsForGroup(),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Row(
-                  children: <Widget>[
-                    Expanded(
-                        child: Divider(
-                      color: Colors.grey.shade700,
-                      indent: 35,
-                      endIndent: 35,
-                      thickness: 1,
-                    )),
-                    Text("OR"),
-                    Expanded(
-                        child: Divider(
-                      color: Colors.grey.shade700,
-                      indent: 35,
-                      endIndent: 35,
-                      thickness: 1,
-                    )),
-                  ],
-                ),
-              ),
-
-              ElevatedButton(
-                onPressed: () {
-                  searchDialog(context);
-                },
-                child: Text('Arrange Trip'),
-              ),
-              SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: () {},
-                child: Text('Create Poll'),
-              ),
-              SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: () {
-                  showDialog(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return Container(
-                          padding: EdgeInsets.all(10),
-                          margin: EdgeInsets.all(10),
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          child: Material(
-                            color: Colors.white,
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                //close button
-                                Row(
-                                  children: [
-                                    Spacer(),
-                                    IconButton(
-                                      onPressed: () {
-                                        Navigator.of(context).pop();
-                                      },
-                                      icon: Icon(Icons.close),
-                                    ),
-                                  ],
-                                ),
-                                Text(
-                                  'Common Dates',
-                                  style: TextStyle(
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                Divider(
-                                  color: Colors.grey,
-                                  thickness: 1,
-                                ),
-                                IgnorePointer(
-                                  child: SfDateRangePicker(
-                                    backgroundColor: Colors.white,
-                                    headerStyle: DateRangePickerHeaderStyle(
-                                      textAlign: TextAlign.center,
-                                    ),
-                                    selectionMode:
-                                        DateRangePickerSelectionMode.values[2],
-                                    initialSelectedRange: PickerDateRange(
-                                      DateTime.parse(
-                                          travelGroup.commonStartDate),
-                                      DateTime.parse(travelGroup.commonEndDate),
-                                    ),
-                                    startRangeSelectionColor:
-                                        Theme.of(context).primaryColor,
-                                    endRangeSelectionColor:
-                                        Theme.of(context).primaryColor,
-                                  ),
-                                ),
-                                SizedBox(height: 20),
-                                Text(
-                                  'Start Date: ${DateFormat.yMMMd().format(
-                                    DateTime.parse(travelGroup.commonStartDate),
-                                  )}\nEnd Date: ${DateFormat.yMMMd().format(
-                                    DateTime.parse(travelGroup.commonEndDate),
-                                  )}',
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                    fontSize: 18,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        );
-                      });
-                },
-                child: Text('Show Common Dates'),
-              ),
-              SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: () {
-                  // show modal to change group name with a text field
-                  showModalBottomSheet(
-                    context: context,
-                    builder: (context) => Container(
-                      margin: EdgeInsets.all(8.0),
-                      padding: EdgeInsets.all(8.0),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: Material(
-                        color: Colors.white,
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            //close button
-                            Row(
-                              children: [
-                                Spacer(),
-                                IconButton(
-                                  onPressed: () {
-                                    Navigator.of(context).pop();
-                                  },
-                                  icon: Icon(Icons.close),
-                                ),
-                              ],
-                            ),
-                            Text(
-                              'Change Group Name',
-                              style: TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            Divider(
-                              color: Colors.grey,
-                              thickness: 1,
-                            ),
-                            TextField(
-                              controller: groupNameController,
-                              decoration: InputDecoration(
-                                hintText: 'Enter new group name',
-                                border: InputBorder.none,
-                                contentPadding: EdgeInsets.only(
-                                  left: 15,
-                                ),
-                              ),
-                            ),
-                            SizedBox(height: 20),
-                            ElevatedButton(
-                              onPressed: () {
-                                groupData.updateGroup(currentGroupId,
-                                    groupNameController.text, "group name");
-                                Navigator.of(context).pop();
-                              },
-                              child: Text('Update Group Name'),
-                            ),
-                            SizedBox(height: 20),
-                          ],
-                        ),
-                      ),
-                    ),
-                  );
-                },
-                child: Text('Update Group Info'),
-              ),
-              SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: () {
-                  groupData.deleteGroup(travelGroup.id);
-                  AlertDialog(
-                    title: Text('Group Deleted'),
-                    content: Text('Group has been deleted'),
-                    actions: [
-                      TextButton(
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        },
-                        child: Text('Ok'),
-                      ),
-                    ],
-                  );
-                },
-                child: Text('Delete Group'),
-              ),
             ],
           ),
         ),
