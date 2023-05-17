@@ -31,17 +31,17 @@ class TripProvider with ChangeNotifier {
     }
   }
 
-  Future addCountry(
-      String tripName, String tripDescription, TravelGroup travelGroup) async {
-    final url = baseUrl + 'trips';
+  Future addTransportation(String tripId, String tripDescription,
+      String groupId, String tripName) async {
+    final url = baseUrl + 'trips/$tripId/transportations/add';
     print(url);
-    final response = await http.post(Uri.parse(url), headers: {
+    final response = await http.put(Uri.parse(url), headers: {
       'Authorization': 'Bearer  $bearerToken',
       'Content-Type': 'application/json',
     }, body: {
       'tripName': tripName,
       'tripDescription': tripDescription,
-      'travelGroup': travelGroup,
+      'groupId': groupId,
     });
     print(response.statusCode);
     if (response.statusCode == 200) {
@@ -52,8 +52,42 @@ class TripProvider with ChangeNotifier {
     }
   }
 
-  Future updateCountry(String id, String tripName, String tripDescription,
-      TravelGroup travelGroup) async {
+  Future addAccomodation(
+      String tripId,
+      String name,
+      String price,
+      String link,
+      String address,
+      String description,
+      String type,
+      String rating,
+      String image) async {
+    final url = baseUrl + 'trips/$tripId/transportations/add';
+    print(url);
+    final response = await http.put(Uri.parse(url), headers: {
+      'Authorization': 'Bearer  $bearerToken',
+      'Content-Type': 'application/json',
+    }, body: {
+      'name': name,
+      'price': price,
+      'link': link,
+      'address': address,
+      'description': description,
+      'type': type,
+      'rating': rating,
+      'image': image,
+    });
+    print(response.statusCode);
+    if (response.statusCode == 200) {
+      print('addTransportation success');
+      return json.decode(response.body);
+    } else {
+      print('addTransportation failed');
+    }
+  }
+
+  Future updateTrip(String id, String tripName, String tripDescription,
+      String groupId) async {
     final url = baseUrl + 'trips/$id';
     print(url);
     final response = await http.put(Uri.parse(url), headers: {
@@ -62,7 +96,7 @@ class TripProvider with ChangeNotifier {
     }, body: {
       'tripName': tripName,
       'tripDescription': tripDescription,
-      'travelGroup': travelGroup,
+      'groupId': groupId,
     });
     print(response.statusCode);
     if (response.statusCode == 200) {

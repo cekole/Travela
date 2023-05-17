@@ -144,6 +144,25 @@ class GroupProvider with ChangeNotifier {
     }
   }
 
+  Future removeUserFromGroup(String groupId, String userId) async {
+    final url = baseUrl + 'groups/$groupId/removeUser/$userId';
+    print(url);
+    final response = await http.put(
+      Uri.parse(url),
+      headers: {
+        'Authorization': 'Bearer  $bearerToken',
+        'Content-Type': 'application/json',
+      },
+    );
+    print(response.statusCode);
+    if (response.statusCode == 200) {
+      print('removeUserFromGroup succeeded');
+      return json.decode(response.body);
+    } else {
+      print('removeUserFromGroup failed');
+    }
+  }
+
   Future updateGroup(String id, String groupName, String ownerId) async {
     final url = baseUrl + 'groups/$id';
     print(url);
@@ -230,25 +249,6 @@ class GroupProvider with ChangeNotifier {
     } else {
       print('addUser failed');
       return false;
-    }
-  }
-
-  Future removeUserFromGroup(String groupId, String userId) async {
-    final url = baseUrl + 'groups/$groupId/removeUser/$userId';
-    print(url);
-    final response = await http.put(
-      Uri.parse(url),
-      headers: {
-        'Authorization': 'Bearer  $bearerToken',
-        'Content-Type': 'application/json',
-      },
-    );
-    print(response.statusCode);
-    if (response.statusCode == 200) {
-      print('removeUserFromGroup succeeded');
-      return json.decode(response.body);
-    } else {
-      print('removeUserFromGroup failed');
     }
   }
 

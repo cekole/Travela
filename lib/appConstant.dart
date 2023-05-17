@@ -16,7 +16,7 @@ List currentRequestIds = [];
 
 String currentGroupId = '';
 String currentGroupIdForSuggestions = '';
-List currentGroupUsernames = [];
+List<String> currentGroupUsernames = [];
 List currentGroupTrips = [];
 
 List currentGroupSuggestions = [];
@@ -36,6 +36,8 @@ List<String> tripPhotos = [];
 List<Trip> upcomingTrips = [];
 List<Trip> pastTrips = [];
 
+String currentTripId = '';
+
 User currentUser = User(
   id: '',
   username: '',
@@ -53,7 +55,7 @@ User currentUser = User(
   availableTo: DateTime.now(),
   visitedCities: [],
 );
-String baseUrl = "http://13.53.60.148:8081/";
+String baseUrl = "http://13.48.206.213:8081/";
 //for local testing
 //String baseUrl = "http://localhost:8081/";
 
