@@ -29,6 +29,7 @@ class GroupsPage extends StatefulWidget {
 class _GroupsPageState extends State<GroupsPage> {
   bool _isExpandedGroup = false;
   bool _isExpandedCalendar = false;
+  int _expandedIndex = -1;
 
   @override
   void initState() {
@@ -114,19 +115,23 @@ class _GroupsPageState extends State<GroupsPage> {
                     color: Theme.of(context).primaryColor.withOpacity(0.2),
                   ),
                   child: ExpansionTileCard(
-                    onExpansionChanged: (value) {
+                    onExpansionChanged: (value) async {
                       final groupData = Provider.of<GroupProvider>(
                         context,
                         listen: false,
                       );
-                      final groupNames = groupData
-                          .getParticipants(travelGroup.id)
-                          .then((value) {
-                        print(currentGroupUsernames);
-                      });
                       setState(() {
                         _isExpandedGroup = value;
+
+                        // Update participants locally before fetching the updated list
+                        if (_isExpandedGroup) {
+                          currentGroupUsernames.clear();
+                        }
                       });
+                      if (_isExpandedGroup) {
+                        final groupNames =
+                            await groupData.getParticipants(travelGroup.id);
+                      }
                     },
                     baseColor:
                         Theme.of(context).backgroundColor.withOpacity(0.2),

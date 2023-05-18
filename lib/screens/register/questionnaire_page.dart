@@ -33,7 +33,10 @@ class _QuestionnarePageState extends State<QuestionnarePage> {
 
   @override
   Widget build(BuildContext context) {
-    final destinatinationsData = Provider.of<DestinationsProvider>(context);
+    final destinatinationsData = Provider.of<DestinationsProvider>(
+      context,
+      listen: false,
+    );
     destinatinationsData.fetchAndSetCities();
     return Scaffold(
       appBar: AppBar(
@@ -63,7 +66,7 @@ class _QuestionnarePageState extends State<QuestionnarePage> {
                 SizedBox(height: 10),
                 Text(
                   'Choose Your Top 3 Destinations',
-                  style: TextStyle(fontSize: 20),
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.w800),
                   textAlign: TextAlign.center,
                 ),
                 Divider(
@@ -112,7 +115,7 @@ class _QuestionnarePageState extends State<QuestionnarePage> {
                               _selectedDestinations.add(destination);
                               print('${destination.city} added');
                             }
-                          } else if (_selectedDestinations.length == 3) {
+                          } else {
                             if (_selectedDestinations.any((element) =>
                                 element.city == destination.city)) {
                               _selectedDestinations.removeWhere((element) =>

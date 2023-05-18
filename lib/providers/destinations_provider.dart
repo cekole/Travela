@@ -162,10 +162,8 @@ class DestinationsProvider with ChangeNotifier {
   }
 
   Future<void> getPopularCities() async {
-    final url = baseUrl + 'most-popular';
-    print(url);
     final response = await http.get(
-      Uri.parse(url),
+      Uri.parse(destinationUrl + '/most-popular'),
       headers: {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer $bearerToken',

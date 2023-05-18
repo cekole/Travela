@@ -17,7 +17,10 @@ class FileStorageProvider with ChangeNotifier {
   Future<void> uploadProfilePic(String filePath, String uId) async {
     final url = baseUrl + 'files/uploadProfilePicToUser/$uId';
     print(url);
-    final response = http.MultipartRequest('POST', Uri.parse(url));
+    final response = http.MultipartRequest(
+      'POST',
+      Uri.parse(url),
+    );
 
     var file = File(filePath);
     var stream = http.ByteStream(file.openRead());

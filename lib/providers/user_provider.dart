@@ -320,41 +320,45 @@ class UserProvider with ChangeNotifier {
         'Authorization': 'Bearer $bearerToken',
       },
     );
-    final extractedData = json.decode(response.body) as List<dynamic>;
-    final List<City> loadedCities = [];
-    extractedData.forEach((city) {
-      loadedCities.add(
-        City(
-          id: city['city_id'].toString(),
-          cityName: city['cityName'],
-          countryName:
-              city['country'] == null ? '' : city['country']['countryName'],
-          description:
-              city['cityDescription'] == null ? '' : city['cityDescription'],
-          imageUrl: city['cityImageURL'] == null ? '' : city['cityImageURL'],
-          activities: city['activities'] == null ? [] : city['activities'],
-          iataCode: city['iata_code'],
-          latitude: city['latitude'],
-          longitude: city['longitude'],
-        ),
-      );
-    });
-    _suggestedDestinations = loadedCities
-        .map(
-          (city) => Destination(
-            id: city.id,
-            country: city.countryName,
-            city: city.cityName,
-            description: city.description,
-            imageUrl: city.imageUrl,
-            rating: 4.5,
-            location: 'Europe',
-            activities: city.activities,
-            isPopular: false,
+    if (response.statusCode == 200) {
+      final extractedData = json.decode(response.body) as List<dynamic>;
+      final List<City> loadedCities = [];
+      extractedData.forEach((city) {
+        loadedCities.add(
+          City(
+            id: city['city_id'].toString(),
+            cityName: city['cityName'],
+            countryName:
+                city['country'] == null ? '' : city['country']['countryName'],
+            description:
+                city['cityDescription'] == null ? '' : city['cityDescription'],
+            imageUrl: city['cityImageURL'] == null ? '' : city['cityImageURL'],
+            activities: city['activities'] == null ? [] : city['activities'],
+            iataCode: city['iata_code'],
+            latitude: city['latitude'],
+            longitude: city['longitude'],
           ),
-        )
-        .toList();
-    notifyListeners();
+        );
+      });
+      _suggestedDestinations = loadedCities
+          .map(
+            (city) => Destination(
+              id: city.id,
+              country: city.countryName,
+              city: city.cityName,
+              description: city.description,
+              imageUrl: city.imageUrl,
+              rating: 4.5,
+              location: 'Europe',
+              activities: city.activities,
+              isPopular: false,
+            ),
+          )
+          .toList();
+      notifyListeners();
+    } else {
+      print('get trip suggestions failed');
+    }
   }
 
   Future getTripDrafts(String userId) async {
@@ -537,7 +541,8 @@ class UserProvider with ChangeNotifier {
             city['latitude'],
             city['longitude'],
             city['cityName'],
-            city['country']['countryName']
+            city['country']['countryName'],
+            city['cityImageURL'],
           ])) {
             return;
           }
@@ -545,7 +550,8 @@ class UserProvider with ChangeNotifier {
             city['latitude'],
             city['longitude'],
             city['cityName'],
-            city['country']['countryName']
+            city['country']['countryName'],
+            city['cityImageURL'],
           ]);
         },
       );
