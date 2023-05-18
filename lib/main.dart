@@ -36,7 +36,7 @@ void main() {
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
   ]);
-
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(const MyApp());
 }
 
