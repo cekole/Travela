@@ -40,6 +40,7 @@ List<String> tripPhotos = [];
 
 List<Trip> upcomingTrips = [];
 List<Trip> pastTrips = [];
+List draftTrips = [];
 
 String currentTripId = '';
 

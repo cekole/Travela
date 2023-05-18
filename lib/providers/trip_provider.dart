@@ -79,10 +79,10 @@ class TripProvider with ChangeNotifier {
     });
     print(response.statusCode);
     if (response.statusCode == 200) {
-      print('addTransportation success');
+      print('addAccomodation success');
       return json.decode(response.body);
     } else {
-      print('addTransportation failed');
+      print('addAccomodation failed');
     }
   }
 
@@ -127,6 +127,26 @@ class TripProvider with ChangeNotifier {
   }
 
   Future getTransportations(String id) async {
+    final url = baseUrl + 'trips/$id/transportations';
+    print(url);
+    final response = await http.get(
+      Uri.parse(url),
+      headers: {
+        'Authorization': 'Bearer  $bearerToken',
+        'Content-Type': 'application/json',
+      },
+    );
+    print(response.statusCode);
+
+    if (response.statusCode == 200) {
+      print('get all transportations success');
+      return json.decode(response.body);
+    } else {
+      print('get all transportations failed');
+    }
+  }
+
+  Future get(String id) async {
     final url = baseUrl + 'trips/$id/transportations';
     print(url);
     final response = await http.get(

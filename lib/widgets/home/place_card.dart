@@ -7,7 +7,7 @@ import 'package:travela_mobile/providers/activities_provider.dart';
 import 'package:travela_mobile/providers/user_provider.dart';
 import 'package:travela_mobile/providers/destinations_provider.dart';
 
-class PlaceCard extends StatelessWidget {
+class PlaceCard extends StatefulWidget {
   const PlaceCard({
     Key? key,
     required this.destination,
@@ -18,6 +18,19 @@ class PlaceCard extends StatelessWidget {
   final String image;
 
   @override
+  State<PlaceCard> createState() => _PlaceCardState();
+}
+
+class _PlaceCardState extends State<PlaceCard> {
+  bool isFavorite = false;
+
+  void toggleFavorite() {
+    setState(() {
+      isFavorite = !isFavorite;
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     final userData = Provider.of<UserProvider>(context, listen: true);
     return GestureDetector(
@@ -25,7 +38,7 @@ class PlaceCard extends StatelessWidget {
         final destinationsData =
             Provider.of<DestinationsProvider>(context, listen: false);
         final selectedDestination = destinationsData.destinations
-            .firstWhere((element) => element.imageUrl == image);
+            .firstWhere((element) => element.imageUrl == widget.image);
         final activitiesData =
             Provider.of<ActivitiesProvider>(context, listen: false);
         final selectedActivities =
@@ -46,7 +59,7 @@ class PlaceCard extends StatelessWidget {
                         height: MediaQuery.of(context).size.height * 0.4,
                         decoration: BoxDecoration(
                           image: DecorationImage(
-                            image: NetworkImage(image),
+                            image: NetworkImage(widget.image),
                             fit: BoxFit.cover,
                           ),
                         ),
@@ -76,7 +89,13 @@ class PlaceCard extends StatelessWidget {
                         top: 20,
                         right: 20,
                         child: IconButton(
+                          icon: Icon(
+                              isFavorite
+                                  ? Icons.favorite
+                                  : Icons.favorite_border,
+                              color: Color.fromARGB(255, 10, 9, 9)),
                           onPressed: () async {
+                            toggleFavorite();
                             try {
                               bool success = await userData.addFavouriteCity(
                                   userId, selectedDestination.id);
@@ -121,17 +140,6 @@ class PlaceCard extends StatelessWidget {
                               print('Error: $error');
                             }
                           },
-                          icon: Icon(
-                            Icons.favorite_border,
-                            color: Colors.white,
-                            size: 30,
-                            shadows: [
-                              Shadow(
-                                blurRadius: 10,
-                                color: Colors.black,
-                              ),
-                            ],
-                          ),
                         ),
                       ),
                     ],
@@ -139,7 +147,7 @@ class PlaceCard extends StatelessWidget {
                   Container(
                     padding: EdgeInsets.all(10),
                     child: Text(
-                      destination,
+                      widget.destination,
                       style: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
@@ -234,7 +242,7 @@ class PlaceCard extends StatelessWidget {
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10),
                 image: DecorationImage(
-                  image: NetworkImage(image),
+                  image: NetworkImage(widget.image),
                   fit: BoxFit.cover,
                 ),
               ),
@@ -247,14 +255,14 @@ class PlaceCard extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                destination.split(', ')[0],
+                widget.destination.split(', ')[0],
                 style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
                 ),
               ),
               Text(
-                destination.split(', ')[1],
+                widget.destination.split(', ')[1],
                 style: TextStyle(
                   fontSize: 14,
                   color: Colors.grey,
