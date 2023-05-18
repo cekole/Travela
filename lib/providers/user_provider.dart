@@ -472,33 +472,90 @@ class UserProvider with ChangeNotifier {
     }
   }
 
-  Future getAllFriendsVisitedCitiesById(String userId) async {
+  Future<void> getAllFriendsVisitedCitiesById() async {
     final url = baseUrl + 'users/$userId/friendsVisitedCities';
     print(url);
     final response = await http.get(
       Uri.parse(url),
       headers: {
         'Authorization': 'Bearer  $bearerToken',
-        'Content-Type': 'application/json',
       },
     );
     print(response.statusCode);
-    print(response.body);
 
     if (response.statusCode == 200) {
       print('getAllFriendsVisitedCities success');
       final extractedData = json.decode(response.body) as List<dynamic>;
+      extractedData.forEach(
+        (city) {
+          //if latitutde and longitude already exists, don't add
+          if (currentFriendsVisitedCities.contains([
+            city['latitude'],
+            city['longitude'],
+            city['cityName'],
+            city['country']['countryName']
+          ])) {
+            return;
+          }
+          currentFriendsVisitedCities.add([
+            city['latitude'],
+            city['longitude'],
+            city['cityName'],
+            city['country']['countryName']
+          ]);
+        },
+      );
+
       if (extractedData == null) {
         return;
       }
-      extractedData.forEach(
-        (trip) {
-          friendsVisitedCities.add(trip);
-        },
-      );
+      ;
       notifyListeners();
     } else {
       print('getAllFriendsVisitedCities failed');
+    }
+  }
+
+  Future<void> getVisitedCitiesById() async {
+    final url = baseUrl + 'users/$userId/visitedCities';
+    print(url);
+    final response = await http.get(
+      Uri.parse(url),
+      headers: {
+        'Authorization': 'Bearer  $bearerToken',
+      },
+    );
+    print(response.statusCode);
+
+    if (response.statusCode == 200) {
+      print('getVisitedCitiesById success');
+      final extractedData = json.decode(response.body) as List<dynamic>;
+      extractedData.forEach(
+        (city) {
+          if (currentVisitedCities.contains([
+            city['latitude'],
+            city['longitude'],
+            city['cityName'],
+            city['country']['countryName']
+          ])) {
+            return;
+          }
+          currentVisitedCities.add([
+            city['latitude'],
+            city['longitude'],
+            city['cityName'],
+            city['country']['countryName']
+          ]);
+        },
+      );
+
+      if (extractedData == null) {
+        return;
+      }
+      ;
+      notifyListeners();
+    } else {
+      print('getVisitedCitiesById failed');
     }
   }
 
@@ -557,6 +614,9 @@ class UserProvider with ChangeNotifier {
 
     favouriteCities = [];
     currentTripDrafts = [];
+
+    currentVisitedCities = [];
+    currentFriendsVisitedCities = [];
     notifyListeners();
   }
 }
