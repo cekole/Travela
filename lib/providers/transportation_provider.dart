@@ -136,4 +136,37 @@ class TransportationProvider with ChangeNotifier {
       print('deleteTransportation failed');
     }
   }
+
+  Future<String> searchTransportation(
+      String departureDate,
+      String originLocationCode,
+      String destinationLocationCode,
+      int adults) async {
+    final url = baseUrl + 'transportations/search';
+
+    var queryParams = {
+      'departureDate': departureDate,
+      'originLocationCode': originLocationCode,
+      'destinationLocationCode': destinationLocationCode,
+      'adults': adults.toString(),
+    };
+
+    try {
+      final response = await http.get(
+        Uri.parse(url),
+        headers: {
+          'Authorization': 'Bearer  $bearerToken',
+          'Content-Type': 'application/json',
+        },
+      );
+      if (response.statusCode == 200) {
+        return response.body;
+      } else {
+        throw Exception(
+            'Search request failed. Status code: ${response.statusCode}');
+      }
+    } catch (e) {
+      throw Exception('Error occurred while making the search request: $e');
+    }
+  }
 }

@@ -111,4 +111,34 @@ class AccomodationProvider with ChangeNotifier {
     _accomodations.removeWhere((accomodation) => accomodation.name == id);
     notifyListeners();
   }
+
+  Future<String> searchAccomodation(String city, String startDate,
+      String destinendDate, int adultsCount) async {
+    final url = baseUrl + 'accomodations/search';
+
+    var queryParams = {
+      'city': city,
+      'startDate': startDate,
+      'destinendDate': destinendDate,
+      'adultsCount': adultsCount.toString(),
+    };
+
+    try {
+      final response = await http.get(
+        Uri.parse(url),
+        headers: {
+          'Authorization': 'Bearer  $bearerToken',
+          'Content-Type': 'application/json',
+        },
+      );
+      if (response.statusCode == 200) {
+        return response.body;
+      } else {
+        throw Exception(
+            'Search request failed. Status code: ${response.statusCode}');
+      }
+    } catch (e) {
+      throw Exception('Error occurred while making the search request: $e');
+    }
+  }
 }

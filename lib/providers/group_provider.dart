@@ -144,6 +144,25 @@ class GroupProvider with ChangeNotifier {
     }
   }
 
+  Future removeDraftTrip(String groupId, String tripId) async {
+    final url = baseUrl + 'groups/$groupId/removeDraftTrip/$tripId';
+    print(url);
+    final response = await http.delete(
+      Uri.parse(url),
+      headers: {
+        'Authorization': 'Bearer  $bearerToken',
+        'Content-Type': 'application/json',
+      },
+    );
+    print(response.statusCode);
+    if (response.statusCode == 200) {
+      print('removeDraftTrip succeeded');
+      return json.decode(response.body);
+    } else {
+      print('removeDraftTrip failed');
+    }
+  }
+
   Future removeUserFromGroup(String groupId, String userId) async {
     final url = baseUrl + 'groups/$groupId/removeUser/$userId';
     print(url);
@@ -252,8 +271,9 @@ class GroupProvider with ChangeNotifier {
     }
   }
 
-  Future addTrip(String groupId, String cityId) async {
-    final url = baseUrl + 'groups/$groupId/trips/add/$cityId';
+  Future addDraftTrip(
+      String groupId, String tripName, String tripDescription) async {
+    final url = baseUrl + 'groups/$groupId/createDraftTrip';
     print(url);
     final response = await http.put(
       Uri.parse(url),
@@ -264,10 +284,40 @@ class GroupProvider with ChangeNotifier {
     );
     print(response.statusCode);
     if (response.statusCode == 200) {
-      print('addTrip succeeded');
+      print('addDraftTrip succeeded');
       return json.decode(response.body);
     } else {
-      print('addTrip failed');
+      print('addDraftTrip failed');
+    }
+  }
+
+  Future<void> getDraftTrips(String groupId) async {
+    final url = baseUrl + 'groups/$groupId/draftTrips';
+    print(url);
+    final response = await http.get(
+      Uri.parse(url),
+      headers: {
+        'Authorization': 'Bearer  $bearerToken',
+      },
+    );
+    print(response.statusCode);
+    if (response.statusCode == 200) {
+      print('getDraftTrips succeeded');
+      final extractedData = json.decode(response.body) as List<dynamic>;
+      if (extractedData == null) {
+        return;
+      }
+
+      extractedData.forEach(
+        (trips) {
+          draftTrips.add(trips);
+        },
+      );
+
+      notifyListeners();
+      return json.decode(response.body);
+    } else {
+      print('getParticipants failed');
     }
   }
 
@@ -286,7 +336,7 @@ class GroupProvider with ChangeNotifier {
       print('acceptDraftTrip succeeded');
       return json.decode(response.body);
     } else {
-      print('addTracceptDraftTripip failed');
+      print('acceptDraftTrip failed');
     }
   }
 
