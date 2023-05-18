@@ -13,6 +13,7 @@ import 'package:travela_mobile/models/travel_group.dart';
 import 'package:travela_mobile/providers/destinations_provider.dart';
 import 'package:travela_mobile/providers/group_provider.dart';
 import 'package:travela_mobile/providers/recommendation_provider.dart';
+import 'package:travela_mobile/screens/groups/groups_page.dart';
 import 'package:travela_mobile/widgets/group/suggestionsForGroup.dart';
 import 'package:travela_mobile/widgets/home/popular_places.dart';
 import 'package:travela_mobile/widgets/home/suggestions.dart';
@@ -378,6 +379,8 @@ class _EditTravelGroupState extends State<EditTravelGroup> {
               );
             },
           );
+        } else if (value == 'add_participants') {
+          showAddFriendDialog(context);
         } else if (value == 'update_group_info') {
           showModalBottomSheet(
             context: context,
@@ -455,7 +458,11 @@ class _EditTravelGroupState extends State<EditTravelGroup> {
                     actions: [
                       TextButton(
                         onPressed: () {
-                          Navigator.of(context).pop();
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => GroupsPage()),
+                          );
                         },
                         child: Text('Ok'),
                       ),
@@ -498,6 +505,13 @@ class _EditTravelGroupState extends State<EditTravelGroup> {
           child: ListTile(
             leading: Icon(Icons.calendar_today),
             title: Text('Show Common Dates'),
+          ),
+        ),
+        PopupMenuItem(
+          value: 'add_participants',
+          child: ListTile(
+            leading: Icon(Icons.person_add),
+            title: Text('Add Participants'),
           ),
         ),
         PopupMenuItem(
@@ -878,4 +892,158 @@ class _EditTravelGroupState extends State<EditTravelGroup> {
       },
     );
   }
+}
+
+void showAddFriendDialog(BuildContext context) {
+  showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context)
+                    .pushNamedAndRemoveUntil('/home', (route) => false);
+                pageNum = 2;
+              },
+              child: Text('OK'),
+            ),
+          ],
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
+          title: Text('Add Members'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const SizedBox(
+                height: 10,
+              ),
+              Container(
+                width: double.maxFinite,
+                height: MediaQuery.of(context).size.height * 0.15,
+                child: Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    border: Border.all(
+                      color: Theme.of(context).primaryColor,
+                    ),
+                  ),
+                  child: ListView.separated(
+                    separatorBuilder: (context, index) => SizedBox(height: 10),
+                    itemCount: currentFriendIds.length,
+                    itemBuilder: (context, index) {
+                      return ListTile(
+                        title: Text(
+                          currentFriendUsernames[index],
+                        ),
+                        trailing: IconButton(
+                          icon: Icon(Icons.add),
+                          onPressed: () {
+                            final groupData = Provider.of<GroupProvider>(
+                              context,
+                              listen: false,
+                            );
+                            groupData.getGroupByUserId(userId).then(
+                                  (value) => groupData
+                                      .addUserToGroup(
+                                    currentGroupId,
+                                    currentFriendIds[index].toString(),
+                                  )
+                                      .then((value) {
+                                    if (value) {
+                                      showDialog(
+                                        context: context,
+                                        builder: (context) => AlertDialog(
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(10),
+                                          ),
+                                          title: Text('Success'),
+                                          content: Text(
+                                              'Added ${currentFriendUsernames[index]} to group'),
+                                          actions: [
+                                            TextButton(
+                                                onPressed: () {
+                                                  Navigator.pop(context);
+                                                },
+                                                child: Text('OK'))
+                                          ],
+                                        ),
+                                      );
+                                    } else {
+                                      showDialog(
+                                        context: context,
+                                        builder: (context) => AlertDialog(
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(10),
+                                          ),
+                                          title: Text('Error'),
+                                          content: Text(
+                                              'Failed to add ${currentFriendUsernames[index]} to group'),
+                                          actions: [
+                                            TextButton(
+                                                onPressed: () {
+                                                  Navigator.pop(context);
+                                                },
+                                                child: Text('OK'))
+                                          ],
+                                        ),
+                                      );
+                                    }
+                                  }),
+                                );
+
+                            /* groupData.addUserToGroup(
+                                groupData.groups.last.id, userId); */
+                          },
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              ),
+              SizedBox(
+                height: 10,
+              ),
+              Row(
+                children: <Widget>[
+                  Expanded(
+                      child: Divider(
+                    color: Colors.grey.shade700,
+                    indent: 30,
+                    endIndent: 30,
+                    thickness: 1,
+                  )),
+                  Text("OR", style: TextStyle(color: Colors.grey.shade700)),
+                  Expanded(
+                    child: Divider(
+                      color: Colors.grey.shade700,
+                      indent: 30,
+                      endIndent: 30,
+                      thickness: 1,
+                    ),
+                  ),
+                ],
+              ),
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pushNamed('/create_travel_group');
+                },
+                child: Center(
+                  child: Text(
+                    'Arrange an Individual Trip',
+                    style: TextStyle(
+                      color: Theme.of(context).primaryColor,
+                      fontSize: 16,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        );
+      });
 }

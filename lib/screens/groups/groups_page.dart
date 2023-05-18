@@ -270,7 +270,7 @@ void showAddFriendDialog(BuildContext context) {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10),
           ),
-          title: Text('Add Members'),
+          title: Text('Add Friends'),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -364,24 +364,152 @@ void showAddFriendDialog(BuildContext context) {
                 ),
               ),
               SizedBox(
-                height: 10,
+                height: 20,
               ),
               Row(
                 children: <Widget>[
                   Expanded(
                       child: Divider(
                     color: Colors.grey.shade700,
-                    indent: 30,
-                    endIndent: 30,
+                    indent: 35,
+                    endIndent: 35,
                     thickness: 1,
                   )),
-                  Text("OR", style: TextStyle(color: Colors.grey.shade700)),
+                  Text("OR"),
                   Expanded(
-                    child: Divider(
-                      color: Colors.grey.shade700,
-                      indent: 30,
-                      endIndent: 30,
-                      thickness: 1,
+                      child: Divider(
+                    color: Colors.grey.shade700,
+                    indent: 35,
+                    endIndent: 35,
+                    thickness: 1,
+                  )),
+                ],
+              ),
+              Row(
+                children: <Widget>[
+                  TextButton(
+                    onPressed: () {
+                      TextEditingController _controller =
+                          TextEditingController();
+                      showDialog(
+                          context: context,
+                          builder: (context) {
+                            return AlertDialog(
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              title: Text('Send friend request'),
+                              content: TextField(
+                                controller: _controller,
+                                decoration: InputDecoration(
+                                  hintText: 'Enter username',
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(25),
+                                  ),
+                                ),
+                                onSubmitted: (value) {
+                                  print(value);
+                                },
+                              ),
+                              actions: [
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                  child: Text('Cancel'),
+                                ),
+                                TextButton(
+                                  onPressed: () {
+                                    print(currentUser.name);
+                                    print('$userId');
+                                    print('friend username' + _controller.text);
+
+                                    final userData = Provider.of<UserProvider>(
+                                        context,
+                                        listen: false);
+                                    userData
+                                        .getUserIdByUsername(_controller.text)
+                                        .then(
+                                      (value) {
+                                        print('friend id' + friendId);
+                                        userData
+                                            .sendFriendRequest(userId, friendId)
+                                            .then((value) {
+                                          Navigator.of(context).pop();
+                                          if (value) {
+                                            showDialog(
+                                                context: context,
+                                                builder: (context) {
+                                                  return AlertDialog(
+                                                    shape:
+                                                        RoundedRectangleBorder(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              10),
+                                                    ),
+                                                    title: Text('Success'),
+                                                    content: Text(
+                                                        'Friend request sent successfully'),
+                                                    actions: [
+                                                      TextButton(
+                                                        onPressed: () {
+                                                          Navigator.of(context)
+                                                              .pushNamedAndRemoveUntil(
+                                                                  '/home',
+                                                                  (route) =>
+                                                                      false);
+                                                          pageNum = 2;
+                                                        },
+                                                        child: Text('Ok'),
+                                                      ),
+                                                    ],
+                                                  );
+                                                });
+                                          } else {
+                                            showDialog(
+                                                context: context,
+                                                builder: (context) {
+                                                  return AlertDialog(
+                                                    shape:
+                                                        RoundedRectangleBorder(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              10),
+                                                    ),
+                                                    title: Text('Error'),
+                                                    content: Text(
+                                                        'An error occured while sending friend request'),
+                                                    actions: [
+                                                      TextButton(
+                                                        onPressed: () {
+                                                          Navigator.of(context)
+                                                              .pop();
+                                                        },
+                                                        child: Text('Ok'),
+                                                      ),
+                                                    ],
+                                                  );
+                                                });
+                                          }
+                                        });
+                                      },
+                                    );
+                                    //
+                                  },
+                                  child: Text('Send'),
+                                ),
+                              ],
+                            );
+                          });
+                    },
+                    child: Center(
+                      child: Text(
+                        'Send Friend Request',
+                        style: TextStyle(
+                          color: Theme.of(context).primaryColor,
+                          fontSize: 16,
+                        ),
+                      ),
                     ),
                   ),
                 ],

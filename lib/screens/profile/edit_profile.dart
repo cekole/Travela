@@ -155,9 +155,30 @@ class _EditProfileState extends State<EditProfile> {
               Spacer(),
               TextButton(
                 onPressed: () {
-                  userData.deleteUser(currentUser.id).then(
-                        (value) => Navigator.of(context).pushNamed('/login'),
-                      );
+                  userData.deleteUser(userId).then((value) =>
+                      value ? Navigator.of(context).pushNamed('/login') : null);
+                  (value) => showDialog(
+                      context: context,
+                      builder: (ctx) => AlertDialog(
+                            title: Text('Are you sure?'),
+                            content:
+                                Text('Do you want to delete your account?'),
+                            actions: [
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.of(ctx).pop(false);
+                                },
+                                child: Text('No'),
+                              ),
+                              TextButton(
+                                onPressed: () {
+                                  // navigate to login page
+                                  Navigator.of(context).pushNamed('/login');
+                                },
+                                child: Text('Yes'),
+                              ),
+                            ],
+                          ));
                 },
                 child: Text(
                   'Delete Account',

@@ -86,7 +86,7 @@ class UserProvider with ChangeNotifier {
     }
   }
 
-  Future deleteUser(String id) async {
+  Future<bool> deleteUser(String id) async {
     final url = baseUrl + 'users/$id';
     print(url);
     final response = await http.delete(
@@ -99,9 +99,10 @@ class UserProvider with ChangeNotifier {
     print(response.statusCode);
     if (response.statusCode == 200) {
       print('delete user success');
-      return json.decode(response.body);
+      return true;
     } else {
       print('delete user failed');
+      return false;
     }
   }
 
