@@ -1,4 +1,5 @@
 import 'package:expansion_tile_card/expansion_tile_card.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
@@ -432,21 +433,17 @@ class TripsPage extends StatelessWidget {
                 onPressed: () {
                   String groupName = textController.text;
                   if (groupName.isEmpty) {
-                    AlertDialog(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      title: Text('Error'),
-                      content: Text('Group name cannot be empty'),
-                      actions: [
-                        TextButton(
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                          },
-                          child: Text('OK'),
-                        ),
-                      ],
-                    );
+                    CupertinoAlertDialog(
+                        title: Text('Error'),
+                        content: Text('Please enter a group name'),
+                        actions: [
+                          TextButton(
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                            child: Text('OK'),
+                          ),
+                        ]);
                   } else {
                     groupData
                         .addGroup(
@@ -456,16 +453,12 @@ class TripsPage extends StatelessWidget {
                         .then((value) {
                       showDialog(
                         context: context,
-                        builder: (context) => AlertDialog(
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
-                          ),
+                        builder: (context) => CupertinoAlertDialog(
                           title: Text('Success'),
                           content: Text('Group created successfully'),
                           actions: [
                             TextButton(
                               onPressed: () {
-                                Navigator.of(context).pop();
                                 Navigator.of(context).pop();
                                 Navigator.of(context).pop();
                               },

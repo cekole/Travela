@@ -317,24 +317,20 @@ void showAddFriendDialog(BuildContext context) {
                                       .then((value) {
                                     if (value) {
                                       showDialog(
-                                        context: context,
-                                        builder: (context) => AlertDialog(
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(10),
-                                          ),
-                                          title: Text('Success'),
-                                          content: Text(
-                                              'Added ${currentFriendUsernames[index]} to group'),
-                                          actions: [
-                                            TextButton(
-                                                onPressed: () {
-                                                  Navigator.pop(context);
-                                                },
-                                                child: Text('OK'))
-                                          ],
-                                        ),
-                                      );
+                                          context: context,
+                                          builder: (context) =>
+                                              CupertinoAlertDialog(
+                                                title: Text('Success'),
+                                                content: Text(
+                                                    'Successfully added ${currentFriendUsernames[index]} to group'),
+                                                actions: [
+                                                  TextButton(
+                                                      onPressed: () {
+                                                        Navigator.pop(context);
+                                                      },
+                                                      child: Text('OK'))
+                                                ],
+                                              ));
                                     } else {
                                       showDialog(
                                         context: context,
@@ -392,127 +388,123 @@ void showAddFriendDialog(BuildContext context) {
               ),
               Row(
                 children: <Widget>[
-                  TextButton(
-                    onPressed: () {
-                      TextEditingController _controller =
-                          TextEditingController();
-                      showDialog(
-                          context: context,
-                          builder: (context) {
-                            return AlertDialog(
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              title: Text('Send friend request'),
-                              content: TextField(
-                                controller: _controller,
-                                decoration: InputDecoration(
-                                  hintText: 'Enter username',
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(25),
-                                  ),
-                                ),
-                                onSubmitted: (value) {
-                                  print(value);
-                                },
-                              ),
-                              actions: [
-                                TextButton(
-                                  onPressed: () {
-                                    Navigator.of(context).pop();
-                                  },
-                                  child: Text('Cancel'),
-                                ),
-                                TextButton(
-                                  onPressed: () {
-                                    print(currentUser.name);
-                                    print('$userId');
-                                    print('friend username' + _controller.text);
-
-                                    final userData = Provider.of<UserProvider>(
-                                        context,
-                                        listen: false);
-                                    userData
-                                        .getUserIdByUsername(_controller.text)
-                                        .then(
-                                      (value) {
-                                        print('friend id' + friendId);
-                                        userData
-                                            .sendFriendRequest(userId, friendId)
-                                            .then((value) {
-                                          Navigator.of(context).pop();
-                                          if (value) {
-                                            showDialog(
-                                                context: context,
-                                                builder: (context) {
-                                                  return AlertDialog(
-                                                    shape:
-                                                        RoundedRectangleBorder(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              10),
-                                                    ),
-                                                    title: Text('Success'),
-                                                    content: Text(
-                                                        'Friend request sent successfully'),
-                                                    actions: [
-                                                      TextButton(
-                                                        onPressed: () {
-                                                          Navigator.of(context)
-                                                              .pushNamedAndRemoveUntil(
-                                                                  '/home',
-                                                                  (route) =>
-                                                                      false);
-                                                          pageNum = 2;
-                                                        },
-                                                        child: Text('Ok'),
-                                                      ),
-                                                    ],
-                                                  );
-                                                });
-                                          } else {
-                                            showDialog(
-                                                context: context,
-                                                builder: (context) {
-                                                  return AlertDialog(
-                                                    shape:
-                                                        RoundedRectangleBorder(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              10),
-                                                    ),
-                                                    title: Text('Error'),
-                                                    content: Text(
-                                                        'An error occured while sending friend request'),
-                                                    actions: [
-                                                      TextButton(
-                                                        onPressed: () {
-                                                          Navigator.of(context)
-                                                              .pop();
-                                                        },
-                                                        child: Text('Ok'),
-                                                      ),
-                                                    ],
-                                                  );
-                                                });
-                                          }
-                                        });
-                                      },
-                                    );
-                                    //
-                                  },
-                                  child: Text('Send'),
-                                ),
-                              ],
-                            );
-                          });
-                    },
+                  Expanded(
                     child: Center(
-                      child: Text(
-                        'Send Friend Request',
-                        style: TextStyle(
-                          color: Theme.of(context).primaryColor,
-                          fontSize: 16,
+                      child: TextButton(
+                        onPressed: () {
+                          TextEditingController _controller =
+                              TextEditingController();
+                          showDialog(
+                            context: context,
+                            builder: (context) {
+                              return AlertDialog(
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                title: Text('Send friend request'),
+                                content: TextField(
+                                  controller: _controller,
+                                  decoration: InputDecoration(
+                                    hintText: 'Enter username',
+                                    border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(25),
+                                    ),
+                                  ),
+                                  onSubmitted: (value) {
+                                    print(value);
+                                  },
+                                ),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                    child: Text('Cancel'),
+                                  ),
+                                  TextButton(
+                                    onPressed: () {
+                                      print(currentUser.name);
+                                      print('$userId');
+                                      print(
+                                          'friend username' + _controller.text);
+
+                                      final userData =
+                                          Provider.of<UserProvider>(context,
+                                              listen: false);
+                                      userData
+                                          .getUserIdByUsername(_controller.text)
+                                          .then(
+                                        (value) {
+                                          print('friend id' + friendId);
+                                          userData
+                                              .sendFriendRequest(
+                                                  userId, friendId)
+                                              .then(
+                                            (value) {
+                                              Navigator.of(context).pop();
+                                              if (value) {
+                                                showDialog(
+                                                  context: context,
+                                                  builder: (context) {
+                                                    return CupertinoAlertDialog(
+                                                      title: Text('Success'),
+                                                      content: Text(
+                                                          'Friend request sent'),
+                                                      actions: [
+                                                        TextButton(
+                                                          onPressed: () {
+                                                            Navigator.of(
+                                                                    context)
+                                                                .pop();
+                                                          },
+                                                          child: Text('Ok'),
+                                                        ),
+                                                      ],
+                                                    );
+                                                  },
+                                                );
+                                              } else {
+                                                showDialog(
+                                                  context: context,
+                                                  builder: (context) {
+                                                    return CupertinoAlertDialog(
+                                                      title: Text('Error'),
+                                                      content: Text(
+                                                          'Failed to send friend request'),
+                                                      actions: [
+                                                        TextButton(
+                                                          onPressed: () {
+                                                            Navigator.of(
+                                                                    context)
+                                                                .pop();
+                                                          },
+                                                          child: Text('Ok'),
+                                                        ),
+                                                      ],
+                                                    );
+                                                  },
+                                                );
+                                              }
+                                            },
+                                          );
+                                        },
+                                      );
+                                    },
+                                    child: Text('Send'),
+                                  ),
+                                ],
+                              );
+                            },
+                          );
+                        },
+                        child: Center(
+                          child: Text(
+                            'Send Friend Request',
+                            style: TextStyle(
+                              color: Theme.of(context).primaryColor,
+                              fontSize: 16,
+                            ),
+                          ),
                         ),
                       ),
                     ),

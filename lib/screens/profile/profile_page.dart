@@ -11,6 +11,7 @@ import 'package:table_calendar/table_calendar.dart';
 import 'package:travela_mobile/appConstant.dart';
 import 'package:travela_mobile/models/travel_group.dart';
 import 'package:travela_mobile/providers/authentication_provider.dart';
+import 'package:travela_mobile/providers/file_storage_provider.dart';
 import 'package:travela_mobile/providers/group_provider.dart';
 import 'package:travela_mobile/providers/travel_group_provider.dart';
 import 'package:travela_mobile/providers/user_provider.dart';
@@ -24,6 +25,10 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
+  String placeholderImage =
+      'assets/images/profile/anonymous-avatar-icon-25.jpg.png';
+  String imageUrl = ''; // The URL of the actual image
+
   @override
   void initState() {
     super.initState();
@@ -57,6 +62,10 @@ class _ProfilePageState extends State<ProfilePage> {
 
   @override
   Widget build(BuildContext context) {
+    final fileStorageData = Provider.of<FileStorageProvider>(context);
+    fileStorageData.getProfilePic(userId);
+    imageUrl = profilePic;
+
     return CustomScrollView(
       slivers: [
         SliverAppBar(
@@ -70,10 +79,21 @@ class _ProfilePageState extends State<ProfilePage> {
                 children: [
                   Row(
                     children: [
-                      CircleAvatar(
-                        radius: 40,
-                        backgroundImage:
-                            AssetImage('assets/images/profile.jpg'),
+                      ClipOval(
+                        child: CircleAvatar(
+                          radius: 40,
+                          backgroundColor: Colors.grey,
+                          child: imageUrl.isNotEmpty
+                              ? FadeInImage.assetNetwork(
+                                  placeholder: placeholderImage,
+                                  image: imageUrl,
+                                  fit: BoxFit.cover,
+                                )
+                              : Image.asset(
+                                  placeholderImage,
+                                  fit: BoxFit.cover,
+                                ),
+                        ),
                       ),
                       SizedBox(width: 20),
                       Column(
@@ -307,24 +327,21 @@ class _ProfilePageState extends State<ProfilePage> {
                                 )
                                     .then((value) {
                                   showDialog(
-                                    context: context,
-                                    builder: (context) => AlertDialog(
-                                      title: Text('Success'),
-                                      content: Text(
-                                          'Your available dates have been updated'),
-                                      actions: [
-                                        TextButton(
-                                          onPressed: () {
-                                            Navigator.of(context)
-                                                .pushNamedAndRemoveUntil(
-                                                    '/home', (route) => false);
-                                            pageNum = 4;
-                                          },
-                                          child: Text('OK'),
-                                        ),
-                                      ],
-                                    ),
-                                  );
+                                      context: context,
+                                      builder: (context) =>
+                                          CupertinoAlertDialog(
+                                            title: Text('Success'),
+                                            content: Text(
+                                                'Your available dates have been updated'),
+                                            actions: [
+                                              TextButton(
+                                                onPressed: () {
+                                                  Navigator.of(context).pop();
+                                                },
+                                                child: Text('OK'),
+                                              ),
+                                            ],
+                                          ));
                                 });
                               },
                             );
@@ -386,41 +403,35 @@ class _ProfilePageState extends State<ProfilePage> {
                   icon: Icon(Icons.add),
                   onPressed: () {
                     showDialog(
-                        context: context,
-                        builder: (context) {
-                          return AlertDialog(
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10),
+                      context: context,
+                      builder: (BuildContext context) {
+                        return CupertinoAlertDialog(
+                          title: Text('Invite Members'),
+                          content: CupertinoTextField(
+                            placeholder: 'Enter username',
+                            decoration: BoxDecoration(
+                              border:
+                                  Border.all(color: CupertinoColors.systemGrey),
+                              borderRadius: BorderRadius.circular(25),
                             ),
-                            title: Text('Invite Members'),
-                            content: ListView(
-                              children: [
-                                TextField(
-                                  decoration: InputDecoration(
-                                    hintText: 'Enter username',
-                                    border: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(25),
-                                    ),
-                                  ),
-                                ),
-                              ],
+                          ),
+                          actions: [
+                            CupertinoDialogAction(
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                              child: Text('Cancel'),
                             ),
-                            actions: [
-                              TextButton(
-                                onPressed: () {
-                                  Navigator.of(context).pop();
-                                },
-                                child: Text('Cancel'),
-                              ),
-                              TextButton(
-                                onPressed: () {
-                                  Navigator.of(context).pop();
-                                },
-                                child: Text('Send Invite'),
-                              ),
-                            ],
-                          );
-                        });
+                            CupertinoDialogAction(
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                              child: Text('Send Invite'),
+                            ),
+                          ],
+                        );
+                      },
+                    );
                   },
                 ),
               ),

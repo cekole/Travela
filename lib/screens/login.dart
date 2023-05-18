@@ -161,35 +161,6 @@ class _LoginPageState extends State<LoginPage> {
                                 top: MediaQuery.of(context).size.height * 0.2),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                TextButton.icon(
-                                  onPressed: () {
-                                    Navigator.pushReplacementNamed(
-                                        context, '/home');
-                                  },
-                                  style: ButtonStyle(
-                                    padding: MaterialStateProperty.all(
-                                        EdgeInsets.symmetric(
-                                            vertical: 15, horizontal: 20)),
-                                    foregroundColor: MaterialStateProperty.all(
-                                        Colors.grey.shade700),
-                                    backgroundColor: Theme.of(context)
-                                        .elevatedButtonTheme
-                                        .style!
-                                        .backgroundColor,
-                                    shape: MaterialStateProperty.all(
-                                      RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(50),
-                                      ),
-                                    ),
-                                  ),
-                                  icon: Image.asset(
-                                    'assets/images/google.png',
-                                    scale: 50,
-                                  ),
-                                  label: Text("Sign In With Google"),
-                                ),
-                              ],
                             ),
                           ),
                           SizedBox(

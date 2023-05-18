@@ -24,7 +24,7 @@ class FriendCard extends StatelessWidget {
           final userData = Provider.of<UserProvider>(context, listen: false);
           await userData.getAllFriends();
         },
-        baseColor: Theme.of(context).backgroundColor.withOpacity(0.5),
+        baseColor: Color.fromARGB(255, 215, 213, 213).withOpacity(0.5),
         title: Text(title!),
         children: [
           ListView.builder(

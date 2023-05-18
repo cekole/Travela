@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
@@ -105,14 +106,15 @@ class _PlaceCardState extends State<PlaceCard> {
                                 showDialog(
                                   context: context,
                                   builder: (BuildContext context) =>
-                                      AlertDialog(
-                                    title: Text('Added to Favorites'),
+                                      CupertinoAlertDialog(
+                                    title: Text('Added to Favourites'),
+                                    // OK BUTTON
                                     actions: [
-                                      TextButton(
-                                        onPressed: () {
-                                          Navigator.pop(context);
-                                        },
+                                      CupertinoDialogAction(
                                         child: Text('OK'),
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                        },
                                       ),
                                     ],
                                   ),
@@ -120,22 +122,19 @@ class _PlaceCardState extends State<PlaceCard> {
                               } else {
                                 // Handle the case when the method returns false
                                 showDialog(
-                                  context: context,
-                                  builder: (BuildContext context) =>
-                                      AlertDialog(
-                                    title: Text('Error'),
-                                    content: Text(
-                                        'An error occurred while adding to favorites'),
-                                    actions: [
-                                      TextButton(
-                                        onPressed: () {
-                                          Navigator.pop(context);
-                                        },
-                                        child: Text('OK'),
-                                      ),
-                                    ],
-                                  ),
-                                );
+                                    context: context,
+                                    builder: (BuildContext context) =>
+                                        CupertinoAlertDialog(
+                                          title: Text('Already added'),
+                                          actions: [
+                                            CupertinoDialogAction(
+                                              child: Text('OK'),
+                                              onPressed: () {
+                                                Navigator.of(context).pop();
+                                              },
+                                            ),
+                                          ],
+                                        ));
                               }
                             } catch (error) {
                               // Handle any errors that occurred during the addFavouriteCity operation

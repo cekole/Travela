@@ -1,4 +1,5 @@
 import 'package:expansion_tile_card/expansion_tile_card.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:travela_mobile/appConstant.dart';
@@ -25,7 +26,7 @@ class RequestCard extends StatelessWidget {
           final userData = Provider.of<UserProvider>(context, listen: false);
           await userData.getAllIncomingRequests();
         },
-        baseColor: Theme.of(context).backgroundColor.withOpacity(0.5),
+        baseColor: Colors.grey.withOpacity(0.5),
         title: Text(title!),
         children: [
           ListView.builder(
@@ -47,22 +48,22 @@ class RequestCard extends StatelessWidget {
                         showDialog(
                           context: context,
                           builder: (context) {
-                            return AlertDialog(
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              title: Text('Request accepted'),
-                              actions: [
-                                TextButton(
+                            return CupertinoAlertDialog(
+                                title: Text('Request accepted'),
+                                actions: [
+                                  CupertinoDialogAction(
                                     onPressed: () {
+                                      // navigate to Groups page
                                       Navigator.of(context)
                                           .pushNamedAndRemoveUntil(
-                                              '/home', (route) => false);
+                                        '/home',
+                                        (route) => false,
+                                      );
                                       pageNum = 2;
                                     },
-                                    child: Text('Ok'))
-                              ],
-                            );
+                                    child: Text('Ok'),
+                                  ),
+                                ]);
                           },
                         );
                       },
@@ -75,18 +76,19 @@ class RequestCard extends StatelessWidget {
                         showDialog(
                           context: context,
                           builder: (context) {
-                            return AlertDialog(
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10),
-                              ),
+                            return CupertinoAlertDialog(
                               title: Text('Request rejected'),
                               actions: [
-                                TextButton(
-                                    onPressed: () {
-                                      requestNames.removeAt(index);
-                                      Navigator.of(context).pop();
-                                    },
-                                    child: Text('Ok'))
+                                CupertinoDialogAction(
+                                  onPressed: () {
+                                    Navigator.of(context)
+                                        .pushNamedAndRemoveUntil(
+                                      '/home',
+                                      (route) => false,
+                                    );
+                                  },
+                                  child: Text('Ok'),
+                                ),
                               ],
                             );
                           },
