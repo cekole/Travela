@@ -1,4 +1,5 @@
 import 'package:bubble/bubble.dart';
+import 'package:expansion_tile_card/expansion_tile_card.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
@@ -43,10 +44,10 @@ class _EditTravelGroupState extends State<EditTravelGroup> {
     final groupData = Provider.of<GroupProvider>(context, listen: false);
     final Size size = MediaQuery.of(context).size;
     TextEditingController groupNameController = TextEditingController();
-
     final travelGroup =
         ModalRoute.of(context)!.settings.arguments as TravelGroup;
 
+    groupData.getDraftTrips(travelGroup.id);
     currentGroupIdForSuggestions = travelGroup.id;
 
     return Scaffold(
@@ -132,32 +133,6 @@ class _EditTravelGroupState extends State<EditTravelGroup> {
                               ),
                             ],
                           ),
-                          SizedBox(height: 10),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              Bubble(
-                                nip: BubbleNip.rightBottom,
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.end,
-                                  children: [
-                                    Text(
-                                      '',
-                                      style: TextStyle(
-                                        color: Colors.blue,
-                                      ),
-                                    ),
-                                    Text(
-                                      'Hi',
-                                      style: TextStyle(
-                                        color: Colors.black,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
                         ],
                       ),
                     ),
@@ -209,6 +184,107 @@ class _EditTravelGroupState extends State<EditTravelGroup> {
                     searchDialog(context);
                   },
                   child: Text('Arrange Trip')),
+              SizedBox(height: 20),
+              ElevatedButton(
+                  onPressed: () {
+                    showModalBottomSheet(
+                      isScrollControlled: true,
+                      useRootNavigator: true,
+                      context: context,
+                      builder: (context) {
+                        return Container(
+                          height: MediaQuery.of(context).size.height * 0.85,
+                          child: Column(
+                            children: [
+                              Stack(
+                                children: [
+                                  Container(
+                                    height: MediaQuery.of(context).size.height *
+                                        0.4,
+                                    decoration: BoxDecoration(),
+                                  ),
+                                  Positioned(
+                                    top: 20,
+                                    left: 20,
+                                    child: IconButton(
+                                      onPressed: () {
+                                        Navigator.pop(context);
+                                      },
+                                      icon: Icon(
+                                        Icons.arrow_back,
+                                        color: Colors.white,
+                                        size: 30,
+                                        shadows: [
+                                          Shadow(
+                                            blurRadius: 10,
+                                            color: Colors.black,
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              ExpansionTileCard(
+                                baseColor: Theme.of(context)
+                                    .primaryColor
+                                    .withOpacity(0.2),
+                                expandedColor:
+                                    Theme.of(context).backgroundColor,
+                                leading: CircleAvatar(
+                                  backgroundColor:
+                                      Theme.of(context).backgroundColor,
+                                  child: Icon(Icons.directions_car),
+                                ),
+                                title: // çağla ekleyecek
+                                    Text("buraya çağlaekleyince gelecek"),
+                                subtitle: pastTrips.length > 0
+                                    ? Text(pastTrips[0].period)
+                                    : Text(''),
+                                children: [
+                                  Divider(
+                                    thickness: 1,
+                                    height: 1,
+                                  ),
+                                  ListTile(
+                                    title: Text('Locations'),
+                                    subtitle: pastTrips.length > 0
+                                        ? Text(pastTrips
+                                            .map((e) => e.locations)
+                                            .join(','))
+                                        : Text(''),
+                                    leading: Icon(Icons.location_on),
+                                  ),
+                                  ListTile(
+                                    title: Text('Travelers'),
+                                    subtitle: Text(
+                                        'You, Yağmur Eryılmaz, Efe Şaman, Çağla Ataoğlu, Efe Ertürk'),
+                                    leading: Icon(Icons.people),
+                                  ),
+                                  ListTile(
+                                    title: Text('Transportation'),
+                                    subtitle: Text(
+                                        'Car \n8/20/2021 12:00 PM - 8/24/2021 12:00 PM'),
+                                    leading: Icon(Icons.mode_of_travel_sharp),
+                                  ),
+                                  ListTile(
+                                    title: Text('Accomodation'),
+                                    subtitle: pastTrips.length > 0
+                                        ? Text(pastTrips
+                                            .map((e) => e.accomodation)
+                                            .join(','))
+                                        : Text(''),
+                                    leading: Icon(Icons.hotel),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        );
+                      },
+                    );
+                  },
+                  child: Text('Trip Options')),
             ],
           ),
         ),
@@ -354,8 +430,8 @@ class _EditTravelGroupState extends State<EditTravelGroup> {
                       SizedBox(height: 20),
                       ElevatedButton(
                         onPressed: () {
-                          groupData.updateGroup(currentGroupId,
-                              groupNameController.text, "group name");
+                          groupData.updateGroup(travelGroup.id,
+                              groupNameController.text, "no need");
                           Navigator.of(context).pop();
                         },
                         child: Text('Update Group Name'),
@@ -412,19 +488,31 @@ class _EditTravelGroupState extends State<EditTravelGroup> {
       itemBuilder: (BuildContext context) => [
         PopupMenuItem(
           value: 'create_poll',
-          child: Text('Create Poll'),
+          child: ListTile(
+            leading: Icon(Icons.poll),
+            title: Text('Create Poll'),
+          ),
         ),
         PopupMenuItem(
           value: 'show_common_dates',
-          child: Text('Show Common Dates'),
+          child: ListTile(
+            leading: Icon(Icons.calendar_today),
+            title: Text('Show Common Dates'),
+          ),
         ),
         PopupMenuItem(
           value: 'update_group_info',
-          child: Text('Update Group Info'),
+          child: ListTile(
+            leading: Icon(Icons.edit),
+            title: Text('Update Group Info'),
+          ),
         ),
         PopupMenuItem(
           value: 'delete_group',
-          child: Text('Delete Group'),
+          child: ListTile(
+            leading: Icon(Icons.delete),
+            title: Text('Delete Group'),
+          ),
         ),
       ],
       icon: Icon(Icons.more_vert),

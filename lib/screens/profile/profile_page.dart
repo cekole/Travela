@@ -89,7 +89,7 @@ class _ProfilePageState extends State<ProfilePage> {
                           ),
                           SizedBox(height: 10),
                           Text(
-                            'Ankara, Turkey',
+                            currentUser.email,
                             style: TextStyle(
                               color: Colors.white,
                             ),
@@ -204,6 +204,10 @@ class _ProfilePageState extends State<ProfilePage> {
                 ),
                 title: Text('Privacy'),
               ),
+              Divider(
+                height: 20,
+                thickness: 2,
+              ),
               SizedBox(height: 20),
               Container(
                 child: Column(
@@ -220,18 +224,40 @@ class _ProfilePageState extends State<ProfilePage> {
                       height: 20,
                       thickness: 2,
                     ),
-                    Column(
-                      children: [
-                        ListTile(
-                          title: Text(
-                            'Start Date: ${currentAvailableFrom}\nEnd Date: ${currentAvailableTo}',
-                          ),
-                        ),
-                      ],
+                    ListTile(
+                      leading: Icon(
+                        Icons.date_range,
+                      ),
+                      title: Text('Start Date: ${currentAvailableFrom}'),
+                    ),
+                    Divider(
+                      height: 1,
+                    ),
+                    Divider(
+                      height: 1,
+                    ),
+                    ListTile(
+                      leading: Icon(
+                        Icons.date_range,
+                      ),
+                      title: Text('End Date: ${currentAvailableTo}'),
+                    ),
+                    Divider(
+                      height: 20,
+                      thickness: 2,
                     ),
                   ],
                 ),
               ),
+              SizedBox(height: 20),
+              Padding(
+                padding: EdgeInsets.only(left: 8.0),
+                child: Text(
+                  'Change Your Available Dates',
+                  style: TextStyle(fontSize: 20),
+                ),
+              ),
+              Divider(height: 20, thickness: 2),
               Container(
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.all(

@@ -75,7 +75,7 @@ class _EditProfileState extends State<EditProfile> {
                   ),
                   SizedBox(width: 20),
                   Padding(
-                    padding: const EdgeInsets.all(8.0),
+                    padding: const EdgeInsets.all(20.0),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -89,7 +89,7 @@ class _EditProfileState extends State<EditProfile> {
                         ),
                         SizedBox(height: 10),
                         Text(
-                          'Ankara, Turkey',
+                          currentUser.email,
                           style: TextStyle(
                             color: Colors.grey,
                           ),
@@ -135,12 +135,17 @@ class _EditProfileState extends State<EditProfile> {
               SizedBox(height: 20),
               ElevatedButton(
                 onPressed: () {
+                  final password = "12345678";
                   final fileStorage =
                       Provider.of<FileStorageProvider>(context, listen: false);
                   fileStorage.uploadProfilePic(image!.path, userId);
                   userData
-                      .updateUserInfo(userId, nameController.text,
-                          emailController.text, usernameController.text)
+                      .updateUserInfo(
+                          userId,
+                          nameController.text,
+                          emailController.text,
+                          usernameController.text,
+                          password)
                       .then(
                         (value) => Navigator.of(context).pushNamed('/profile'),
                       );

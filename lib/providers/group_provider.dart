@@ -187,7 +187,6 @@ class GroupProvider with ChangeNotifier {
     print(url);
     final response = await http.put(Uri.parse(url), headers: {
       'Authorization': 'Bearer  $bearerToken',
-      'Content-Type': 'application/json',
     }, body: {
       'groupName': groupName,
       'ownerId': ownerId,

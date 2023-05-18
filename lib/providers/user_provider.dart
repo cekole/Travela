@@ -64,8 +64,8 @@ class UserProvider with ChangeNotifier {
     }
   }
 
-  Future updateUserInfo(
-      String id, String name, String username, String email) async {
+  Future updateUserInfo(String id, String name, String username, String email,
+      String password) async {
     final url = baseUrl + 'users/$id';
     print(url);
     final response = await http.put(Uri.parse(url), headers: {
@@ -75,6 +75,7 @@ class UserProvider with ChangeNotifier {
       'name': name,
       'username': username,
       'email': email,
+      'password': password
     });
     print(response.statusCode);
     if (response.statusCode == 200) {
@@ -523,10 +524,9 @@ class UserProvider with ChangeNotifier {
       extractedData.forEach(
         (city) {
           favouriteCities.add(city);
+          notifyListeners();
         },
       );
-
-      notifyListeners();
     } else {
       print('getFavouriteCities failed');
     }
