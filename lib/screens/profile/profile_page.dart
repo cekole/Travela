@@ -300,10 +300,32 @@ class _ProfilePageState extends State<ProfilePage> {
                             )
                                 .then(
                               (value) {
-                                userData.setAvailableTo(
+                                userData
+                                    .setAvailableTo(
                                   userId,
                                   DateFormat('yyyy-MM-dd').format(rangeEndDate),
-                                );
+                                )
+                                    .then((value) {
+                                  showDialog(
+                                    context: context,
+                                    builder: (context) => AlertDialog(
+                                      title: Text('Success'),
+                                      content: Text(
+                                          'Your available dates have been updated'),
+                                      actions: [
+                                        TextButton(
+                                          onPressed: () {
+                                            Navigator.of(context)
+                                                .pushNamedAndRemoveUntil(
+                                                    '/home', (route) => false);
+                                            pageNum = 4;
+                                          },
+                                          child: Text('OK'),
+                                        ),
+                                      ],
+                                    ),
+                                  );
+                                });
                               },
                             );
                             _currentStartDate = rangeStartDate;

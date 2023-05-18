@@ -17,7 +17,6 @@ class FavoritesPage extends StatelessWidget {
       ),
       body: SafeArea(
         child: SizedBox(
-          height: MediaQuery.of(context).size.height * 0.25,
           child: ListView.builder(
             scrollDirection: Axis.vertical,
             itemCount: favouriteCities.length,
