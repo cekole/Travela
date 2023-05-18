@@ -43,6 +43,8 @@ List<Trip> upcomingTrips = [];
 List<Trip> pastTrips = [];
 List draftTrips = [];
 
+List currentAccomodations = [];
+
 String currentTripId = '';
 
 User currentUser = User(

@@ -1,12 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:provider/provider.dart';
+import 'package:travela_mobile/providers/accomodation_provider.dart';
+import 'package:travela_mobile/providers/trip_provider.dart';
 
 class HotelPage extends StatelessWidget {
   const HotelPage({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final accomodationData =
+        Provider.of<AccomodationProvider>(context, listen: false);
     final size = MediaQuery.of(context).size;
     final height = size.height;
     final width = size.width;

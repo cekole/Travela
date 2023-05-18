@@ -113,13 +113,13 @@ class AccomodationProvider with ChangeNotifier {
   }
 
   Future<String> searchAccomodation(String city, String startDate,
-      String destinendDate, int adultsCount) async {
+      String destinationDate, int adultsCount) async {
     final url = baseUrl + 'accomodations/search';
 
     var queryParams = {
       'city': city,
       'startDate': startDate,
-      'destinendDate': destinendDate,
+      'destinationDate': destinationDate,
       'adultsCount': adultsCount.toString(),
     };
 

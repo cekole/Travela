@@ -4,7 +4,9 @@ import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:travela_mobile/appConstant.dart';
 import 'package:travela_mobile/providers/user_provider.dart';
+import 'package:travela_mobile/screens/favorites/favorite_page.dart';
 
 class CustomDrawer extends StatelessWidget {
   const CustomDrawer({
@@ -30,19 +32,21 @@ class CustomDrawer extends StatelessWidget {
             ),
           ),
           ListTile(
-            leading: Icon(Icons.account_circle),
-            title: Text('Account'),
-          ),
-          ListTile(
-            leading: Icon(Icons.help),
-            title: Text('Help'),
-          ),
+              leading: Icon(Icons.account_circle),
+              title: Text('Account'),
+              onTap: () {
+                Navigator.pushNamedAndRemoveUntil(
+                    context, '/home', (route) => false);
+                pageNum = 4;
+              }),
           ListTile(
             leading: Icon(Icons.favorite),
             title: Text('Favorites'),
             onTap: () {
-              Navigator.pop(context);
-              Navigator.pushNamed(context, '/favorites');
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => FavoritesPage()),
+              );
             },
           ),
           ListTile(
