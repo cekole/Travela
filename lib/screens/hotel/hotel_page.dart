@@ -13,7 +13,7 @@ class HotelPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).primaryColor,
-        title: const Text('Hotels'),
+        title: const Text('Accommodation'),
       ),
       body: Container(
         margin: const EdgeInsets.all(16.0),
