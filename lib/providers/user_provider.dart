@@ -566,13 +566,13 @@ class UserProvider with ChangeNotifier {
     }
   }
 
-  Future getFavouriteCities(String userId) async {
+  Future<void> getFavouriteCities(String userId) async {
     final url = baseUrl + 'users/$userId/favouriteCities';
     print(url);
     final response = await http.get(
       Uri.parse(url),
       headers: {
-        'Authorization': 'Bearer  $bearerToken',
+        'Authorization': 'Bearer $bearerToken',
         'Content-Type': 'application/json',
       },
     );
@@ -585,12 +585,12 @@ class UserProvider with ChangeNotifier {
       if (extractedData == null) {
         return;
       }
-      extractedData.forEach(
-        (city) {
-          favouriteCities.add(city);
-          notifyListeners();
-        },
-      );
+
+      extractedData.forEach((city) {
+        favouriteCities.add(city);
+      });
+
+      notifyListeners();
     } else {
       print('getFavouriteCities failed');
     }

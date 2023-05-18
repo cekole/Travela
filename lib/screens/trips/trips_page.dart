@@ -49,6 +49,9 @@ class TripsPage extends StatelessWidget {
             children: [
               Column(
                 children: [
+                  SizedBox(
+                    height: 20,
+                  ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -56,7 +59,6 @@ class TripsPage extends StatelessWidget {
                         'Upcoming Trips',
                         style: TextStyle(
                           fontSize: 20,
-                          fontWeight: FontWeight.bold,
                         ),
                       ),
                     ],
@@ -187,6 +189,9 @@ class TripsPage extends StatelessWidget {
                       )
                     ],
                   ),
+                  SizedBox(
+                    height: 20,
+                  ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -194,7 +199,6 @@ class TripsPage extends StatelessWidget {
                         'Previous Trips',
                         style: TextStyle(
                           fontSize: 20,
-                          fontWeight: FontWeight.bold,
                         ),
                       ),
                       IconButton(
