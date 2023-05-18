@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
@@ -62,56 +63,9 @@ class _RegisterPageState extends State<RegisterPage> {
                   children: [
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        TextButton.icon(
-                          onPressed: () {
-                            Navigator.pushReplacementNamed(context, '/home');
-                          },
-                          style: ButtonStyle(
-                            padding: MaterialStateProperty.all(
-                                EdgeInsets.symmetric(
-                                    vertical: 15, horizontal: 20)),
-                            foregroundColor:
-                                MaterialStateProperty.all(Colors.grey.shade700),
-                            backgroundColor: Theme.of(context)
-                                .elevatedButtonTheme
-                                .style!
-                                .backgroundColor,
-                            shape: MaterialStateProperty.all(
-                              RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(50),
-                              ),
-                            ),
-                          ),
-                          icon: Image.asset(
-                            'assets/images/google.png',
-                            scale: 50,
-                          ),
-                          label: Text("Sign Up With Google"),
-                        ),
-                      ],
                     ),
                     SizedBox(
                       height: 20,
-                    ),
-                    Row(
-                      children: <Widget>[
-                        Expanded(
-                            child: Divider(
-                          color: Colors.grey.shade700,
-                          indent: 35,
-                          endIndent: 35,
-                          thickness: 1,
-                        )),
-                        Text("OR"),
-                        Expanded(
-                            child: Divider(
-                          color: Colors.grey.shade700,
-                          indent: 35,
-                          endIndent: 35,
-                          thickness: 1,
-                        )),
-                      ],
                     ),
                     SizedBox(
                       height: 20,
@@ -264,20 +218,19 @@ class _RegisterPageState extends State<RegisterPage> {
     }
     if (!EmailValidator.validate(emailController.text)) {
       showDialog(
-        context: context,
-        builder: (BuildContext context) => AlertDialog(
-          title: Text('Invalid Email'),
-          content: Text('Please enter a valid email'),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              child: Text('OK'),
-            ),
-          ],
-        ),
-      );
+          context: context,
+          builder: (BuildContext context) => CupertinoAlertDialog(
+                title: Text('Invalid Email'),
+                content: Text('Please enter a valid email address'),
+                actions: [
+                  TextButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    child: Text('OK'),
+                  ),
+                ],
+              ));
     } else if (passwordCheck) {
       final authenticaticationData =
           Provider.of<AuthenticationProvider>(context, listen: false);
