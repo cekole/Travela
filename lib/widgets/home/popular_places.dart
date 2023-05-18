@@ -29,9 +29,9 @@ class PopularPlaces extends StatelessWidget {
               onPressed: () {
                 final destinationsData =
                     Provider.of<DestinationsProvider>(context, listen: false);
-                destinationsData.fetchAndSetCities();
+                destinationsData.getPopularCities();
                 Navigator.pushNamed(context, '/popular', arguments: {
-                  destinationsData.destinations.toList(),
+                  destinationsData.popularDestinationsList.toList(),
                 });
               },
               child: Text(
@@ -46,12 +46,11 @@ class PopularPlaces extends StatelessWidget {
         Container(
           height: MediaQuery.of(context).size.height * 0.25,
           child: FutureBuilder(
-            future: Provider.of<DestinationsProvider>(context, listen: false)
-                .fetchAndSetCities(),
+            future: Future.delayed(Duration(seconds: 1)),
             builder: (context, snapshot) {
               return Consumer<DestinationsProvider>(
                 builder: (context, destinationsData, child) {
-                  if (destinationsData.destinations.isEmpty) {
+                  if (destinationsData.popularDestinationsList.isEmpty) {
                     return ListView.builder(
                       scrollDirection: Axis.horizontal,
                       itemCount: 5,
@@ -66,12 +65,14 @@ class PopularPlaces extends StatelessWidget {
                   } else {
                     return ListView.builder(
                       scrollDirection: Axis.horizontal,
-                      itemCount: destinationsData.destinations.length,
+                      itemCount:
+                          destinationsData.popularDestinationsList.length,
                       itemBuilder: (context, index) {
                         return PlaceCard(
                           destination:
-                              '${destinationsData.destinations[index].city}, ${destinationsData.destinations[index].country}',
-                          image: destinationsData.destinations[index].imageUrl,
+                              '${destinationsData.popularDestinationsList[index].city}, ${destinationsData.destinations[index].country}',
+                          image: destinationsData
+                              .popularDestinationsList[index].imageUrl,
                           isArranged: isArranged,
                         );
                       },

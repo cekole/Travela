@@ -9,6 +9,7 @@ import 'package:shimmer/shimmer.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 import 'package:travela_mobile/appConstant.dart';
 import 'package:travela_mobile/providers/destinations_provider.dart';
+import 'package:travela_mobile/providers/user_provider.dart';
 import 'package:travela_mobile/widgets/home/popular_places.dart';
 import 'package:travela_mobile/widgets/home/suggestions.dart';
 
@@ -29,6 +30,10 @@ class _HomeBodyState extends State<HomeBody> {
         [
           Provider.of<DestinationsProvider>(context, listen: false)
               .fetchAndSetCities(),
+          Provider.of<DestinationsProvider>(context, listen: false)
+              .getPopularCities(),
+          Provider.of<UserProvider>(context, listen: false)
+              .getTripSuggestions(userId),
         ],
       ).then(
         (value) => Future.delayed(Duration(seconds: 1)),

@@ -8,13 +8,26 @@ import 'package:travela_mobile/models/destination.dart';
 import 'package:travela_mobile/providers/user_provider.dart';
 import 'package:travela_mobile/widgets/home/place_card.dart';
 
-class SuggestionsForYou extends StatelessWidget {
+class SuggestionsForYou extends StatefulWidget {
   const SuggestionsForYou({
     Key? key,
     required this.isArranged,
   }) : super(key: key);
 
   final bool? isArranged;
+
+  @override
+  State<SuggestionsForYou> createState() => _SuggestionsForYouState();
+}
+
+class _SuggestionsForYouState extends State<SuggestionsForYou> {
+  @override
+  void initState() {
+    super.initState();
+    final userData = Provider.of<UserProvider>(context, listen: false);
+    userData.getTripSuggestions(userId);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -69,7 +82,7 @@ class SuggestionsForYou extends StatelessWidget {
                           destination:
                               '${userData.suggestedDestinations[index].city}, ${userData.suggestedDestinations[index].country}',
                           image: userData.suggestedDestinations[index].imageUrl,
-                          isArranged: isArranged,
+                          isArranged: widget.isArranged,
                         );
                       },
                     );
