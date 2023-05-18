@@ -540,7 +540,8 @@ class UserProvider with ChangeNotifier {
             city['latitude'],
             city['longitude'],
             city['cityName'],
-            city['country']['countryName']
+            city['country']['countryName'],
+            city['cityImageURL'],
           ])) {
             return;
           }
@@ -548,7 +549,8 @@ class UserProvider with ChangeNotifier {
             city['latitude'],
             city['longitude'],
             city['cityName'],
-            city['country']['countryName']
+            city['country']['countryName'],
+            city['cityImageURL'],
           ]);
         },
       );

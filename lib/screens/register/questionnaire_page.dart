@@ -33,7 +33,10 @@ class _QuestionnarePageState extends State<QuestionnarePage> {
 
   @override
   Widget build(BuildContext context) {
-    final destinatinationsData = Provider.of<DestinationsProvider>(context);
+    final destinatinationsData = Provider.of<DestinationsProvider>(
+      context,
+      listen: false,
+    );
     destinatinationsData.fetchAndSetCities();
     return Scaffold(
       appBar: AppBar(
