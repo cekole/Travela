@@ -147,10 +147,6 @@ class _GroupsPageState extends State<GroupsPage> {
                       ),
                     ),
                     title: Text(travelGroup.groupName),
-                    subtitle: Text(
-                      travelGroup.commonStartDate.toString(),
-                      overflow: TextOverflow.ellipsis,
-                    ),
                     children: [
                       Builder(
                         builder: (context) {

@@ -13,6 +13,7 @@ import 'package:travela_mobile/providers/destinations_provider.dart';
 import 'package:travela_mobile/providers/group_provider.dart';
 import 'package:travela_mobile/providers/recommendation_provider.dart';
 import 'package:travela_mobile/widgets/group/suggestionsForGroup.dart';
+import 'package:travela_mobile/widgets/home/popular_places.dart';
 import 'package:travela_mobile/widgets/home/suggestions.dart';
 
 class EditTravelGroup extends StatefulWidget {
@@ -29,6 +30,13 @@ class _EditTravelGroupState extends State<EditTravelGroup> {
   RangeValues _currentRatingRangeValues = const RangeValues(3, 5);
   RangeValues _currentDistanceRangeValues = const RangeValues(0, 1000);
   String _currentSeason = 'Summer';
+
+  @override
+  void initState() {
+    super.initState();
+    final groupData = Provider.of<GroupProvider>(context, listen: false);
+    groupData.getTripSuggestions(currentGroupIdForSuggestions);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -196,7 +204,11 @@ class _EditTravelGroupState extends State<EditTravelGroup> {
                 ),
               ),
               SizedBox(height: 20),
-              SuggestionsForGroup(),
+              ElevatedButton(
+                  onPressed: () {
+                    searchDialog(context);
+                  },
+                  child: Text('Arrange Trip')),
             ],
           ),
         ),
@@ -214,9 +226,7 @@ class _EditTravelGroupState extends State<EditTravelGroup> {
         borderRadius: BorderRadius.circular(10),
       ),
       onSelected: (value) {
-        if (value == 'arrange_trip') {
-          searchDialog(context);
-        } else if (value == 'create_poll') {
+        if (value == 'create_poll') {
           // Add functionality for create_poll button
         } else if (value == 'show_common_dates') {
           showDialog(
@@ -358,31 +368,48 @@ class _EditTravelGroupState extends State<EditTravelGroup> {
             },
           );
         } else if (value == 'delete_group') {
-          groupData.deleteGroup(travelGroup.id);
-          showDialog(
-            context: context,
-            builder: (BuildContext context) {
-              return AlertDialog(
-                title: Text('Group Deleted'),
-                content: Text('Group has been deleted'),
-                actions: [
-                  TextButton(
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                    child: Text('Ok'),
-                  ),
-                ],
+          groupData.deleteGroup(travelGroup.id).then((value) {
+            if (value) {
+              showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    title: Text('Group Deleted'),
+                    content: Text('Group has been deleted'),
+                    actions: [
+                      TextButton(
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                        child: Text('Ok'),
+                      ),
+                    ],
+                  );
+                },
               );
-            },
-          );
+            } else {
+              showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    title: Text('Error'),
+                    content: Text('Something went wrong'),
+                    actions: [
+                      TextButton(
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                        child: Text('Ok'),
+                      ),
+                    ],
+                  );
+                },
+              );
+            }
+          });
         }
       },
       itemBuilder: (BuildContext context) => [
-        PopupMenuItem(
-          value: 'arrange_trip',
-          child: Text('Arrange Trip'),
-        ),
         PopupMenuItem(
           value: 'create_poll',
           child: Text('Create Poll'),
@@ -435,12 +462,14 @@ class _EditTravelGroupState extends State<EditTravelGroup> {
                   ),
                   prefixIcon: Icon(Icons.search),
                 ),
-                onSubmitted: (value) {},
+                onSubmitted: (value) {
+                  Navigator.of(context).pushNamed('/destination_list');
+                },
               ),
               Divider(
                 thickness: 1,
               ),
-              Container(
+              /* Container(
                 decoration: BoxDecoration(
                   color: Colors.grey[200],
                   borderRadius: BorderRadius.circular(10),
@@ -604,7 +633,7 @@ class _EditTravelGroupState extends State<EditTravelGroup> {
                     ),
                   ],
                 ),
-              ),
+              ), 
               SizedBox(
                 height: 10,
               ),
@@ -615,15 +644,24 @@ class _EditTravelGroupState extends State<EditTravelGroup> {
                 onPressed: () {},
                 child: Text('Apply'),
               ),
-              TextButton(
-                style: ButtonStyle(
-                  foregroundColor: MaterialStateProperty.all<Color>(
-                      Theme.of(context).primaryColor),
+              */
+              SizedBox(
+                height: 10,
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: SuggestionsForGroup(
+                  isArranged: true,
                 ),
-                onPressed: () {
-                  Navigator.of(context).pushNamed('/destination_list');
-                },
-                child: Text('Search'),
+              ),
+              SizedBox(
+                height: 50,
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: PopularPlaces(
+                  isArranged: true,
+                ),
               ),
             ],
           ),

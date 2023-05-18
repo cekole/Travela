@@ -12,10 +12,12 @@ class PlaceCard extends StatefulWidget {
     Key? key,
     required this.destination,
     required this.image,
+    required this.isArranged,
   }) : super(key: key);
 
   final String destination;
   final String image;
+  final bool? isArranged;
 
   @override
   State<PlaceCard> createState() => _PlaceCardState();
@@ -225,6 +227,18 @@ class _PlaceCardState extends State<PlaceCard> {
                       },
                     ),
                   ),
+                  //add to trip button at center bottom
+                  isArranged!
+                      ? Container(
+                          margin: EdgeInsets.only(top: 10),
+                          child: ElevatedButton(
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                            child: Text('Add to Trip'),
+                          ),
+                        )
+                      : SizedBox(),
                 ],
               ),
             );
