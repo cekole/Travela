@@ -228,13 +228,13 @@ class _PlaceCardState extends State<PlaceCard> {
                     ),
                   ),
 
-                  isArranged!
+                  widget.isArranged!
                       ? Container(
                           margin: EdgeInsets.only(top: 10),
                           child: ElevatedButton(
                             onPressed: () {
                               Navigator.of(context).pushNamed('/search_options',
-                                  arguments: destination);
+                                  arguments: widget.destination);
                             },
                             child: Text('Add to Trip'),
                           ),

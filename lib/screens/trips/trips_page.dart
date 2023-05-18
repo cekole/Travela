@@ -258,6 +258,150 @@ class TripsPage extends StatelessWidget {
                       ),
                     ],
                   ),
+                  Divider(
+                    thickness: 2,
+                  ),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        'Trips Planned By You',
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  ),
+                  Divider(
+                    thickness: 2,
+                  ),
+                  ExpansionTileCard(
+                    baseColor: Theme.of(context).primaryColor.withOpacity(0.2),
+                    expandedColor: Theme.of(context).backgroundColor,
+                    leading: CircleAvatar(
+                      backgroundColor: Theme.of(context).backgroundColor,
+                      child: Icon(Icons.directions_boat),
+                    ),
+                    title: Text(upcomingTrips.length > 0
+                        ? upcomingTrips[0].name
+                        : 'No Upcoming Trips'),
+                    subtitle: upcomingTrips.length > 0
+                        ? Text(upcomingTrips[0].period)
+                        : Text(''),
+                    children: [
+                      Divider(
+                        thickness: 1,
+                        height: 1,
+                      ),
+                      ListTile(
+                        title: Text('Locations'),
+                        subtitle: upcomingTrips.length > 0
+                            ? Text(
+                                upcomingTrips.map((e) => e.locations).join(','))
+                            : Text(''),
+                        leading: Icon(Icons.location_on),
+                      ),
+                      ListTile(
+                        title: Text('Travelers'),
+                        subtitle: Text(upcomingTrips.length > 0
+                            ? upcomingTrips.map((e) => e.travelGroup).join(',')
+                            : ''),
+                        leading: Icon(Icons.people),
+                      ),
+                      ListTile(
+                        title: Text('Transportation'),
+                        subtitle: Text(upcomingTrips.length > 0
+                            ? upcomingTrips
+                                .map((e) => e.transportation)
+                                .join(',')
+                            : ''),
+                        leading: Icon(Icons.mode_of_travel_sharp),
+                      ),
+                      ListTile(
+                        title: Text('Accomodation'),
+                        subtitle: upcomingTrips.length > 0
+                            ? Text(upcomingTrips
+                                .map((e) => e.accomodation)
+                                .join(','))
+                            : Text(''),
+                        leading: Icon(Icons.hotel),
+                      ),
+                      ListTile(
+                        title: Text('Description'),
+                        subtitle: upcomingTrips.length > 0
+                            ? Text(upcomingTrips
+                                .map((e) => e.description)
+                                .join(','))
+                            : Text(''),
+                        leading: Icon(Icons.note),
+                      ),
+                      ListTile(
+                        trailing: IconButton(
+                          onPressed: () {
+                            // create a modal to change the trip info
+                            showModalBottomSheet(
+                              context: context,
+                              builder: (context) => Container(
+                                height: 300,
+                                child: Column(
+                                  children: [
+                                    SizedBox(
+                                      height: 20,
+                                    ),
+                                    Text(
+                                      'Edit Trip Info',
+                                      style: TextStyle(
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    TextField(
+                                      decoration: InputDecoration(
+                                        hintText: 'Trip Name',
+                                      ),
+                                      onChanged: (value) {
+                                        _groupNameController.text = value;
+                                      },
+                                    ),
+                                    TextField(
+                                      decoration: InputDecoration(
+                                        hintText: 'Trip Description',
+                                      ),
+                                      onChanged: (value) {
+                                        _groupDescriptionController.text =
+                                            value;
+                                      },
+                                    ),
+                                    SizedBox(
+                                      height: 20,
+                                    ),
+                                    ElevatedButton(
+                                      onPressed: () {
+                                        final tripData =
+                                            Provider.of<TripProvider>(context,
+                                                listen: false);
+                                        tripData.updateTrip(
+                                            currentTripId, // buraya trip id gelecek bu çalışmaz şu an
+                                            _groupNameController.text,
+                                            _groupDescriptionController.text,
+                                            currentGroupId);
+                                      },
+                                      child: Text('Update Trip'),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            );
+                          },
+                          icon: Icon(Icons.edit),
+                        ),
+                      )
+                    ],
+                  ),
                 ],
               ),
             ],
