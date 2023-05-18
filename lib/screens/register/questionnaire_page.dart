@@ -16,6 +16,7 @@ class QuestionnarePage extends StatefulWidget {
 }
 
 class _QuestionnarePageState extends State<QuestionnarePage> {
+  TextEditingController _searchController = TextEditingController();
   List<Destination> _selectedDestinations = [];
   @override
   void initState() {
@@ -48,6 +49,18 @@ class _QuestionnarePageState extends State<QuestionnarePage> {
             padding: const EdgeInsets.all(8.0),
             child: Column(
               children: [
+                TextField(
+                  controller: _searchController,
+                  onChanged: (value) {
+                    setState(
+                        () {}); // Trigger UI update when search text changes
+                  },
+                  decoration: InputDecoration(
+                    labelText: 'Search',
+                    prefixIcon: Icon(Icons.search),
+                  ),
+                ),
+                SizedBox(height: 10),
                 Text(
                   'Choose Your Top 3 Destinations',
                   style: TextStyle(fontSize: 20, fontWeight: FontWeight.w800),
@@ -62,33 +75,57 @@ class _QuestionnarePageState extends State<QuestionnarePage> {
                   height: MediaQuery.of(context).size.height * 0.6,
                   child: ListView.separated(
                     itemCount: destinatinationsData.destinations.length,
-                    itemBuilder: (context, index) => AnswerCard(
-                      destination: destinatinationsData.destinations[index],
-                      onSelect: (destination) {
-                        if (_selectedDestinations.length < 3) {
-                          if (_selectedDestinations.any(
-                              (element) => element.city == destination.city)) {
-                            _selectedDestinations.removeWhere(
-                                (element) => element.city == destination.city);
-                            print('${destination.city} removed');
-                            print(_selectedDestinations.length);
-                          } else {
-                            _selectedDestinations.add(destination);
-                            print('${destination.city} added');
-                          }
-                        } else {
-                          if (_selectedDestinations.any(
-                              (element) => element.city == destination.city)) {
-                            _selectedDestinations.removeWhere(
-                                (element) => element.city == destination.city);
-                            print('${destination.city} removed');
-                            print(_selectedDestinations.length);
-                          } else {
-                            print('Maximum number of destinations selected');
-                          }
+                    itemBuilder: (context, index) {
+                      final filteredDestinations = destinatinationsData
+                          .destinations
+                          .where((destination) =>
+                              destination.city.toLowerCase().contains(
+                                    _searchController.text.toLowerCase(),
+                                  ))
+                          .toList();
+                      if (index >= filteredDestinations.length) {
+                        //if none show a placeholder
+                        if (filteredDestinations.isEmpty) {
+                          return Center(
+                            child: Text(
+                              'No destinations found',
+                              style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.w800,
+                              ),
+                            ),
+                          );
                         }
-                      },
-                    ),
+                        return SizedBox.shrink();
+                      }
+                      return AnswerCard(
+                        destination: filteredDestinations[index],
+                        onSelect: (destination) {
+                          if (_selectedDestinations.length < 3) {
+                            if (_selectedDestinations.any((element) =>
+                                element.city == destination.city)) {
+                              _selectedDestinations.removeWhere((element) =>
+                                  element.city == destination.city);
+                              print('${destination.city} removed');
+                              print(_selectedDestinations.length);
+                            } else {
+                              _selectedDestinations.add(destination);
+                              print('${destination.city} added');
+                            }
+                          } else {
+                            if (_selectedDestinations.any((element) =>
+                                element.city == destination.city)) {
+                              _selectedDestinations.removeWhere((element) =>
+                                  element.city == destination.city);
+                              print('${destination.city} removed');
+                              print(_selectedDestinations.length);
+                            } else {
+                              print('Maximum number of destinations selected');
+                            }
+                          }
+                        },
+                      );
+                    },
                     separatorBuilder: (context, index) =>
                         const SizedBox(height: 10),
                   ),

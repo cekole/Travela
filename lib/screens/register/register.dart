@@ -209,26 +209,6 @@ class _RegisterPageState extends State<RegisterPage> {
                           ),
                           ElevatedButton(
                             onPressed: () {
-                              if (!EmailValidator.validate(
-                                  emailController.text)) {
-                                showDialog(
-                                  context: context,
-                                  builder: (BuildContext context) =>
-                                      AlertDialog(
-                                    title: Text('Invalid Email'),
-                                    content: Text('Please enter a valid email'),
-                                    actions: [
-                                      TextButton(
-                                        onPressed: () {
-                                          Navigator.pop(context);
-                                        },
-                                        child: Text('OK'),
-                                      ),
-                                    ],
-                                  ),
-                                );
-                              }
-
                               handleSignUp();
                             },
                             child: Text(
@@ -282,7 +262,23 @@ class _RegisterPageState extends State<RegisterPage> {
     if (passwordController.text == confirmPasswordController.text) {
       passwordCheck = true;
     }
-    if (passwordCheck) {
+    if (!EmailValidator.validate(emailController.text)) {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) => AlertDialog(
+          title: Text('Invalid Email'),
+          content: Text('Please enter a valid email'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: Text('OK'),
+            ),
+          ],
+        ),
+      );
+    } else if (passwordCheck) {
       final authenticaticationData =
           Provider.of<AuthenticationProvider>(context, listen: false);
       authenticaticationData
@@ -310,32 +306,38 @@ class _RegisterPageState extends State<RegisterPage> {
                       }
                   });
         } else {
-          return AlertDialog(
-            title: Text('Could not register. Please try again.'),
-            content: Text('Could not register. Please try again.'),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                child: Text('OK'),
-              ),
-            ],
+          showDialog(
+            context: context,
+            builder: (BuildContext context) => AlertDialog(
+              title: Text('Could not register. Please try again.'),
+              content: Text('Could not register. Please try again.'),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: Text('OK'),
+                ),
+              ],
+            ),
           );
         }
       });
     } else {
-      return AlertDialog(
-        title: Text('Passwords do not match'),
-        content: Text('Please enter matching passwords'),
-        actions: [
-          TextButton(
-            onPressed: () {
-              Navigator.pop(context);
-            },
-            child: Text('OK'),
-          ),
-        ],
+      showDialog(
+        context: context,
+        builder: (BuildContext context) => AlertDialog(
+          title: Text('Passwords do not match'),
+          content: Text('Please enter matching passwords'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: Text('OK'),
+            ),
+          ],
+        ),
       );
     }
   }

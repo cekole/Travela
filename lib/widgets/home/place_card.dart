@@ -219,13 +219,14 @@ class PlaceCard extends StatelessWidget {
                       },
                     ),
                   ),
-                  //add to trip button at center bottom
+
                   isArranged!
                       ? Container(
                           margin: EdgeInsets.only(top: 10),
                           child: ElevatedButton(
                             onPressed: () {
-                              Navigator.pop(context);
+                              Navigator.of(context).pushNamed('/search_options',
+                                  arguments: destination);
                             },
                             child: Text('Add to Trip'),
                           ),

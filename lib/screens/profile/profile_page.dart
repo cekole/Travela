@@ -11,6 +11,7 @@ import 'package:table_calendar/table_calendar.dart';
 import 'package:travela_mobile/appConstant.dart';
 import 'package:travela_mobile/models/travel_group.dart';
 import 'package:travela_mobile/providers/authentication_provider.dart';
+import 'package:travela_mobile/providers/group_provider.dart';
 import 'package:travela_mobile/providers/travel_group_provider.dart';
 import 'package:travela_mobile/providers/user_provider.dart';
 import 'package:travela_mobile/screens/trips/trips_page.dart';
@@ -132,7 +133,10 @@ class _ProfilePageState extends State<ProfilePage> {
                       Column(
                         children: [
                           Text(
-                            '4',
+                            Provider.of<GroupProvider>(
+                              context,
+                              listen: false,
+                            ).groups.length.toString(),
                             style: TextStyle(
                               color: Colors.white,
                               fontSize: 20,
@@ -140,7 +144,7 @@ class _ProfilePageState extends State<ProfilePage> {
                             ),
                           ),
                           Text(
-                            'Trips',
+                            'Groups',
                             style: TextStyle(color: Colors.white),
                           ),
                         ],
