@@ -115,8 +115,6 @@ class UserProvider with ChangeNotifier {
       },
     );
     print(response.statusCode);
-    print(response.body);
-    //extract username and id of friends and set to currentFriendIds and currentFriendUsernames
 
     if (response.statusCode == 200) {
       print('get all friends success');
@@ -177,7 +175,6 @@ class UserProvider with ChangeNotifier {
       },
     );
     print(response.statusCode);
-    print(response.body);
     if (response.statusCode == 200) {
       return true;
     } else {
