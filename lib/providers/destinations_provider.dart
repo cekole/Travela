@@ -101,8 +101,14 @@ class DestinationsProvider with ChangeNotifier {
     ) */
   ];
 
+  List<Destination> _popularDestinations = [];
+
   List<Destination> get destinations {
     return [..._destinations];
+  }
+
+  List<Destination> get popularDestinationsList {
+    return [..._popularDestinations];
   }
 
   Destination findById(String id) {
@@ -138,6 +144,53 @@ class DestinationsProvider with ChangeNotifier {
       );
     });
     _destinations = loadedCities
+        .map(
+          (city) => Destination(
+            id: city.id,
+            country: city.countryName,
+            city: city.cityName,
+            description: city.description,
+            imageUrl: city.imageUrl,
+            rating: 4.5,
+            location: 'Europe',
+            activities: city.activities,
+            isPopular: false,
+          ),
+        )
+        .toList();
+    notifyListeners();
+  }
+
+  Future<void> getPopularCities() async {
+    final url = baseUrl + 'most-popular';
+    print(url);
+    final response = await http.get(
+      Uri.parse(url),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $bearerToken',
+      },
+    );
+    final extractedData = json.decode(response.body) as List<dynamic>;
+    final List<City> loadedCities = [];
+    extractedData.forEach((city) {
+      loadedCities.add(
+        City(
+          id: city['city_id'].toString(),
+          cityName: city['cityName'],
+          countryName:
+              city['country'] == null ? '' : city['country']['countryName'],
+          description:
+              city['cityDescription'] == null ? '' : city['cityDescription'],
+          imageUrl: city['cityImageURL'] == null ? '' : city['cityImageURL'],
+          activities: city['activities'] == null ? [] : city['activities'],
+          iataCode: city['iata_code'],
+          latitude: city['latitude'],
+          longitude: city['longitude'],
+        ),
+      );
+    });
+    _popularDestinations = loadedCities
         .map(
           (city) => Destination(
             id: city.id,

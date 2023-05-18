@@ -33,7 +33,8 @@ DateTime startDate = DateTime.now();
 List favouriteCities = [];
 List<Trip> currentTripDrafts = [];
 
-List<City> friendsVisitedCities = [];
+List currentVisitedCities = [];
+List currentFriendsVisitedCities = [];
 
 String profilePic = '';
 List<String> tripPhotos = [];
