@@ -127,6 +127,10 @@ class DestinationsProvider with ChangeNotifier {
     final extractedData = json.decode(response.body) as List<dynamic>;
     final List<City> loadedCities = [];
     extractedData.forEach((city) {
+      final activities = city['activities'];
+      final List<String> parsedActivities = activities != null
+          ? List<String>.from(activities.cast<String>())
+          : [];
       loadedCities.add(
         City(
           id: city['city_id'].toString(),
@@ -136,7 +140,7 @@ class DestinationsProvider with ChangeNotifier {
           description:
               city['cityDescription'] == null ? '' : city['cityDescription'],
           imageUrl: city['cityImageURL'] == null ? '' : city['cityImageURL'],
-          activities: city['activities'] == null ? [] : city['activities'],
+          activities: parsedActivities,
           iataCode: city['iata_code'],
           latitude: city['latitude'],
           longitude: city['longitude'],
@@ -172,6 +176,10 @@ class DestinationsProvider with ChangeNotifier {
     final extractedData = json.decode(response.body) as List<dynamic>;
     final List<City> loadedCities = [];
     extractedData.forEach((city) {
+      final activities = city['activities'];
+      final List<String> parsedActivities = activities != null
+          ? List<String>.from(activities.cast<String>())
+          : [];
       loadedCities.add(
         City(
           id: city['city_id'].toString(),
@@ -181,7 +189,7 @@ class DestinationsProvider with ChangeNotifier {
           description:
               city['cityDescription'] == null ? '' : city['cityDescription'],
           imageUrl: city['cityImageURL'] == null ? '' : city['cityImageURL'],
-          activities: city['activities'] == null ? [] : city['activities'],
+          activities: parsedActivities,
           iataCode: city['iata_code'],
           latitude: city['latitude'],
           longitude: city['longitude'],

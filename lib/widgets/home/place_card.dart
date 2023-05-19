@@ -44,8 +44,8 @@ class _PlaceCardState extends State<PlaceCard> {
             .firstWhere((element) => element.imageUrl == widget.image);
         final activitiesData =
             Provider.of<ActivitiesProvider>(context, listen: false);
-        final selectedActivities =
-            activitiesData.getActivitiesByDestinationId(selectedDestination.id);
+        print(selectedDestination.activities);
+        final selectedActivities = selectedDestination.activities;
 
         showModalBottomSheet(
           isScrollControlled: true,
@@ -189,11 +189,6 @@ class _PlaceCardState extends State<PlaceCard> {
                                 height:
                                     MediaQuery.of(context).size.height * 0.1,
                                 decoration: BoxDecoration(
-                                  image: DecorationImage(
-                                    image: AssetImage(
-                                        selectedActivities[index].imageUrl),
-                                    fit: BoxFit.cover,
-                                  ),
                                   borderRadius: BorderRadius.only(
                                     topLeft: Radius.circular(20),
                                     topRight: Radius.circular(20),
@@ -203,7 +198,7 @@ class _PlaceCardState extends State<PlaceCard> {
                               Container(
                                 padding: EdgeInsets.all(10),
                                 child: Text(
-                                  selectedActivities[index].name,
+                                  selectedActivities[index],
                                   style: TextStyle(
                                     fontSize: 15,
                                     fontWeight: FontWeight.bold,
