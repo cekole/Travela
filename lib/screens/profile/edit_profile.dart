@@ -61,8 +61,9 @@ class _EditProfileState extends State<EditProfile> {
                     children: [
                       CircleAvatar(
                         radius: 40,
-                        backgroundImage:
-                            image == null ? null : FileImage(image!),
+                        backgroundImage: image == null
+                            ? null
+                            : MemoryImage(profilePic, scale: 1),
                       ),
                       IconButton(
                         onPressed: () {

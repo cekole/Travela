@@ -65,8 +65,8 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     final fileStorageData = Provider.of<FileStorageProvider>(context);
-    fileStorageData.getProfilePic(userId);
-    imageUrl = profilePic;
+    final pic = fileStorageData.fetchProfilePic(userId);
+    imageUrl = pic.toString();
 
     return CustomScrollView(
       slivers: [
@@ -82,19 +82,33 @@ class _ProfilePageState extends State<ProfilePage> {
                   Row(
                     children: [
                       ClipOval(
-                        child: CircleAvatar(
-                          radius: 40,
-                          backgroundColor: Colors.grey,
-                          child: imageUrl.isNotEmpty
-                              ? FadeInImage.assetNetwork(
-                                  placeholder: placeholderImage,
-                                  image: imageUrl,
-                                  fit: BoxFit.cover,
-                                )
-                              : Image.asset(
+                        child: FutureBuilder(
+                          future: fileStorageData.fetchProfilePic(userId),
+                          builder: (context, snapshot) {
+                            if (snapshot.connectionState ==
+                                ConnectionState.waiting) {
+                              return CircleAvatar(
+                                radius: 40,
+                                backgroundColor: Colors.grey,
+                                child: Image.asset(
                                   placeholderImage,
                                   fit: BoxFit.cover,
                                 ),
+                              );
+                            } else {
+                              return CircleAvatar(
+                                radius: 40,
+                                backgroundColor: Colors.grey,
+                                child: imageUrl.isNotEmpty
+                                    ? Image.memory(profilePic,
+                                        fit: BoxFit.cover)
+                                    : Image.asset(
+                                        placeholderImage,
+                                        fit: BoxFit.cover,
+                                      ),
+                              );
+                            }
+                          },
                         ),
                       ),
                       SizedBox(width: 20),
