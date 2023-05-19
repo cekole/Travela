@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
@@ -115,7 +116,7 @@ class _QuestionnarePageState extends State<QuestionnarePage> {
                               _selectedDestinations.add(destination);
                               print('${destination.city} added');
                             }
-                          } else {
+                          } else if (_selectedDestinations.length == 3) {
                             if (_selectedDestinations.any((element) =>
                                 element.city == destination.city)) {
                               _selectedDestinations.removeWhere((element) =>
@@ -123,7 +124,10 @@ class _QuestionnarePageState extends State<QuestionnarePage> {
                               print('${destination.city} removed');
                               print(_selectedDestinations.length);
                             } else {
-                              print('Maximum number of destinations selected');
+                              return CupertinoAlertDialog(
+                                title:
+                                    Text('You can only select 3 destinations'),
+                              );
                             }
                           }
                         },
@@ -156,7 +160,6 @@ class _QuestionnarePageState extends State<QuestionnarePage> {
                               Provider.of<UserProvider>(context, listen: false);
                           for (var destination in _selectedDestinations) {
                             print(destination.city);
-
                             print('user id is ${userId}');
                             print('destination id is ${destination.id}');
                             userData.addVisitedCity(userId, destination.id);
@@ -176,7 +179,9 @@ class _QuestionnarePageState extends State<QuestionnarePage> {
                                 .toString(),
                           );
 
-                          Navigator.of(context).pushNamed('/home');
+                          Navigator.pushNamedAndRemoveUntil(
+                              context, '/home', (route) => false);
+                          pageNum = 0;
                         },
                       ),
                     ),

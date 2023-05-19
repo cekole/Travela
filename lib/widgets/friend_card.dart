@@ -34,7 +34,13 @@ class FriendCard extends StatelessWidget {
               return ListTile(
                 title: Text(friendNames[index]),
                 trailing: IconButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    // navigate to Groups page
+                    Navigator.of(context).pushNamedAndRemoveUntil(
+                      '/map',
+                      (route) => false,
+                    );
+                  },
                   icon: Icon(Icons.travel_explore),
                 ),
               );
