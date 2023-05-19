@@ -70,7 +70,7 @@ class PopularPlaces extends StatelessWidget {
                       itemBuilder: (context, index) {
                         return PlaceCard(
                           destination:
-                              '${destinationsData.popularDestinationsList[index].city}, ${destinationsData.destinations[index].country}',
+                              '${destinationsData.popularDestinationsList[index].city}, ${destinationsData.popularDestinationsList[index].country}',
                           image: destinationsData
                               .popularDestinationsList[index].imageUrl,
                           isArranged: isArranged,

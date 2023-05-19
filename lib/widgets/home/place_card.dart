@@ -151,7 +151,7 @@ class _PlaceCardState extends State<PlaceCard> {
                   Container(
                     padding: EdgeInsets.all(10),
                     child: Text(
-                      widget.destination,
+                      selectedDestination.city,
                       style: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
