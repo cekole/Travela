@@ -8,6 +8,7 @@ import 'package:travela_mobile/appConstant.dart';
 import 'package:http/http.dart' as http;
 import 'package:travela_mobile/models/city.dart';
 import 'package:travela_mobile/models/country.dart';
+import 'package:travela_mobile/models/transportation.dart';
 import 'package:travela_mobile/models/user.dart';
 
 class TransportationProvider with ChangeNotifier {
@@ -137,36 +138,34 @@ class TransportationProvider with ChangeNotifier {
     }
   }
 
-  Future<String> searchTransportation(
-      String departureDate,
-      String originLocationCode,
-      String destinationLocationCode,
-      int adults) async {
-    final url = baseUrl + 'transportations/search';
+  Future searchTransportation(String departureDate, String originLocationCode,
+      String destinationLocationCode, int adults) async {
+    final url =
+        'http://13.48.206.213:8081/transportations/search?departureDate=$departureDate&originLocationCode=$originLocationCode&destinationLocationCode=$destinationLocationCode&adults=$adults';
 
-    var queryParams = {
-      'departureDate': departureDate,
-      'originLocationCode': originLocationCode,
-      'destinationLocationCode': destinationLocationCode,
-      'adults': adults.toString(),
-    };
-
-    try {
-      final response = await http.get(
-        Uri.parse(url),
-        headers: {
-          'Authorization': 'Bearer  $bearerToken',
-          'Content-Type': 'application/json',
-        },
-      );
-      if (response.statusCode == 200) {
-        return response.body;
-      } else {
-        throw Exception(
-            'Search request failed. Status code: ${response.statusCode}');
-      }
-    } catch (e) {
-      throw Exception('Error occurred while making the search request: $e');
+    print(url);
+    final response = await http.get(
+      Uri.parse(url),
+      headers: {
+        'Authorization': 'Bearer $bearerToken',
+      },
+    );
+    print(response.statusCode);
+    if (response.statusCode == 200) {
+      final extractedData = json.decode(response.body) as Map<String, dynamic>;
+      final listExtracted = extractedData['propertyList'] as List<dynamic>;
+      listExtracted.forEach((item) {
+        final duration = item['itenar']['duration'] as String;
+        final price = item['price'] as String;
+        final departure = item['itenary']['segments']['departure'] as String;
+        final arrival = item['itenary']['segments']['arrival'] as String;
+        //first clear the list and then add the new items
+        currentTransportations.add([duration, price, departure, arrival]);
+      });
+      return currentTransportations;
+    } else {
+      print('error');
     }
+    notifyListeners();
   }
 }

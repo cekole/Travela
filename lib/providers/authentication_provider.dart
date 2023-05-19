@@ -67,6 +67,7 @@ class AuthenticationProvider with ChangeNotifier {
       print('login success');
 
       bearerToken = response.body;
+      print(bearerToken);
       Map<String, dynamic> decodedToken = JwtDecoder.decode(bearerToken);
 
       final SharedPreferences prefs = await SharedPreferences.getInstance();
