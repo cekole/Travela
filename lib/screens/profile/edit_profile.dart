@@ -40,6 +40,7 @@ class _EditProfileState extends State<EditProfile> {
 
   @override
   Widget build(BuildContext context) {
+    String password = "12345678";
     final userData = Provider.of<UserProvider>(context);
     return Scaffold(
       resizeToAvoidBottomInset: false,
@@ -136,7 +137,10 @@ class _EditProfileState extends State<EditProfile> {
               SizedBox(height: 20),
               ElevatedButton(
                 onPressed: () {
-                  final password = "12345678";
+                  print("email" + emailController.text);
+                  print("user" + usernameController.text);
+                  print("name" + nameController.text);
+                  print(password);
                   final fileStorage =
                       Provider.of<FileStorageProvider>(context, listen: false);
                   fileStorage.uploadProfilePic(image!.path, userId);
@@ -144,12 +148,23 @@ class _EditProfileState extends State<EditProfile> {
                       .updateUserInfo(
                           userId,
                           nameController.text,
-                          emailController.text,
                           usernameController.text,
+                          emailController.text,
                           password)
-                      .then(
-                        (value) => Navigator.of(context).pushNamed('/profile'),
-                      );
+                      .then((value) => showDialog(
+                          context: context,
+                          builder: (ctx) => CupertinoAlertDialog(
+                                title: Text('Success'),
+                                content: Text('Profile updated successfully'),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.of(ctx).pop();
+                                    },
+                                    child: Text('Ok'),
+                                  ),
+                                ],
+                              )));
                 },
                 child: Text('Save'),
               ),

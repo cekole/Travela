@@ -32,7 +32,7 @@ DateTime startDate = DateTime.now();
 
 List favouriteCities = [];
 List<Trip> currentTripDrafts = [];
-
+List<City> fetchedCities = [];
 List currentVisitedCities = [];
 List currentFriendsVisitedCities = [];
 

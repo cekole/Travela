@@ -125,13 +125,13 @@ class DestinationsProvider with ChangeNotifier {
       },
     );
     final extractedData = json.decode(response.body) as List<dynamic>;
-    final List<City> loadedCities = [];
+
     extractedData.forEach((city) {
       final activities = city['activities'];
       final List<String> parsedActivities = activities != null
           ? List<String>.from(activities.cast<String>())
           : [];
-      loadedCities.add(
+      fetchedCities.add(
         City(
           id: city['city_id'].toString(),
           cityName: city['cityName'],
@@ -147,7 +147,7 @@ class DestinationsProvider with ChangeNotifier {
         ),
       );
     });
-    _destinations = loadedCities
+    _destinations = fetchedCities
         .map(
           (city) => Destination(
             id: city.id,

@@ -70,7 +70,6 @@ class UserProvider with ChangeNotifier {
     print(url);
     final response = await http.put(Uri.parse(url), headers: {
       'Authorization': 'Bearer  $bearerToken',
-      'Content-Type': 'application/json',
     }, body: {
       'name': name,
       'username': username,
