@@ -53,6 +53,8 @@ class _FlightsPageState extends State<FlightsPage> {
 
   @override
   Widget build(BuildContext context) {
+    final destination = ModalRoute.of(context)!.settings.arguments as String;
+    final city = destination.split(',')[0];
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).primaryColor,
@@ -210,6 +212,74 @@ class _FlightsPageState extends State<FlightsPage> {
             ),
           ),
           const SizedBox(height: 16),
+          //To container
+          Container(
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(10),
+              border: Border.all(color: Colors.grey.shade300),
+            ),
+            child: ListTile(
+              title: Text('To'),
+              subtitle: Text(destinationCode),
+              trailing: Icon(Icons.arrow_forward_ios),
+              onTap: () {
+                showDialog(
+                  context: context,
+                  builder: (context) => Container(
+                    padding: EdgeInsets.all(10),
+                    margin: EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Material(
+                      child: ListView(
+                        children: [
+                          Row(
+                            children: [
+                              Spacer(),
+                              IconButton(
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                                icon: Icon(Icons.close),
+                              ),
+                            ],
+                          ),
+                          Center(
+                            child: Text(
+                              'Select City',
+                              style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                          Divider(),
+                          for (var destination
+                              in Provider.of<DestinationsProvider>(context,
+                                      listen: false)
+                                  .destinations)
+                            ListTile(
+                              title: Text(destination.city),
+                              subtitle: Text(destination.country),
+                              onTap: () {
+                                setState(() {
+                                  destinationCode = destination.cityIataCode;
+                                  Navigator.of(context).pop();
+                                });
+                              },
+                            ),
+                        ],
+                      ),
+                    ),
+                  ),
+                );
+              },
+            ),
+          ),
+          const SizedBox(height: 16),
           Container(
             decoration: BoxDecoration(
               color: Colors.white,
@@ -246,7 +316,7 @@ class _FlightsPageState extends State<FlightsPage> {
                   .searchTransportation(
                 _currentStartDateCheckIn.toString().split(' ')[0],
                 originCode,
-                'ESB',
+                destinationCode,
                 _numberOfPeople,
               )
                   .then((value) {

@@ -320,10 +320,9 @@ class _HotelPageState extends State<HotelPage> {
                 numberOfPeople,
               )
                   .then((value) {
-                /*  Navigator.of(context).pushNamed(
+                Navigator.of(context).pushNamed(
                   '/accomodation_list',
-                ); */
-                print(currentTransportations);
+                );
               });
             },
             child: Text(
