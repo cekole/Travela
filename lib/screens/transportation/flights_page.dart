@@ -250,7 +250,7 @@ class _FlightsPageState extends State<FlightsPage> {
                 _numberOfPeople,
               )
                   .then((value) {
-                //Navigator.of(context).pushNamed('/flight_list');
+                Navigator.of(context).pushNamed('/transportation_list');
               });
             },
             child: Text('Search'),

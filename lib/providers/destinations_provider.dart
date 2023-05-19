@@ -124,14 +124,16 @@ class DestinationsProvider with ChangeNotifier {
         'Authorization': 'Bearer $bearerToken',
       },
     );
+    print('dsd');
+    print(response.statusCode);
     final extractedData = json.decode(response.body) as List<dynamic>;
-
+    final List<City> loadedCities = [];
     extractedData.forEach((city) {
       final activities = city['activities'];
       final List<String> parsedActivities = activities != null
           ? List<String>.from(activities.cast<String>())
           : [];
-      fetchedCities.add(
+      loadedCities.add(
         City(
           id: city['city_id'].toString(),
           cityName: city['cityName'],
@@ -147,7 +149,7 @@ class DestinationsProvider with ChangeNotifier {
         ),
       );
     });
-    _destinations = fetchedCities
+    _destinations = loadedCities
         .map(
           (city) => Destination(
             id: city.id,
