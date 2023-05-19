@@ -50,6 +50,7 @@ dependencies:
   intl: ^0.17.0
   shimmer: ^2.0.0
   image_picker: ^0.8.7+5
+  flutter_native_splash: ^2.1.1
   
 
 dev_dependencies:
@@ -62,13 +63,20 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^2.0.0
-  flutter_launcher_icons: "^0.13.1"
+  flutter_launcher_icons: ^0.13.1
  
-flutter_launcher_icons:
-  android: "launcher_icon"
+flutter_icons:
+  android: true
   ios: true
-  image_path: "assets/icon/icon.png"
-  min_sdk_android: 21
+  image_path: "assets/icon/icon.jpg"
+
+# Splash Screen Settings
+flutter_native_splash:
+  #general
+  background_image: "assets/icon/icon.jpg"
+  android_12:
+    image: "assets/icon/icon.jpg"
+    # icon_background_color: "#FFD1A6"
    
 
 # For information on the generic Dart part of this file, see the
@@ -90,6 +98,7 @@ flutter:
     - assets/images/transportation/
     - assets/images/hotel/
     - assets/images/profile/
+    - assets/icon/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

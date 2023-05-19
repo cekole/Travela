@@ -260,20 +260,19 @@ class _RegisterPageState extends State<RegisterPage> {
                   });
         } else {
           showDialog(
-            context: context,
-            builder: (BuildContext context) => AlertDialog(
-              title: Text('Could not register. Please try again.'),
-              content: Text('Could not register. Please try again.'),
-              actions: [
-                TextButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  child: Text('OK'),
-                ),
-              ],
-            ),
-          );
+              context: context,
+              builder: (BuildContext context) => CupertinoAlertDialog(
+                    title: Text('Could not register'),
+                    content: Text('Please try again'),
+                    actions: [
+                      TextButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        child: Text('OK'),
+                      ),
+                    ],
+                  ));
         }
       });
     } else {
