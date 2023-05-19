@@ -334,11 +334,8 @@ void showAddFriendDialog(BuildContext context) {
                                     } else {
                                       showDialog(
                                         context: context,
-                                        builder: (context) => AlertDialog(
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(10),
-                                          ),
+                                        builder: (context) =>
+                                            CupertinoAlertDialog(
                                           title: Text('Error'),
                                           content: Text(
                                               'Failed to add ${currentFriendUsernames[index]} to group'),
