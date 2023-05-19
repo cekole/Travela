@@ -590,6 +590,8 @@ class UserProvider with ChangeNotifier {
         return;
       }
 
+      // Clear the favouriteCities list before adding new cities
+      favouriteCities.clear();
       extractedData.forEach((city) {
         favouriteCities.add(city);
       });

@@ -7,6 +7,7 @@ import 'package:travela_mobile/appConstant.dart';
 import 'package:travela_mobile/providers/activities_provider.dart';
 import 'package:travela_mobile/providers/user_provider.dart';
 import 'package:travela_mobile/providers/destinations_provider.dart';
+import 'package:travela_mobile/screens/home/home_page.dart';
 
 class PlaceCard extends StatefulWidget {
   const PlaceCard({
@@ -113,7 +114,9 @@ class _PlaceCardState extends State<PlaceCard> {
                                       CupertinoDialogAction(
                                         child: Text('OK'),
                                         onPressed: () {
-                                          Navigator.of(context).pop();
+                                          //navigate to home page
+                                          Navigator.pushReplacementNamed(
+                                              context, '/favorites');
                                         },
                                       ),
                                     ],

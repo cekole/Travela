@@ -277,20 +277,19 @@ class _RegisterPageState extends State<RegisterPage> {
       });
     } else {
       showDialog(
-        context: context,
-        builder: (BuildContext context) => AlertDialog(
-          title: Text('Passwords do not match'),
-          content: Text('Please enter matching passwords'),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              child: Text('OK'),
-            ),
-          ],
-        ),
-      );
+          context: context,
+          builder: (BuildContext context) => CupertinoAlertDialog(
+                title: Text('Passwords do not match'),
+                content: Text('Please try again'),
+                actions: [
+                  TextButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    child: Text('OK'),
+                  ),
+                ],
+              ));
     }
   }
 }
