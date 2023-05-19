@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:travela_mobile/appConstant.dart';
@@ -112,33 +113,32 @@ class AccomodationProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<String> searchAccomodation(String city, String startDate,
+  Future searchAccomodation(String city, String startDate,
       String destinationDate, int adultsCount) async {
-    final url = baseUrl + 'accomodations/search';
-
-    var queryParams = {
-      'city': city,
-      'startDate': startDate,
-      'destinationDate': destinationDate,
-      'adultsCount': adultsCount.toString(),
-    };
-
-    try {
-      final response = await http.get(
-        Uri.parse(url),
-        headers: {
-          'Authorization': 'Bearer  $bearerToken',
-          'Content-Type': 'application/json',
-        },
-      );
-      if (response.statusCode == 200) {
-        return response.body;
-      } else {
-        throw Exception(
-            'Search request failed. Status code: ${response.statusCode}');
-      }
-    } catch (e) {
-      throw Exception('Error occurred while making the search request: $e');
+    final url =
+        'http://13.48.206.213:8081/accomodations/search?city=$city&startDate=$startDate&endDate=$destinationDate&adultsCount=$adultsCount';
+    print(url);
+    final response = await http.get(
+      Uri.parse(url),
+      headers: {
+        'Authorization': 'Bearer $bearerToken',
+      },
+    );
+    print(response.statusCode);
+    if (response.statusCode == 200) {
+      final extractedData = json.decode(response.body) as Map<String, dynamic>;
+      final listExtracted = extractedData['propertyList'] as List<dynamic>;
+      listExtracted.forEach((item) {
+        final name = item['name'] as String;
+        final price = item['price'] as String;
+        final imageUrl = item['imageUrl'] as String;
+        //first clear the list and then add the new items
+        currentAccomodations.add([name, price, imageUrl]);
+      });
+      return currentAccomodations;
+    } else {
+      print('error');
     }
+    notifyListeners();
   }
 }

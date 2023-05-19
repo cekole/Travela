@@ -53,7 +53,8 @@ class SearchOptions extends StatelessWidget {
             const SizedBox(height: 5),
             GestureDetector(
               onTap: () {
-                Navigator.of(context).pushNamed('/hotel_page');
+                Navigator.of(context)
+                    .pushNamed('/hotel_page', arguments: destination);
               },
               child: Container(
                 decoration: BoxDecoration(
