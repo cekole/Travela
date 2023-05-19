@@ -30,6 +30,7 @@ import 'package:travela_mobile/screens/home/home_page.dart';
 import 'package:travela_mobile/screens/login.dart';
 import 'package:travela_mobile/screens/home/popular_destinations.dart';
 import 'package:travela_mobile/screens/register/register.dart';
+import 'package:travela_mobile/screens/transportation/flights_page.dart';
 
 void main() {
   // Set preferred orientations
@@ -110,6 +111,7 @@ class MyApp extends StatelessWidget {
           '/accomodation_list': (context) => const AccomodationList(),
           '/favorites': (context) => FavoritesPage(),
           '/destination_list': (context) => const DestinationListPage(),
+          '/flights_page': (context) => const FlightsPage(),
         },
       ),
     );

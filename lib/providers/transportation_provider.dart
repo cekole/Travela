@@ -138,7 +138,7 @@ class TransportationProvider with ChangeNotifier {
     }
   }
 
-  Future searchTransportation(String departureDate, String originLocationCode,
+  Future searchTransportation(DateTime departureDate, String originLocationCode,
       String destinationLocationCode, int adults) async {
     final url =
         'http://13.48.206.213:8081/transportations/search?departureDate=$departureDate&originLocationCode=$originLocationCode&destinationLocationCode=$destinationLocationCode&adults=$adults';
