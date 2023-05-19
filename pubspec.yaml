@@ -73,9 +73,9 @@ flutter_icons:
 # Splash Screen Settings
 flutter_native_splash:
   #general
-  background_image: "assets/icon/icon.jpg"
+  background_image: "assets/icon/icon.png"
   android_12:
-    image: "assets/icon/icon.jpg"
+    image: "assets/icon/icon.png"
     # icon_background_color: "#FFD1A6"
    
 
