@@ -12,6 +12,8 @@ import 'package:travela_mobile/providers/trip_provider.dart';
 import 'package:travela_mobile/screens/maps/previous_trips_map.dart';
 import 'package:travela_mobile/screens/home/popular_destinations.dart';
 import 'package:travela_mobile/widgets/custom_drawer.dart';
+import 'package:travela_mobile/widgets/group/suggestionsForGroup.dart';
+import 'package:travela_mobile/widgets/home/popular_places.dart';
 
 class TripsPage extends StatelessWidget {
   const TripsPage({Key? key}) : super(key: key);
@@ -377,8 +379,9 @@ class TripsPage extends StatelessWidget {
                 ],
               ),
               TextButton(
-                onPressed: () {
-                  formGroup(context);
+                onPressed: () async {
+                  await formGroup(context);
+                  searchDialog(context);
                 },
                 child: Text(
                   'Arrange an Individual Trip',
@@ -395,10 +398,10 @@ class TripsPage extends StatelessWidget {
     );
   }
 
-  void formGroup(BuildContext context) {
+  Future formGroup(BuildContext context) {
     final groupData = Provider.of<GroupProvider>(context, listen: false);
     final TextEditingController textController = TextEditingController();
-    showModalBottomSheet(
+    return showModalBottomSheet(
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(
           top: Radius.circular(20),
@@ -482,4 +485,245 @@ class TripsPage extends StatelessWidget {
       ),
     );
   }
+}
+
+Future<dynamic> searchDialog(BuildContext context) {
+  TextEditingController _searchController = TextEditingController();
+
+  return showDialog(
+    context: context,
+    builder: (context) => Container(
+      margin: EdgeInsets.all(8.0),
+      padding: EdgeInsets.all(8.0),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(20),
+      ),
+      child: Dialog.fullscreen(
+        child: ListView(
+          children: [
+            Align(
+              alignment: Alignment.topLeft,
+              child: IconButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                icon: Icon(Icons.close),
+              ),
+            ),
+            TextField(
+              controller: _searchController,
+              decoration: InputDecoration(
+                hintText: 'Enter a place name',
+                border: UnderlineInputBorder(
+                  borderSide: BorderSide.none,
+                ),
+                prefixIcon: Icon(Icons.search),
+              ),
+              onSubmitted: (value) {
+                Navigator.of(context).pushNamed('/destination_list');
+              },
+            ),
+            Divider(
+              thickness: 1,
+            ),
+            /* Container(
+                decoration: BoxDecoration(
+                  color: Colors.grey[200],
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                padding: EdgeInsets.all(10),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Row(
+                            children: [
+                              Text('Price Range'),
+                              Expanded(
+                                child: RangeSlider(
+                                  activeColor: Theme.of(context).primaryColor,
+                                  values: _currentPriceRangeValues,
+                                  max: 100,
+                                  labels: RangeLabels(
+                                    _currentPriceRangeValues.start
+                                        .round()
+                                        .toString(),
+                                    _currentPriceRangeValues.end
+                                        .round()
+                                        .toString(),
+                                  ),
+                                  onChanged: (values) {
+                                    setState(() {
+                                      _currentPriceRangeValues = values;
+                                    });
+                                  },
+                                ),
+                              ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Column(
+                                    children: [
+                                      Container(
+                                        padding: EdgeInsets.all(5),
+                                        decoration: BoxDecoration(
+                                          border: Border.all(
+                                            color:
+                                                Theme.of(context).primaryColor,
+                                          ),
+                                          borderRadius:
+                                              BorderRadius.circular(5),
+                                        ),
+                                        child: Text(
+                                          _currentPriceRangeValues.start
+                                              .round()
+                                              .toString(),
+                                        ),
+                                      ),
+                                      Text('Min'),
+                                    ],
+                                  ),
+                                  VerticalDivider(),
+                                  Column(
+                                    children: [
+                                      Container(
+                                        padding: EdgeInsets.all(5),
+                                        decoration: BoxDecoration(
+                                          border: Border.all(
+                                            color:
+                                                Theme.of(context).primaryColor,
+                                          ),
+                                          borderRadius:
+                                              BorderRadius.circular(5),
+                                        ),
+                                        child: Text(
+                                          _currentPriceRangeValues.end
+                                              .round()
+                                              .toString(),
+                                        ),
+                                      ),
+                                      Text('Max'),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                          Divider(),
+                          Row(
+                            children: [
+                              Text('Distance(km)'),
+                              Expanded(
+                                child: RangeSlider(
+                                  activeColor: Theme.of(context).primaryColor,
+                                  values: _currentDistanceRangeValues,
+                                  max: 1000,
+                                  labels: RangeLabels(
+                                    _currentDistanceRangeValues.start
+                                        .round()
+                                        .toString(),
+                                    _currentDistanceRangeValues.end
+                                        .round()
+                                        .toString(),
+                                  ),
+                                  onChanged: (values) {
+                                    setState(() {
+                                      _currentDistanceRangeValues = values;
+                                    });
+                                  },
+                                ),
+                              ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Column(
+                                    children: [
+                                      Container(
+                                        padding: EdgeInsets.all(5),
+                                        decoration: BoxDecoration(
+                                          border: Border.all(
+                                            color:
+                                                Theme.of(context).primaryColor,
+                                          ),
+                                          borderRadius:
+                                              BorderRadius.circular(5),
+                                        ),
+                                        child: Text(
+                                          _currentDistanceRangeValues.start
+                                              .round()
+                                              .toString(),
+                                        ),
+                                      ),
+                                      Text('Min'),
+                                    ],
+                                  ),
+                                  VerticalDivider(),
+                                  Column(
+                                    children: [
+                                      Container(
+                                        padding: EdgeInsets.all(5),
+                                        decoration: BoxDecoration(
+                                          border: Border.all(
+                                            color:
+                                                Theme.of(context).primaryColor,
+                                          ),
+                                          borderRadius:
+                                              BorderRadius.circular(5),
+                                        ),
+                                        child: Text(
+                                          _currentDistanceRangeValues.end
+                                              .round()
+                                              .toString(),
+                                        ),
+                                      ),
+                                      Text('Max'),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ), 
+              SizedBox(
+                height: 10,
+              ),
+              SizedBox(
+                height: 10,
+              ),
+              ElevatedButton(
+                onPressed: () {},
+                child: Text('Apply'),
+              ),
+              */
+            SizedBox(
+              height: 10,
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: SuggestionsForGroup(
+                isArranged: true,
+              ),
+            ),
+            SizedBox(
+              height: 50,
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: PopularPlaces(
+                isArranged: true,
+              ),
+            ),
+          ],
+        ),
+      ),
+    ),
+  );
 }

@@ -155,7 +155,7 @@ class TransportationProvider with ChangeNotifier {
       final extractedData = json.decode(response.body) as Map<String, dynamic>;
       final listExtracted = extractedData['propertyList'] as List<dynamic>;
       listExtracted.forEach((item) {
-        final duration = item['itenar']['duration'] as String;
+        final duration = item['itenary']['duration'] as String;
         final price = item['price'] as String;
         final departure = item['itenary']['segments']['departure'] as String;
         final arrival = item['itenary']['segments']['arrival'] as String;
