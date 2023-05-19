@@ -8,6 +8,13 @@ class TransportationList extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+          onPressed: () {
+            currentTransportations = [];
+            Navigator.pop(context);
+          },
+          icon: const Icon(Icons.arrow_back_ios),
+        ),
         title: Text('Transportation'),
         backgroundColor: Theme.of(context).primaryColor,
       ),
@@ -23,28 +30,21 @@ class TransportationList extends StatelessWidget {
           final departure = currentTransportations[index][2] as String;
           final arrival = currentTransportations[index][3] as String;
 
-          return Container(
-            padding: const EdgeInsets.all(4.0),
-            height: MediaQuery.of(context).size.height * 0.25,
-            child: Container(
-              margin: EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(12),
-                color: Colors.white,
+          return Padding(
+            padding: const EdgeInsets.only(top: 12.0),
+            child: ListTile(
+              title: Text(
+                'Duration: ${duration.substring(2, 3)} Hours ${duration.substring(5, 6)} Minutes',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
-              height: 200,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              subtitle: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Duration: $duration',
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  Text(
-                    'Price: $price',
+                    'Price: €$price',
                     style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
