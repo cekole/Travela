@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
@@ -17,31 +18,43 @@ class FileStorageProvider with ChangeNotifier {
   Future<void> uploadProfilePic(String filePath, String uId) async {
     final url = baseUrl + 'files/uploadProfilePicToUser/$uId';
     print(url);
-    final response = http.MultipartRequest(
-      'POST',
+
+    var request = http.MultipartRequest('POST', Uri.parse(url));
+    request.headers['Content-Type'] = 'multipart/form-data';
+    request.headers['Authorization'] = 'Bearer $bearerToken';
+
+    var file = await http.MultipartFile.fromPath('file', filePath);
+    request.files.add(file);
+
+    try {
+      var response = await request.send();
+      print(response.statusCode);
+
+      if (response.statusCode == 200) {
+        print('uploadProfilePic success');
+      } else {
+        print('uploadProfilePic failed');
+      }
+    } catch (e) {
+      print('Error: $e');
+    }
+  }
+
+  Future<Uint8List> fetchProfilePic(String uId) async {
+    final url = baseUrl + 'files/getProfilePic/$uId';
+    print(url);
+    final response = await http.get(
       Uri.parse(url),
+      headers: {
+        'Authorization': 'Bearer  $bearerToken',
+      },
     );
-
-    var file = File(filePath);
-    var stream = http.ByteStream(file.openRead());
-    var length = await file.length();
-
-    var multipartFile = http.MultipartFile(
-      'file',
-      stream,
-      length,
-      filename: file.path,
-    );
-
-    response.files.add(multipartFile);
-
-    final res = await response.send();
-    print(res.statusCode);
-
-    if (res.statusCode == 200) {
-      print('uploadProfilePic success');
+    print(response.statusCode);
+    if (response.statusCode == 200) {
+      profilePic = response.bodyBytes;
+      return response.bodyBytes;
     } else {
-      print('uploadProfilePic failed');
+      throw Exception('Failed to fetch profile picture');
     }
   }
 
