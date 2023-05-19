@@ -8,6 +8,7 @@ class Destination {
   final String imageUrl;
   final double rating;
   final String location;
+  final String cityIataCode;
   final List<String> activities;
   bool isPopular;
   //final List<String> images;
@@ -22,6 +23,7 @@ class Destination {
     required this.location,
     required this.activities,
     required this.isPopular,
+    required this.cityIataCode,
     //required this.images,
   });
 }

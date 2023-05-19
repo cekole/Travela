@@ -350,6 +350,7 @@ class UserProvider with ChangeNotifier {
               id: city.id,
               country: city.countryName,
               city: city.cityName,
+              cityIataCode: city.iataCode,
               description: city.description,
               imageUrl: city.imageUrl,
               rating: 4.5,

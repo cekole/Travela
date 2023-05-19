@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:expansion_tile_card/expansion_tile_card.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -199,19 +201,16 @@ class _ProfilePageState extends State<ProfilePage> {
                       leading: Icon(
                         Icons.date_range,
                       ),
-                      title: Text('Start Date: ${currentAvailableFrom}'),
-                    ),
-                    Divider(
-                      height: 1,
-                    ),
-                    Divider(
-                      height: 1,
+                      //convert currentAvailableFrom to a date
+                      title: Text(
+                          'Start Date: ${DateFormat('dd-MM-yyyy').format(DateTime.parse(currentAvailableFrom))}'),
                     ),
                     ListTile(
                       leading: Icon(
                         Icons.date_range,
                       ),
-                      title: Text('End Date: ${currentAvailableTo}'),
+                      title: Text(
+                          'End Date:   ${DateFormat('dd-MM-yyyy').format(DateTime.parse(currentAvailableTo))}'),
                     ),
                     Divider(
                       height: 20,
@@ -278,21 +277,43 @@ class _ProfilePageState extends State<ProfilePage> {
                                 )
                                     .then((value) {
                                   showDialog(
-                                      context: context,
-                                      builder: (context) =>
-                                          CupertinoAlertDialog(
+                                    context: context,
+                                    builder: (context) => Platform.isIOS
+                                        ? CupertinoAlertDialog(
                                             title: Text('Success'),
                                             content: Text(
                                                 'Your available dates have been updated'),
                                             actions: [
                                               TextButton(
                                                 onPressed: () {
-                                                  Navigator.of(context).pop();
+                                                  Navigator.of(context)
+                                                      .pushNamedAndRemoveUntil(
+                                                          '/home',
+                                                          (route) => false);
+                                                  pageNum = 4;
                                                 },
                                                 child: Text('OK'),
                                               ),
                                             ],
-                                          ));
+                                          )
+                                        : AlertDialog(
+                                            title: Text('Success'),
+                                            content: Text(
+                                                'Your available dates have been updated'),
+                                            actions: [
+                                              TextButton(
+                                                onPressed: () {
+                                                  Navigator.of(context)
+                                                      .pushNamedAndRemoveUntil(
+                                                          '/home',
+                                                          (route) => false);
+                                                  pageNum = 4;
+                                                },
+                                                child: Text('OK'),
+                                              ),
+                                            ],
+                                          ),
+                                  );
                                 });
                               },
                             );

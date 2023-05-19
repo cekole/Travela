@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:provider/provider.dart';
+import 'package:shimmer/shimmer.dart';
 import 'package:travela_mobile/appConstant.dart';
 import 'package:travela_mobile/models/destination.dart';
 import 'package:travela_mobile/providers/authentication_provider.dart';
@@ -23,9 +24,12 @@ class _QuestionnarePageState extends State<QuestionnarePage> {
     final authenticationData =
         Provider.of<AuthenticationProvider>(context, listen: false);
     final userData = Provider.of<UserProvider>(context, listen: false);
+    final destinatinationsData =
+        Provider.of<DestinationsProvider>(context, listen: false);
     authenticationData.getCurrentUser().then(
       (value) {
         userData.getUserIdByUsername(currentUser.username);
+        destinatinationsData.fetchAndSetCities();
       },
     );
     super.initState();
@@ -37,7 +41,6 @@ class _QuestionnarePageState extends State<QuestionnarePage> {
       context,
       listen: false,
     );
-    destinatinationsData.fetchAndSetCities();
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
@@ -76,61 +79,114 @@ class _QuestionnarePageState extends State<QuestionnarePage> {
                 SizedBox(height: 10),
                 SizedBox(
                   height: MediaQuery.of(context).size.height * 0.6,
-                  child: ListView.separated(
-                    itemCount: destinatinationsData.destinations.length,
-                    itemBuilder: (context, index) {
-                      final filteredDestinations = destinatinationsData
-                          .destinations
-                          .where((destination) =>
-                              destination.city.toLowerCase().contains(
-                                    _searchController.text.toLowerCase(),
-                                  ))
-                          .toList();
-                      if (index >= filteredDestinations.length) {
-                        //if none show a placeholder
-                        if (filteredDestinations.isEmpty) {
-                          return Center(
-                            child: Text(
-                              'No destinations found',
-                              style: TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.w800,
-                              ),
-                            ),
-                          );
-                        }
-                        return SizedBox.shrink();
+                  child: FutureBuilder(
+                    future: Future.wait(
+                      [
+                        Provider.of<DestinationsProvider>(context,
+                                listen: false)
+                            .fetchAndSetCities(),
+                      ],
+                    ).then(
+                      (value) => Future.delayed(Duration(seconds: 1)),
+                    ),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return Shimmer.fromColors(
+                          baseColor: Colors.grey[300]!,
+                          highlightColor: Colors.grey[100]!,
+                          child: ListView.separated(
+                            itemCount: 10,
+                            itemBuilder: (context, index) {
+                              return AnswerCard(
+                                destination:
+                                    destinatinationsData.destinations[index],
+                                onSelect: (destination) {},
+                              );
+                            },
+                            separatorBuilder: (context, index) =>
+                                const SizedBox(height: 10),
+                          ),
+                        );
+                      } else {
+                        return Consumer<DestinationsProvider>(
+                          builder: (context, destinationData, child) {
+                            List<Destination> destinations =
+                                destinationData.destinations;
+                            if (_searchController.text.isNotEmpty) {
+                              destinations = destinations.where((destination) {
+                                return destination.city
+                                    .toLowerCase()
+                                    .contains(_searchController.text);
+                              }).toList();
+                            }
+                            return ListView.separated(
+                              itemCount:
+                                  destinatinationsData.destinations.length,
+                              itemBuilder: (context, index) {
+                                final filteredDestinations =
+                                    destinatinationsData.destinations
+                                        .where((destination) => destination.city
+                                            .toLowerCase()
+                                            .contains(
+                                              _searchController.text
+                                                  .toLowerCase(),
+                                            ))
+                                        .toList();
+                                if (index >= filteredDestinations.length) {
+                                  //if none show a placeholder
+                                  if (filteredDestinations.isEmpty) {
+                                    return Center(
+                                      child: Text(
+                                        'No destinations found',
+                                        style: TextStyle(
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.w800,
+                                        ),
+                                      ),
+                                    );
+                                  }
+                                  return SizedBox.shrink();
+                                }
+                                return AnswerCard(
+                                  destination: filteredDestinations[index],
+                                  onSelect: (destination) {
+                                    if (_selectedDestinations.length < 3) {
+                                      if (_selectedDestinations.any((element) =>
+                                          element.city == destination.city)) {
+                                        _selectedDestinations.removeWhere(
+                                            (element) =>
+                                                element.city ==
+                                                destination.city);
+                                        print('${destination.city} removed');
+                                        print(_selectedDestinations.length);
+                                      } else {
+                                        _selectedDestinations.add(destination);
+                                        print('${destination.city} added');
+                                      }
+                                    } else {
+                                      if (_selectedDestinations.any((element) =>
+                                          element.city == destination.city)) {
+                                        _selectedDestinations.removeWhere(
+                                            (element) =>
+                                                element.city ==
+                                                destination.city);
+                                        print('${destination.city} removed');
+                                        print(_selectedDestinations.length);
+                                      } else {
+                                        print(
+                                            'Maximum number of destinations selected');
+                                      }
+                                    }
+                                  },
+                                );
+                              },
+                              separatorBuilder: (context, index) =>
+                                  const SizedBox(height: 10),
+                            );
+                          },
+                        );
                       }
-                      return AnswerCard(
-                        destination: filteredDestinations[index],
-                        onSelect: (destination) {
-                          if (_selectedDestinations.length < 3) {
-                            if (_selectedDestinations.any((element) =>
-                                element.city == destination.city)) {
-                              _selectedDestinations.removeWhere((element) =>
-                                  element.city == destination.city);
-                              print('${destination.city} removed');
-                              print(_selectedDestinations.length);
-                            } else {
-                              _selectedDestinations.add(destination);
-                              print('${destination.city} added');
-                            }
-                          } else {
-                            if (_selectedDestinations.any((element) =>
-                                element.city == destination.city)) {
-                              _selectedDestinations.removeWhere((element) =>
-                                  element.city == destination.city);
-                              print('${destination.city} removed');
-                              print(_selectedDestinations.length);
-                            } else {
-                              print('Maximum number of destinations selected');
-                            }
-                          }
-                        },
-                      );
                     },
-                    separatorBuilder: (context, index) =>
-                        const SizedBox(height: 10),
                   ),
                 ),
               ],
@@ -165,15 +221,10 @@ class _QuestionnarePageState extends State<QuestionnarePage> {
                             userId,
                             DateTime.now().toString().split(' ')[0].toString(),
                           );
-                          //DateTime split to get date only
 
                           userData.setAvailableTo(
                             userId,
-                            DateTime.now()
-                                .add(Duration(days: 1))
-                                .toString()
-                                .split(' ')[0]
-                                .toString(),
+                            DateTime.now().toString().split(' ')[0].toString(),
                           );
 
                           Navigator.of(context).pushNamed('/home');
