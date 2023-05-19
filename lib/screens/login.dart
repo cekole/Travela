@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
@@ -135,9 +136,20 @@ class _LoginPageState extends State<LoginPage> {
                                                 context, '/home'),
                                       );
                                 } else {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(
-                                      content: Text('Wrong email or password'),
+                                  showDialog(
+                                    context: context,
+                                    builder: (context) => CupertinoAlertDialog(
+                                      title: Text('Error'),
+                                      content: Text(
+                                          'Wrong mail or password, please try again'),
+                                      actions: [
+                                        TextButton(
+                                          onPressed: () {
+                                            Navigator.pop(context);
+                                          },
+                                          child: Text('Ok'),
+                                        ),
+                                      ],
                                     ),
                                   );
                                 }
