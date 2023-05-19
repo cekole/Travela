@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:syncfusion_flutter_datepicker/datepicker.dart';
+import 'package:travela_mobile/appConstant.dart';
+import 'package:travela_mobile/models/destination.dart';
+import 'package:travela_mobile/providers/destinations_provider.dart';
 import 'package:travela_mobile/providers/transportation_provider.dart';
 
 class FlightsPage extends StatefulWidget {
@@ -11,30 +15,44 @@ class FlightsPage extends StatefulWidget {
 }
 
 class _FlightsPageState extends State<FlightsPage> {
-  String _departure = '';
-  String _arrival = '';
-  DateTime? _selectedDate;
+  DateTime _currentStartDateCheckIn = DateTime.now();
+  DateTime _currentEndDateCheckIn = DateTime.now().add(const Duration(days: 7));
+  DateTime _currentStartDateCheckOut = DateTime.now();
+  DateTime _currentEndDateCheckOut =
+      DateTime.now().add(const Duration(days: 7));
   int _numberOfPeople = 1;
 
-  void _selectDate(BuildContext context) async {
-    final DateTime? pickedDate = await showDatePicker(
-      context: context,
-      initialDate: DateTime.now(),
-      firstDate: DateTime.now(),
-      lastDate: DateTime(2023),
-    );
+  String originCode = '';
+  String destinationCode = '';
 
-    if (pickedDate != null) {
+  DateRangePickerController _dateRangePickerController =
+      DateRangePickerController();
+  DateTime rangeStartDate = DateTime.now();
+  DateTime rangeEndDate = DateTime.now().add(const Duration(days: 7));
+
+  void _onSelectionChanged(DateRangePickerSelectionChangedArgs args) {
+    print(args.value);
+    if (args.value is PickerDateRange) {
       setState(() {
-        _selectedDate = pickedDate;
+        rangeStartDate = args.value.startDate;
+        rangeEndDate = args.value.endDate;
+      });
+    } else if (args.value is DateTime) {
+      setState(() {
+        rangeStartDate = args.value;
+        rangeEndDate = args.value;
       });
     }
   }
 
   @override
-  Widget build(BuildContext context) {
-    final flightProvider = Provider.of<TransportationProvider>(context);
+  void initState() {
+    currentTransportations = [];
+    super.initState();
+  }
 
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).primaryColor,
@@ -43,75 +61,197 @@ class _FlightsPageState extends State<FlightsPage> {
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
-          TextField(
-            decoration: InputDecoration(
-              labelText: 'Departure',
+          //container textfield style
+          Container(
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(10),
+              border: Border.all(color: Colors.grey.shade300),
             ),
-            onChanged: (value) {
-              setState(() {
-                _departure = value;
-              });
-            },
-          ),
-          const SizedBox(height: 16),
-          TextField(
-            decoration: InputDecoration(
-              labelText: 'Arrival',
-            ),
-            onChanged: (value) {
-              setState(() {
-                _arrival = value;
-              });
-            },
-          ),
-          const SizedBox(height: 16),
-          InkWell(
-            onTap: () => _selectDate(context),
-            child: InputDecorator(
-              decoration: InputDecoration(
-                labelText: 'Date',
+            child: ListTile(
+              title: Text(
+                'Departure',
               ),
-              child: Text(
-                _selectedDate != null
-                    ? DateFormat('dd/MM/yyyy').format(_selectedDate!)
-                    : 'Select date',
-              ),
-            ),
-          ),
-          const SizedBox(height: 16),
-          Row(
-            children: [
-              Text(
-                'Number of people:',
+              subtitle: Text(
+                DateFormat('dd/MM/yyyy').format(_currentStartDateCheckIn),
                 style: TextStyle(fontSize: 16),
               ),
-              const SizedBox(width: 8),
-              DropdownButton<int>(
+              trailing: Icon(Icons.calendar_today),
+              onTap: () {
+                showDialog(
+                  context: context,
+                  builder: (context) => Container(
+                    padding: EdgeInsets.all(10),
+                    margin: EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Material(
+                      child: Column(
+                        children: [
+                          Row(
+                            children: [
+                              Spacer(),
+                              IconButton(
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                                icon: Icon(Icons.close),
+                              ),
+                            ],
+                          ),
+                          Text(
+                            'Select Departure Date',
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          Divider(),
+                          SfDateRangePicker(
+                            controller: _dateRangePickerController,
+                            headerStyle: DateRangePickerHeaderStyle(
+                              textAlign: TextAlign.center,
+                            ),
+                            enablePastDates: false,
+                            onSelectionChanged: _onSelectionChanged,
+                            selectionMode: DateRangePickerSelectionMode.single,
+                            initialDisplayDate: DateTime.now(),
+                          ),
+                          Row(
+                            children: [
+                              Spacer(),
+                              TextButton(
+                                onPressed: () {
+                                  setState(() {
+                                    _currentStartDateCheckIn = rangeStartDate;
+                                    _currentEndDateCheckIn = rangeEndDate;
+                                    Navigator.of(context).pop();
+                                  });
+                                },
+                                child: Text('Done'),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                );
+              },
+            ),
+          ),
+          SizedBox(height: 10),
+          Container(
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(10),
+              border: Border.all(color: Colors.grey.shade300),
+            ),
+            child: ListTile(
+              title: Text('From'),
+              subtitle: Text(originCode),
+              trailing: Icon(Icons.arrow_forward_ios),
+              onTap: () {
+                showDialog(
+                  context: context,
+                  builder: (context) => Container(
+                    padding: EdgeInsets.all(10),
+                    margin: EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Material(
+                      child: ListView(
+                        children: [
+                          Row(
+                            children: [
+                              Spacer(),
+                              IconButton(
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                                icon: Icon(Icons.close),
+                              ),
+                            ],
+                          ),
+                          Center(
+                            child: Text(
+                              'Select City',
+                              style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                          Divider(),
+                          for (var destination
+                              in Provider.of<DestinationsProvider>(context,
+                                      listen: false)
+                                  .destinations)
+                            ListTile(
+                              title: Text(destination.city),
+                              subtitle: Text(destination.country),
+                              onTap: () {
+                                setState(() {
+                                  originCode = destination.cityIataCode;
+                                  Navigator.of(context).pop();
+                                });
+                              },
+                            ),
+                        ],
+                      ),
+                    ),
+                  ),
+                );
+              },
+            ),
+          ),
+          const SizedBox(height: 16),
+          Container(
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(10),
+              border: Border.all(color: Colors.grey.shade300),
+            ),
+            child: ListTile(
+              title: Text('Number of people'),
+              trailing: DropdownButton<int>(
+                borderRadius: BorderRadius.circular(10),
                 value: _numberOfPeople,
-                onChanged: (value) {
+                onChanged: (int? newValue) {
                   setState(() {
-                    _numberOfPeople = value!;
+                    _numberOfPeople = newValue!;
                   });
                 },
-                items: List.generate(10, (index) => index + 1)
-                    .map((int value) => DropdownMenuItem<int>(
-                          value: value,
-                          child: Text(value.toString()),
-                        ))
-                    .toList(),
+                items: <int>[1, 2, 3, 4, 5, 6, 7, 8, 9]
+                    .map<DropdownMenuItem<int>>((int value) {
+                  return DropdownMenuItem<int>(
+                    value: value,
+                    child: Text(value.toString()),
+                  );
+                }).toList(),
               ),
-            ],
+            ),
           ),
+
           const SizedBox(height: 16),
           ElevatedButton(
             onPressed: () {
-              flightProvider.searchTransportation(
-                _selectedDate!,
-                _departure,
-                _arrival,
+              final transportationData =
+                  Provider.of<TransportationProvider>(context, listen: false);
+              transportationData
+                  .searchTransportation(
+                _currentStartDateCheckIn.toString().split(' ')[0],
+                originCode,
+                'ESB',
                 _numberOfPeople,
-              );
-              Navigator.pushNamed(context, '/flight_list');
+              )
+                  .then((value) {
+                //Navigator.of(context).pushNamed('/flight_list');
+              });
             },
             child: Text('Search'),
           ),

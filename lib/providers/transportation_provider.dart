@@ -138,10 +138,10 @@ class TransportationProvider with ChangeNotifier {
     }
   }
 
-  Future searchTransportation(DateTime departureDate, String originLocationCode,
+  Future searchTransportation(String departureDate, String originLocationCode,
       String destinationLocationCode, int adults) async {
     final url =
-        'http://13.48.206.213:8081/transportations/search?departureDate=$departureDate&originLocationCode=$originLocationCode&destinationLocationCode=$destinationLocationCode&adults=$adults';
+        '${baseUrl}transportations/search?departureDate=$departureDate&originLocationCode=$originLocationCode&destinationLocationCode=$destinationLocationCode&adults=$adults';
 
     print(url);
     final response = await http.get(
@@ -153,19 +153,26 @@ class TransportationProvider with ChangeNotifier {
     print(response.statusCode);
     if (response.statusCode == 200) {
       final extractedData = json.decode(response.body) as Map<String, dynamic>;
-      final listExtracted = extractedData['propertyList'] as List<dynamic>;
+      final listExtracted =
+          extractedData['transportationList'] as List<dynamic>;
+
       listExtracted.forEach((item) {
-        final duration = item['itenary']['duration'] as String;
+        final duration = item['itinerary']['duration'] as String;
         final price = item['price'] as String;
-        final departure = item['itenary']['segments']['departure'] as String;
-        final arrival = item['itenary']['segments']['arrival'] as String;
-        //first clear the list and then add the new items
+
+        final segments = item['itinerary']['segments'] as List<dynamic>;
+        final departure = segments[0]['departure'] as String;
+        final arrival = segments[segments.length - 1]['arrival'] as String;
+
+        // Clear the list and then add the new items
         currentTransportations.add([duration, price, departure, arrival]);
       });
+      print(currentTransportations);
       return currentTransportations;
     } else {
       print('error');
     }
+
     notifyListeners();
   }
 }

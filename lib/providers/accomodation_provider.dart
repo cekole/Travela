@@ -116,7 +116,7 @@ class AccomodationProvider with ChangeNotifier {
   Future searchAccomodation(String city, String startDate,
       String destinationDate, int adultsCount) async {
     final url =
-        'http://13.48.206.213:8081/accomodations/search?city=$city&startDate=$startDate&endDate=$destinationDate&adultsCount=$adultsCount';
+        '${baseUrl}accomodations/search?city=$city&startDate=$startDate&endDate=$destinationDate&adultsCount=$adultsCount';
     print(url);
     final response = await http.get(
       Uri.parse(url),

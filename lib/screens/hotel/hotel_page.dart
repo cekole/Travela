@@ -73,7 +73,7 @@ class _HotelPageState extends State<HotelPage> {
               borderRadius: BorderRadius.all(
                 Radius.circular(5),
               ),
-              color: Theme.of(context).primaryColor.withOpacity(0.2),
+              color: Theme.of(context).primaryColor.withOpacity(0.1),
             ),
             margin: EdgeInsets.all(10),
             child: Column(
@@ -320,9 +320,10 @@ class _HotelPageState extends State<HotelPage> {
                 numberOfPeople,
               )
                   .then((value) {
-                Navigator.of(context).pushNamed(
+                /*  Navigator.of(context).pushNamed(
                   '/accomodation_list',
-                );
+                ); */
+                print(currentTransportations);
               });
             },
             child: Text(
