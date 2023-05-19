@@ -26,8 +26,7 @@ class RequestCard extends StatelessWidget {
           final userData = Provider.of<UserProvider>(context, listen: false);
           await userData.getAllIncomingRequests();
         },
-        baseColor: Colors.grey.withOpacity(0.2),
-        shadowColor: Colors.black,
+        baseColor: Color.fromARGB(255, 215, 213, 213).withOpacity(0.5),
         title: Text(title!),
         children: [
           ListView.builder(

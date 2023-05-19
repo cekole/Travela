@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/src/foundation/key.dart';
@@ -155,25 +156,25 @@ class _EditProfileState extends State<EditProfile> {
               Spacer(),
               TextButton(
                 onPressed: () {
-                  userData.deleteUser(userId).then((value) =>
-                      value ? Navigator.of(context).pushNamed('/login') : null);
-                  (value) => showDialog(
+                  showDialog(
                       context: context,
-                      builder: (ctx) => AlertDialog(
-                            title: Text('Are you sure?'),
-                            content:
-                                Text('Do you want to delete your account?'),
+                      builder: (ctx) => CupertinoAlertDialog(
+                            title: Text('Delete Account'),
+                            content: Text(
+                                'Are you sure you want to delete your account?'),
                             actions: [
                               TextButton(
                                 onPressed: () {
-                                  Navigator.of(ctx).pop(false);
+                                  Navigator.of(ctx).pop();
                                 },
                                 child: Text('No'),
                               ),
                               TextButton(
                                 onPressed: () {
-                                  // navigate to login page
-                                  Navigator.of(context).pushNamed('/login');
+                                  userData.deleteUser(userId);
+                                  Navigator.of(ctx).pop();
+                                  Navigator.of(context).pushNamedAndRemoveUntil(
+                                      '/login', (route) => false);
                                 },
                                 child: Text('Yes'),
                               ),
