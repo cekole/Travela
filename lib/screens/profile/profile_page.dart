@@ -179,60 +179,11 @@ class _ProfilePageState extends State<ProfilePage> {
         SliverList(
           delegate: SliverChildListDelegate.fixed(
             [
-              Padding(
-                padding: EdgeInsets.only(left: 8.0, top: 16.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'My Travela',
-                      style: TextStyle(
-                        fontSize: 20,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              Divider(
-                height: 20,
-                thickness: 2,
-              ),
-              ListTile(
-                leading: Icon(
-                  Icons.location_on,
-                ),
-                title: Text('Location'),
-              ),
-              Divider(
-                height: 1,
-              ),
-              Divider(
-                height: 1,
-              ),
-              ListTile(
-                leading: Icon(
-                  Icons.notifications,
-                ),
-                title: Text('Notification'),
-              ),
-              Divider(
-                height: 1,
-              ),
-              ListTile(
-                leading: Icon(
-                  Icons.privacy_tip,
-                ),
-                title: Text('Privacy'),
-              ),
-              Divider(
-                height: 20,
-                thickness: 2,
-              ),
-              SizedBox(height: 20),
               Container(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    SizedBox(height: 20),
                     Padding(
                       padding: EdgeInsets.only(left: 8.0),
                       child: Text(

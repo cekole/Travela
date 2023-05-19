@@ -145,30 +145,20 @@ class _PlaceCardState extends State<PlaceCard> {
                       ),
                     ],
                   ),
+                  SizedBox(
+                    height: 10,
+                  ),
                   Container(
                     padding: EdgeInsets.all(10),
                     child: Text(
-                      widget.destination,
+                      widget.destination.split(',')[1],
                       style: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
                   ),
-                  Container(
-                    margin: EdgeInsets.symmetric(horizontal: 10),
-                    padding: EdgeInsets.all(10),
-                    decoration: BoxDecoration(
-                      color: Colors.grey[200],
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    child: Text(
-                      selectedDestination.description,
-                      style: TextStyle(
-                        fontSize: 15,
-                      ),
-                    ),
-                  ),
+
                   //Suggested Activities
                   Container(
                     padding: EdgeInsets.all(10),
