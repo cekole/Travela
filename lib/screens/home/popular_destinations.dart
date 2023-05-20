@@ -49,7 +49,6 @@ class _PopularDestinationsState extends State<PopularDestinations> {
                 setState(() {}); // Trigger UI update when search text changes
               },
               decoration: InputDecoration(
-                labelText: 'Search',
                 prefixIcon: Icon(Icons.search),
               ),
             ),

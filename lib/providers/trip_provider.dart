@@ -107,8 +107,8 @@ class TripProvider with ChangeNotifier {
     }
   }
 
-  Future deleteCountry(String id) async {
-    final url = baseUrl + 'trips/$id';
+  Future deleteTrip(String tripId) async {
+    final url = baseUrl + 'trips/$tripId';
     print(url);
     final response = await http.delete(
       Uri.parse(url),
@@ -119,10 +119,10 @@ class TripProvider with ChangeNotifier {
     );
     print(response.statusCode);
     if (response.statusCode == 200) {
-      print('deleteCountry succeeded');
+      print('deleteTrip succeeded');
       return json.decode(response.body);
     } else {
-      print('deleteCountry failed');
+      print('deleteTrip failed');
     }
   }
 
