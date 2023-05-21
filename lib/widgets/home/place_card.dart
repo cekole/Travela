@@ -83,7 +83,10 @@ class _PlaceCardState extends State<PlaceCard> {
                 ),
               ),
               Text(
-                widget.destination.split(', ')[1],
+                (widget.destination.split(', ')[1] ==
+                        "United States of America")
+                    ? "USA"
+                    : widget.destination.split(', ')[1],
                 style: TextStyle(
                   fontSize: 14,
                   color: Colors.grey,
