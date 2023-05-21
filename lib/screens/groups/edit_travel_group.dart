@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:bubble/bubble.dart';
 import 'package:expansion_tile_card/expansion_tile_card.dart';
 import 'package:flutter/cupertino.dart';
@@ -420,18 +422,7 @@ class _EditTravelGroupState extends State<EditTravelGroup> {
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      //close button
-                      Row(
-                        children: [
-                          Spacer(),
-                          IconButton(
-                            onPressed: () {
-                              Navigator.of(context).pop();
-                            },
-                            icon: Icon(Icons.close),
-                          ),
-                        ],
-                      ),
+                      SizedBox(height: 10),
                       Text(
                         'Change Group Name',
                         style: TextStyle(
@@ -456,13 +447,95 @@ class _EditTravelGroupState extends State<EditTravelGroup> {
                       SizedBox(height: 20),
                       ElevatedButton(
                         onPressed: () {
-                          groupData.updateGroup(travelGroup.id,
-                              groupNameController.text, "no need");
-                          Navigator.of(context).pop();
+                          groupData
+                              .updateGroup(travelGroup.id,
+                                  groupNameController.text, userId)
+                              .then((value) => {
+                                    if (value)
+                                      {
+                                        showDialog(
+                                          context: context,
+                                          builder: (BuildContext context) {
+                                            return Platform.isIOS
+                                                ? CupertinoAlertDialog(
+                                                    title: Text(
+                                                        'Group Name Updated'),
+                                                    content: Text(
+                                                        'Group name has been updated'),
+                                                    actions: [
+                                                      CupertinoDialogAction(
+                                                        onPressed: () {
+                                                          Navigator
+                                                              .pushReplacementNamed(
+                                                                  context,
+                                                                  '/home');
+                                                        },
+                                                        child: Text('Ok'),
+                                                      ),
+                                                    ],
+                                                  )
+                                                : AlertDialog(
+                                                    title: Text(
+                                                        'Group Name Updated'),
+                                                    content: Text(
+                                                        'Group name has been updated'),
+                                                    actions: [
+                                                      TextButton(
+                                                        onPressed: () {
+                                                          Navigator
+                                                              .pushReplacementNamed(
+                                                                  context,
+                                                                  '/home');
+                                                        },
+                                                        child: Text('Ok'),
+                                                      ),
+                                                    ],
+                                                  );
+                                          },
+                                        ),
+                                      }
+                                    else
+                                      {
+                                        showDialog(
+                                          context: context,
+                                          builder: (BuildContext context) {
+                                            return Platform.isIOS
+                                                ? CupertinoAlertDialog(
+                                                    title: Text('Error'),
+                                                    content: Text(
+                                                        'Group name could not be updated'),
+                                                    actions: [
+                                                      CupertinoDialogAction(
+                                                        onPressed: () {
+                                                          Navigator.of(context)
+                                                              .pop();
+                                                        },
+                                                        child: Text('Ok'),
+                                                      ),
+                                                    ],
+                                                  )
+                                                : AlertDialog(
+                                                    title: Text('Error'),
+                                                    content: Text(
+                                                        'Group name could not be updated'),
+                                                    actions: [
+                                                      TextButton(
+                                                        onPressed: () {
+                                                          Navigator.of(context)
+                                                              .pop();
+                                                        },
+                                                        child: Text('Ok'),
+                                                      ),
+                                                    ],
+                                                  );
+                                          },
+                                        ),
+                                      }
+                                  });
                         },
-                        child: Text('Update Group Name'),
+                        child: Text('Update '),
                       ),
-                      SizedBox(height: 20),
+                      SizedBox(height: 30),
                     ],
                   ),
                 ),

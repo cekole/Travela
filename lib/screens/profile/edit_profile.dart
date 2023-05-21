@@ -191,7 +191,9 @@ class _EditProfileState extends State<EditProfile> {
                                   actions: [
                                     TextButton(
                                       onPressed: () {
-                                        Navigator.pop(context);
+                                        Navigator.pushReplacementNamed(
+                                            context, '/home');
+                                        pageNum = 4;
                                       },
                                       child: Text('OK'),
                                     ),

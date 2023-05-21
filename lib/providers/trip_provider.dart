@@ -154,14 +154,18 @@ class TripProvider with ChangeNotifier {
       String groupId) async {
     final url = baseUrl + 'trips/$id';
     print(url);
-    final response = await http.put(Uri.parse(url), headers: {
-      'Authorization': 'Bearer  $bearerToken',
-      'Content-Type': 'application/json',
-    }, body: {
-      'tripName': tripName,
-      'tripDescription': tripDescription,
-      'groupId': groupId,
-    });
+    final response = await http.put(
+      Uri.parse(url),
+      headers: {
+        'Authorization': 'Bearer  $bearerToken',
+        'Content-Type': 'application/json',
+      },
+      body: json.encode({
+        'tripName': tripName,
+        'tripDescription': tripDescription,
+        'groupId': groupId,
+      }),
+    );
     print(response.statusCode);
     if (response.statusCode == 200) {
       print('updateCountry succeeded');

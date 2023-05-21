@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
@@ -218,24 +221,65 @@ class _QuestionnarePageState extends State<QuestionnarePage> {
                         onPressed: () {
                           final userData =
                               Provider.of<UserProvider>(context, listen: false);
-                          for (var destination in _selectedDestinations) {
-                            print(destination.city);
+                          if (_selectedDestinations.length < 3) {
+                            showDialog(
+                              context: context,
+                              builder: (context) {
+                                return Platform.isIOS
+                                    ? CupertinoAlertDialog(
+                                        title: Text('Error'),
+                                        content: Text(
+                                            'Please select at least 3 destinations'),
+                                        actions: [
+                                          TextButton(
+                                            onPressed: () {
+                                              Navigator.of(context).pop();
+                                            },
+                                            child: Text('OK'),
+                                          ),
+                                        ],
+                                      )
+                                    : AlertDialog(
+                                        title: Text('Error'),
+                                        content: Text(
+                                            'Please select 3 destinations'),
+                                        actions: [
+                                          TextButton(
+                                            onPressed: () {
+                                              Navigator.of(context).pop();
+                                            },
+                                            child: Text('OK'),
+                                          ),
+                                        ],
+                                      );
+                              },
+                            );
+                          } else {
+                            for (var destination in _selectedDestinations) {
+                              print(destination.city);
 
-                            print('user id is ${userId}');
-                            print('destination id is ${destination.id}');
-                            userData.addVisitedCity(userId, destination.id);
+                              print('user id is ${userId}');
+                              print('destination id is ${destination.id}');
+                              userData.addVisitedCity(userId, destination.id);
+                            }
+                            userData.setAvailableFrom(
+                              userId,
+                              DateTime.now()
+                                  .toString()
+                                  .split(' ')[0]
+                                  .toString(),
+                            );
+
+                            userData.setAvailableTo(
+                              userId,
+                              DateTime.now()
+                                  .toString()
+                                  .split(' ')[0]
+                                  .toString(),
+                            );
+
+                            Navigator.of(context).pushNamed('/home');
                           }
-                          userData.setAvailableFrom(
-                            userId,
-                            DateTime.now().toString().split(' ')[0].toString(),
-                          );
-
-                          userData.setAvailableTo(
-                            userId,
-                            DateTime.now().toString().split(' ')[0].toString(),
-                          );
-
-                          Navigator.of(context).pushNamed('/home');
                         },
                       ),
                     ),

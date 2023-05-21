@@ -92,17 +92,26 @@ class UserProvider with ChangeNotifier {
       String email, String password) async {
     final url = baseUrl + 'users/$id';
     print(url);
-    final response = await http.put(Uri.parse(url), headers: {
-      'Authorization': 'Bearer  $bearerToken',
-    }, body: {
-      'name': name,
-      'username': username,
-      'email': email,
-      'password': password
-    });
+    final response = await http.put(
+      Uri.parse(url),
+      headers: {
+        'Authorization': 'Bearer  $bearerToken',
+        'Content-Type': 'application/json',
+      },
+      body: json.encode({
+        'name': name,
+        'username': username,
+        'email': email,
+        'password': password,
+      }),
+    );
     print(response.statusCode);
     print(response.body);
     if (response.statusCode == 200) {
+      userUsername = username;
+      userEmail = email;
+      nameOfUser = name;
+
       print('update user info success');
       return true;
     } else {
