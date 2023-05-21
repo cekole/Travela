@@ -35,6 +35,16 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   void initState() {
     super.initState();
+    fetchProfilePicture();
+  }
+
+  void fetchProfilePicture() async {
+    final fileStorageData =
+        Provider.of<FileStorageProvider>(context, listen: false);
+    final pic = await fileStorageData.fetchProfilePic(userId);
+    setState(() {
+      imageUrl = pic != null ? pic.toString() : placeholderImage;
+    });
   }
 
   DateTime _currentStartDate = DateTime.now();
@@ -87,37 +97,18 @@ class _ProfilePageState extends State<ProfilePage> {
                         child: FutureBuilder<Uint8List>(
                           future: fileStorageData.fetchProfilePic(userId),
                           builder: (context, snapshot) {
-                            if (snapshot.connectionState ==
-                                ConnectionState.waiting) {
-                              return CircleAvatar(
-                                radius: 40,
-                                backgroundColor: Colors.grey,
-                                child: Image.asset(
-                                  placeholderImage,
-                                  fit: BoxFit.cover,
-                                ),
-                              );
-                            } else if (snapshot.hasData) {
-                              final profilePic = snapshot.data!;
-                              return CircleAvatar(
-                                radius: 40,
-                                backgroundColor: Colors.grey,
-                                child:
-                                    Image.memory(profilePic, fit: BoxFit.cover),
-                              );
-                            } else {
-                              return CircleAvatar(
-                                radius: 40,
-                                backgroundColor: Colors.grey,
-                                child: profilePic != null
-                                    ? Image.memory(profilePic,
-                                        fit: BoxFit.cover)
-                                    : Image.asset(
-                                        placeholderImage,
-                                        fit: BoxFit.cover,
-                                      ),
-                              );
-                            }
+                            final profilePic = snapshot.data ?? Uint8List(0);
+                            return CircleAvatar(
+                              radius: 40,
+                              backgroundColor: Colors.grey,
+                              backgroundImage: snapshot.connectionState ==
+                                      ConnectionState.waiting
+                                  ? Image.asset(
+                                      placeholderImage,
+                                      fit: BoxFit.cover,
+                                    ).image
+                                  : MemoryImage(profilePic),
+                            );
                           },
                         ),
                       ),
