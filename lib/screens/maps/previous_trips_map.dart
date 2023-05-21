@@ -66,21 +66,6 @@ class PreviousTripsMap extends StatelessWidget {
                                 onChanged: (value) {},
                               ),
                             ),
-                            ListTile(
-                              title: Text('Date'),
-                              leading: Icon(Icons.date_range),
-                              trailing: Icon(Icons.arrow_forward_ios),
-                            ),
-                            ListTile(
-                              title: Text('Location'),
-                              leading: Icon(Icons.location_on),
-                              trailing: Icon(Icons.arrow_forward_ios),
-                            ),
-                            Spacer(),
-                            ElevatedButton(
-                              onPressed: () {},
-                              child: Text('Share Trip'),
-                            ),
                           ],
                         ),
                       );

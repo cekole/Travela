@@ -84,7 +84,7 @@ class _HomeBodyState extends State<HomeBody> {
                   decoration: BoxDecoration(
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.grey.withOpacity(0.5),
+                        color: Colors.white,
                         spreadRadius: 1,
                         blurRadius: 7,
                         offset: Offset(0, 3),
@@ -93,31 +93,6 @@ class _HomeBodyState extends State<HomeBody> {
                     color: Colors.grey[200],
                     borderRadius: BorderRadius.circular(50),
                   ),
-                  child: TextField(
-                    onTap: () {},
-                    controller:
-                        _searchController, // TODO: Implement search functionality
-                    decoration: InputDecoration(
-                      hintText: 'Where Do You Want To Go?',
-                      prefixIcon: Icon(
-                        Icons.search,
-                        color: Theme.of(context).primaryColor,
-                      ),
-                      /* suffixIcon: IconButton(
-                        icon: Icon(Icons.filter_list),
-                        onPressed: () {
-                          _filterModal(context);
-                        },
-                      ), */
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(50),
-                        borderSide: BorderSide.none,
-                      ),
-                    ),
-                  ),
-                ),
-                Divider(
-                  thickness: 0,
                 ),
                 Shimmer.fromColors(
                   baseColor: Colors.grey[300]!,
@@ -187,31 +162,6 @@ class _HomeBodyState extends State<HomeBody> {
                     color: Colors.grey[200],
                     borderRadius: BorderRadius.circular(50),
                   ),
-                  child: TextField(
-                    onTap: () {},
-                    controller:
-                        _searchController, // TODO: Implement search functionality
-                    decoration: InputDecoration(
-                      hintText: 'Where Do You Want To Go?',
-                      prefixIcon: Icon(
-                        Icons.search,
-                        color: Theme.of(context).primaryColor,
-                      ),
-                      /* suffixIcon: IconButton(
-                        icon: Icon(Icons.filter_list),
-                        onPressed: () {
-                          _filterModal(context);
-                        },
-                      ), */
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(50),
-                        borderSide: BorderSide.none,
-                      ),
-                    ),
-                  ),
-                ),
-                Divider(
-                  thickness: 0,
                 ),
                 Padding(
                   padding: EdgeInsets.all(8),
