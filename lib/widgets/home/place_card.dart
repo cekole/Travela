@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:travela_mobile/appConstant.dart';
 import 'package:travela_mobile/models/destination.dart';
+import 'package:travela_mobile/models/attraction.dart';
 import 'package:travela_mobile/providers/activities_provider.dart';
 import 'package:travela_mobile/providers/trip_provider.dart';
 import 'package:travela_mobile/providers/user_provider.dart';
@@ -40,18 +41,23 @@ class _PlaceCardState extends State<PlaceCard> {
   Widget build(BuildContext context) {
     final userData = Provider.of<UserProvider>(context, listen: true);
     return GestureDetector(
-      onTap: () {
+      onTap: () async {
         final destinationsData =
             Provider.of<DestinationsProvider>(context, listen: false);
         final selectedDestination = destinationsData.destinations
             .firstWhere((element) => element.imageUrl == widget.image);
         final activitiesData =
             Provider.of<ActivitiesProvider>(context, listen: false);
-        print(selectedDestination.activities);
-        final selectedActivities = selectedDestination.activities;
+
+        final attractionData =
+            Provider.of<DestinationsProvider>(context, listen: false);
+
+        final selectedAttractions =
+            await attractionData.getAttractionsByCityId(selectedDestination.id);
+        print("aaaaaaa" + selectedAttractions[0].name);
 
         placeCardBottomSheet(
-            context, userData, selectedDestination, selectedActivities);
+            context, userData, selectedDestination, selectedAttractions);
       },
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -104,7 +110,7 @@ class _PlaceCardState extends State<PlaceCard> {
       BuildContext context,
       UserProvider userData,
       Destination selectedDestination,
-      List<String> selectedActivities) {
+      List<Attraction> selectedAttractions) {
     return showModalBottomSheet(
       isScrollControlled: true,
       useRootNavigator: true,
@@ -232,7 +238,7 @@ class _PlaceCardState extends State<PlaceCard> {
                 height: MediaQuery.of(context).size.height * 0.2,
                 child: ListView.builder(
                   scrollDirection: Axis.horizontal,
-                  itemCount: selectedActivities.length,
+                  itemCount: selectedAttractions.length,
                   itemBuilder: (context, index) {
                     return Container(
                       width: MediaQuery.of(context).size.width * 0.4,
@@ -240,29 +246,50 @@ class _PlaceCardState extends State<PlaceCard> {
                       decoration: BoxDecoration(
                         color: Colors.grey[200],
                         borderRadius: BorderRadius.circular(20),
+                        image: DecorationImage(
+                          image:
+                              NetworkImage(selectedAttractions[index].imageUrl),
+                          fit: BoxFit.cover,
+                        ),
                       ),
-                      child: Column(
-                        children: [
-                          Container(
-                            height: MediaQuery.of(context).size.height * 0.1,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.only(
-                                topLeft: Radius.circular(20),
-                                topRight: Radius.circular(20),
+                      child: Expanded(
+                        child: Column(
+                          children: [
+                            Expanded(
+                              child: Container(
+                                height:
+                                    MediaQuery.of(context).size.height * 0.1,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.only(
+                                    topLeft: Radius.circular(20),
+                                    topRight: Radius.circular(20),
+                                  ),
+                                ),
                               ),
                             ),
-                          ),
-                          Container(
-                            padding: EdgeInsets.all(10),
-                            child: Text(
-                              selectedActivities[index],
-                              style: TextStyle(
-                                fontSize: 15,
-                                fontWeight: FontWeight.bold,
+                            Container(
+                              padding: EdgeInsets.all(10),
+                              child: Text(
+                                selectedAttractions[index].name,
+                                style: TextStyle(
+                                  fontSize: 15,
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
                             ),
-                          ),
-                        ],
+                            Container(
+                              padding: EdgeInsets.symmetric(vertical: 5),
+                              child: Text(
+                                selectedAttractions[index].category,
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  color: Colors.grey,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     );
                   },

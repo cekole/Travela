@@ -146,6 +146,15 @@ class _EditProfileState extends State<EditProfile> {
                   print("user" + usernameController.text);
                   print("name" + nameController.text);
                   print(password);
+
+                  if (usernameController.text == "" ||
+                      emailController.text == "" ||
+                      nameController.text == "") {
+                    usernameController.text = userUsername;
+                    emailController.text = userEmail;
+                    nameController.text = nameOfUser;
+                  }
+
                   if (!EmailValidator.validate(emailController.text)) {
                     showDialog(
                         context: context,

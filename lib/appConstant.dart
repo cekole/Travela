@@ -11,6 +11,7 @@ String userId = '';
 String friendId = '';
 String userEmail = '';
 String userUsername = '';
+String nameOfUser = '';
 
 List currentFriendIds = [];
 List currentFriendUsernames = [];

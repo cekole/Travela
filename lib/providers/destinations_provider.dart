@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:travela_mobile/appConstant.dart';
+import 'package:travela_mobile/models/attraction.dart';
 import 'package:travela_mobile/models/city.dart';
 import 'package:travela_mobile/models/destination.dart';
 import 'package:http/http.dart' as http;
@@ -216,6 +217,37 @@ class DestinationsProvider with ChangeNotifier {
         )
         .toList();
     notifyListeners();
+  }
+
+  Future<List<Attraction>> getAttractionsByCityId(String cityId) async {
+    final url = baseUrl + 'cities/$cityId/attractions';
+    print(url);
+    final response = await http.get(
+      Uri.parse(url),
+      headers: {
+        'Authorization': 'Bearer  $bearerToken',
+      },
+    );
+    print(response.statusCode);
+
+    final extractedData = json.decode(response.body) as List<dynamic>;
+    if (extractedData == null) {
+      return [];
+    }
+    final attractions = extractedData.map((attraction) {
+      final attractionName = attraction['attractionName'];
+      final attractionCategory = attraction['category'];
+      final attractionImage = attraction['imageUrl'];
+      return Attraction(
+        name: attractionName,
+        category: attractionCategory,
+        imageUrl: attractionImage,
+      );
+    }).toList();
+
+    notifyListeners();
+    print(attractions);
+    return attractions;
   }
 
   void updateDestination(String id, Destination newDestination) {
