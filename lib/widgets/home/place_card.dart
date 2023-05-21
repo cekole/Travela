@@ -171,7 +171,7 @@ class _PlaceCardState extends State<PlaceCard> {
                                     onPressed: () {
                                       //navigate to home page
                                       Navigator.pushReplacementNamed(
-                                          context, '/home');
+                                          context, '/favorites');
                                     },
                                   ),
                                 ],
