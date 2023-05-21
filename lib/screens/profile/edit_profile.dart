@@ -65,13 +65,65 @@ class _EditProfileState extends State<EditProfile> {
                     children: [
                       CircleAvatar(
                         radius: 40,
-                        backgroundImage: image == null
-                            ? null
-                            : MemoryImage(profilePic, scale: 1),
+                        backgroundColor: Colors.grey,
+                        backgroundImage: MemoryImage(profilePic),
                       ),
                       IconButton(
                         onPressed: () {
-                          pickImage();
+                          pickImage().then((value) => showDialog(
+                                context: context,
+                                builder: (context) => Platform.isIOS
+                                    ? CupertinoAlertDialog(
+                                        title: Text('Upload Profile Picture'),
+                                        content: Text(
+                                            'Are you sure you want to upload this picture?'),
+                                        actions: [
+                                          TextButton(
+                                            onPressed: () {
+                                              Navigator.of(context).pop();
+                                            },
+                                            child: Text('No'),
+                                          ),
+                                          TextButton(
+                                            onPressed: () {
+                                              if (image != null) {
+                                                fileStorage.uploadProfilePic(
+                                                    image!.path, userId);
+                                                Navigator.of(context)
+                                                    .pushNamedAndRemoveUntil(
+                                                        '/home',
+                                                        (route) => false);
+                                                pageNum = 4;
+                                              }
+                                            },
+                                            child: Text('Yes'),
+                                          ),
+                                        ],
+                                      )
+                                    : AlertDialog(
+                                        title: Text('Upload Profile Picture'),
+                                        content: Text(
+                                            'Are you sure you want to upload this picture?'),
+                                        actions: [
+                                          TextButton(
+                                            onPressed: () {
+                                              Navigator.of(context).pop();
+                                            },
+                                            child: Text('No'),
+                                          ),
+                                          TextButton(
+                                            onPressed: () {
+                                              if (image != null) {
+                                                fileStorage.uploadProfilePic(
+                                                    image!.path, userId);
+                                                Navigator.of(context).pop();
+                                              }
+                                            },
+                                            child: Text('Yes'),
+                                          ),
+                                        ],
+                                      ),
+                              ));
                         },
                         icon: Icon(
                           Icons.camera_alt,
@@ -183,38 +235,65 @@ class _EditProfileState extends State<EditProfile> {
                       if (value) {
                         showDialog(
                             context: context,
-                            builder: (BuildContext context) =>
-                                CupertinoAlertDialog(
-                                  title: Text('Success'),
-                                  content:
-                                      Text('Profile is successfully updated!'),
-                                  actions: [
-                                    TextButton(
-                                      onPressed: () {
-                                        Navigator.pushReplacementNamed(
-                                            context, '/home');
-                                        pageNum = 4;
-                                      },
-                                      child: Text('OK'),
-                                    ),
-                                  ],
-                                ));
+                            builder: (BuildContext context) => Platform.isIOS
+                                ? CupertinoAlertDialog(
+                                    title: Text('Success'),
+                                    content: Text(
+                                        'Profile is successfully updated!'),
+                                    actions: [
+                                      TextButton(
+                                        onPressed: () {
+                                          Navigator.pushReplacementNamed(
+                                              context, '/home');
+                                          pageNum = 4;
+                                        },
+                                        child: Text('OK'),
+                                      ),
+                                    ],
+                                  )
+                                : AlertDialog(
+                                    title: Text('Success'),
+                                    content: Text(
+                                        'Profile is successfully updated!'),
+                                    actions: [
+                                      TextButton(
+                                        onPressed: () {
+                                          Navigator.pushReplacementNamed(
+                                              context, '/home');
+                                          pageNum = 4;
+                                        },
+                                        child: Text('OK'),
+                                      ),
+                                    ],
+                                  ));
                       } else {
                         showDialog(
                             context: context,
-                            builder: (BuildContext context) =>
-                                CupertinoAlertDialog(
-                                  title: Text('Error'),
-                                  content: Text('Profile cannot be updated'),
-                                  actions: [
-                                    TextButton(
-                                      onPressed: () {
-                                        Navigator.pop(context);
-                                      },
-                                      child: Text('OK'),
-                                    ),
-                                  ],
-                                ));
+                            builder: (BuildContext context) => Platform.isIOS
+                                ? CupertinoAlertDialog(
+                                    title: Text('Error'),
+                                    content: Text('Profile cannot be updated'),
+                                    actions: [
+                                      TextButton(
+                                        onPressed: () {
+                                          Navigator.pop(context);
+                                        },
+                                        child: Text('OK'),
+                                      ),
+                                    ],
+                                  )
+                                : AlertDialog(
+                                    title: Text('Error'),
+                                    content: Text('Profile cannot be updated'),
+                                    actions: [
+                                      TextButton(
+                                        onPressed: () {
+                                          Navigator.pop(context);
+                                        },
+                                        child: Text('OK'),
+                                      ),
+                                    ],
+                                  ));
                       }
                     });
                   }
@@ -226,28 +305,53 @@ class _EditProfileState extends State<EditProfile> {
                 onPressed: () {
                   showDialog(
                       context: context,
-                      builder: (ctx) => CupertinoAlertDialog(
-                            title: Text('Delete Account'),
-                            content: Text(
-                                'Are you sure you want to delete your account?'),
-                            actions: [
-                              TextButton(
-                                onPressed: () {
-                                  Navigator.of(ctx).pop();
-                                },
-                                child: Text('No'),
-                              ),
-                              TextButton(
-                                onPressed: () {
-                                  userData.deleteUser(userId);
-                                  Navigator.of(ctx).pop();
-                                  Navigator.of(context).pushNamedAndRemoveUntil(
-                                      '/login', (route) => false);
-                                },
-                                child: Text('Yes'),
-                              ),
-                            ],
-                          ));
+                      builder: (ctx) => Platform.isIOS
+                          ? CupertinoAlertDialog(
+                              title: Text('Delete Account'),
+                              content: Text(
+                                  'Are you sure you want to delete your account?'),
+                              actions: [
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.of(ctx).pop();
+                                  },
+                                  child: Text('No'),
+                                ),
+                                TextButton(
+                                  onPressed: () {
+                                    userData.deleteUser(userId);
+                                    Navigator.of(ctx).pop();
+                                    Navigator.of(context)
+                                        .pushNamedAndRemoveUntil(
+                                            '/login', (route) => false);
+                                  },
+                                  child: Text('Yes'),
+                                ),
+                              ],
+                            )
+                          : AlertDialog(
+                              title: Text('Delete Account'),
+                              content: Text(
+                                  'Are you sure you want to delete your account?'),
+                              actions: [
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.of(ctx).pop();
+                                  },
+                                  child: Text('No'),
+                                ),
+                                TextButton(
+                                  onPressed: () {
+                                    userData.deleteUser(userId);
+                                    Navigator.of(ctx).pop();
+                                    Navigator.of(context)
+                                        .pushNamedAndRemoveUntil(
+                                            '/login', (route) => false);
+                                  },
+                                  child: Text('Yes'),
+                                ),
+                              ],
+                            ));
                 },
                 child: Text(
                   'Delete Account',

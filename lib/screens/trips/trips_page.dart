@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:expansion_tile_card/expansion_tile_card.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -348,17 +350,29 @@ class TripsPage extends StatelessWidget {
                 onPressed: () {
                   String groupName = textController.text;
                   if (groupName.isEmpty) {
-                    CupertinoAlertDialog(
-                        title: Text('Error'),
-                        content: Text('Please enter a group name'),
-                        actions: [
-                          TextButton(
-                            onPressed: () {
-                              Navigator.of(context).pop();
-                            },
-                            child: Text('OK'),
-                          ),
-                        ]);
+                    Platform.isIOS
+                        ? CupertinoAlertDialog(
+                            title: Text('Error'),
+                            content: Text('Please enter a group name'),
+                            actions: [
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                  child: Text('OK'),
+                                ),
+                              ])
+                        : AlertDialog(
+                            title: Text('Error'),
+                            content: Text('Please enter a group name'),
+                            actions: [
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                  child: Text('OK'),
+                                ),
+                              ]);
                   } else {
                     groupData
                         .addGroup(
@@ -368,19 +382,33 @@ class TripsPage extends StatelessWidget {
                         .then((value) {
                       showDialog(
                         context: context,
-                        builder: (context) => CupertinoAlertDialog(
-                          title: Text('Success'),
-                          content: Text('Group created successfully'),
-                          actions: [
-                            TextButton(
-                              onPressed: () {
-                                Navigator.of(context).pop();
-                                Navigator.of(context).pop();
-                              },
-                              child: Text('OK'),
-                            ),
-                          ],
-                        ),
+                        builder: (context) => Platform.isIOS
+                            ? CupertinoAlertDialog(
+                                title: Text('Success'),
+                                content: Text('Group created successfully'),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                      Navigator.of(context).pop();
+                                    },
+                                    child: Text('OK'),
+                                  ),
+                                ],
+                              )
+                            : AlertDialog(
+                                title: Text('Success'),
+                                content: Text('Group created successfully'),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                      Navigator.of(context).pop();
+                                    },
+                                    child: Text('OK'),
+                                  ),
+                                ],
+                              ),
                       );
                     });
                   }

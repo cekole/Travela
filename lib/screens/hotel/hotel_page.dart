@@ -269,34 +269,21 @@ class _HotelPageState extends State<HotelPage> {
                       '$numberOfPeople people',
                       style: TextStyle(fontSize: 16),
                     ),
-                    trailing: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        IconButton(
-                          onPressed: () {
-                            setState(() {
-                              if (numberOfPeople > 1) {
-                                numberOfPeople--;
-                              }
-                            });
-                          },
-                          icon: Icon(
-                            Icons.remove,
-                            color: Colors.grey[600],
-                          ),
-                        ),
-                        IconButton(
-                          onPressed: () {
-                            setState(() {
-                              numberOfPeople++;
-                            });
-                          },
-                          icon: Icon(
-                            Icons.add,
-                            color: Colors.grey[600],
-                          ),
-                        ),
-                      ],
+                    trailing: DropdownButton<int>(
+                      borderRadius: BorderRadius.circular(10),
+                      value: numberOfPeople,
+                      onChanged: (int? newValue) {
+                        setState(() {
+                          numberOfPeople = newValue!;
+                        });
+                      },
+                      items: <int>[1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+                          .map<DropdownMenuItem<int>>((int value) {
+                        return DropdownMenuItem<int>(
+                          value: value,
+                          child: Text(value.toString()),
+                        );
+                      }).toList(),
                     ),
                     onTap: () {},
                   ),

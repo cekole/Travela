@@ -31,6 +31,7 @@ class FileStorageProvider with ChangeNotifier {
       print(response.statusCode);
 
       if (response.statusCode == 200) {
+        profilePic = await response.stream.toBytes();
         print('uploadProfilePic success');
       } else {
         print('uploadProfilePic failed');

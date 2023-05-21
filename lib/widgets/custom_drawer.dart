@@ -65,28 +65,55 @@ class CustomDrawer extends StatelessWidget {
                     ? showCupertinoDialog(
                         context: context,
                         builder: (context) {
-                          return CupertinoAlertDialog(
-                            title: Text('Logout'),
-                            content: Text('Are you sure you want to logout?'),
-                            actions: [
-                              CupertinoDialogAction(
-                                child: Text('Cancel'),
-                                onPressed: () {
-                                  Navigator.pop(context);
-                                },
-                              ),
-                              CupertinoDialogAction(
-                                child: Text('Logout'),
-                                onPressed: () {
-                                  Navigator.popAndPushNamed(context, '/login');
-                                  final userData = Provider.of<UserProvider>(
-                                      context,
-                                      listen: false);
-                                  userData.resetCurrentValues();
-                                },
-                              ),
-                            ],
-                          );
+                          return Platform.isIOS
+                              ? CupertinoAlertDialog(
+                                  title: Text('Logout'),
+                                  content:
+                                      Text('Are you sure you want to logout?'),
+                                  actions: [
+                                    CupertinoDialogAction(
+                                      child: Text('Cancel'),
+                                      onPressed: () {
+                                        Navigator.pop(context);
+                                      },
+                                    ),
+                                    CupertinoDialogAction(
+                                      child: Text('Logout'),
+                                      onPressed: () {
+                                        Navigator.popAndPushNamed(
+                                            context, '/login');
+                                        final userData =
+                                            Provider.of<UserProvider>(context,
+                                                listen: false);
+                                        userData.resetCurrentValues();
+                                      },
+                                    ),
+                                  ],
+                                )
+                              : AlertDialog(
+                                  title: Text('Logout'),
+                                  content:
+                                      Text('Are you sure you want to logout?'),
+                                  actions: [
+                                    TextButton(
+                                      child: Text('Cancel'),
+                                      onPressed: () {
+                                        Navigator.pop(context);
+                                      },
+                                    ),
+                                    TextButton(
+                                      child: Text('Logout'),
+                                      onPressed: () {
+                                        Navigator.popAndPushNamed(
+                                            context, '/login');
+                                        final userData =
+                                            Provider.of<UserProvider>(context,
+                                                listen: false);
+                                        userData.resetCurrentValues();
+                                      },
+                                    ),
+                                  ],
+                                );
                         })
                     : kIsWeb
                         ? Container()

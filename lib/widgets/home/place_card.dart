@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -30,6 +32,7 @@ class PlaceCard extends StatefulWidget {
 }
 
 class _PlaceCardState extends State<PlaceCard> {
+  final placeholderImage = AssetImage('assets/images/placeholder.jpg');
   bool isFavorite = false;
 
   void toggleFavorite() {
@@ -163,38 +166,65 @@ class _PlaceCardState extends State<PlaceCard> {
                             if (success) {
                               showDialog(
                                 context: context,
-                                builder: (BuildContext context) =>
-                                    CupertinoAlertDialog(
-                                  title: Text('Added to Favourites'),
-                                  // OK BUTTON
-                                  actions: [
-                                    CupertinoDialogAction(
-                                      child: Text('OK'),
-                                      onPressed: () {
-                                        //navigate to home page
-                                        Navigator.pushReplacementNamed(
-                                            context, '/favorites');
-                                      },
-                                    ),
-                                  ],
-                                ),
+                                builder: (BuildContext context) => Platform
+                                        .isIOS
+                                    ? CupertinoAlertDialog(
+                                        title: Text('Added to Favourites'),
+                                        // OK BUTTON
+                                        actions: [
+                                          CupertinoDialogAction(
+                                            child: Text('OK'),
+                                            onPressed: () {
+                                              //navigate to home page
+                                              Navigator.pushReplacementNamed(
+                                                  context, '/favorites');
+                                            },
+                                          ),
+                                        ],
+                                      )
+                                    : AlertDialog(
+                                        title: Text('Added to Favourites'),
+                                        // OK BUTTON
+                                        actions: [
+                                          TextButton(
+                                            child: Text('OK'),
+                                            onPressed: () {
+                                              //navigate to home page
+                                              Navigator.pushReplacementNamed(
+                                                  context, '/favorites');
+                                            },
+                                          ),
+                                        ],
+                                      ),
                               );
                             } else {
                               // Handle the case when the method returns false
                               showDialog(
                                   context: context,
                                   builder: (BuildContext context) =>
-                                      CupertinoAlertDialog(
-                                        title: Text('Already added'),
-                                        actions: [
-                                          CupertinoDialogAction(
-                                            child: Text('OK'),
-                                            onPressed: () {
-                                              Navigator.of(context).pop();
-                                            },
-                                          ),
-                                        ],
-                                      ));
+                                      Platform.isIOS
+                                          ? CupertinoAlertDialog(
+                                              title: Text('Already added'),
+                                              actions: [
+                                                CupertinoDialogAction(
+                                                  child: Text('OK'),
+                                                  onPressed: () {
+                                                    Navigator.of(context).pop();
+                                                  },
+                                                ),
+                                              ],
+                                            )
+                                          : AlertDialog(
+                                              title: Text('Already added'),
+                                              actions: [
+                                                TextButton(
+                                                  child: Text('OK'),
+                                                  onPressed: () {
+                                                    Navigator.of(context).pop();
+                                                  },
+                                                ),
+                                              ],
+                                            ));
                             }
                           } catch (error) {
                             // Handle any errors that occurred during the addFavouriteCity operation
@@ -277,19 +307,18 @@ class _PlaceCardState extends State<PlaceCard> {
                               margin: EdgeInsets.all(10),
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(10),
-                                image:
-                                    selectedAttractions[index].imageUrl == null
-                                        ? const DecorationImage(
-                                            image: AssetImage(
-                                                'assets/images/placeholder.png'),
-                                            fit: BoxFit.cover,
-                                          )
-                                        : DecorationImage(
-                                            image: NetworkImage(
-                                                selectedAttractions[index]
-                                                    .imageUrl),
-                                            fit: BoxFit.cover,
-                                          ),
+                                image: selectedAttractions[index].imageUrl == ""
+                                    ? const DecorationImage(
+                                        image: AssetImage(
+                                            'assets/images/destinations/placeholder.jpg'),
+                                        fit: BoxFit.cover,
+                                      )
+                                    : DecorationImage(
+                                        image: NetworkImage(
+                                            selectedAttractions[index]
+                                                .imageUrl),
+                                        fit: BoxFit.cover,
+                                      ),
                               ),
                               child: Column(
                                 mainAxisAlignment: MainAxisAlignment.end,

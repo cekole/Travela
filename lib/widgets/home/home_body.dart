@@ -69,6 +69,7 @@ class _HomeBodyState extends State<HomeBody> {
                 fontWeight: FontWeight.bold,
               ),
             ),
+            // add notification icon
           ),
           iconTheme: IconThemeData(color: Theme.of(context).primaryColor),
           pinned: true,

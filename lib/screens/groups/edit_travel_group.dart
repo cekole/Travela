@@ -44,6 +44,7 @@ class _EditTravelGroupState extends State<EditTravelGroup> {
     super.initState();
     final groupData = Provider.of<GroupProvider>(context, listen: false);
     groupData.getTripSuggestions(currentGroupIdForSuggestions);
+    groupData.updateCommonDates(currentGroupIdForSuggestions);
     groupData.getDraftTrips(currentGroupIdForSuggestions);
     groupData.getChat(currentGroupIdForSuggestions).then((messages) {
       setState(() {
@@ -122,6 +123,8 @@ class _EditTravelGroupState extends State<EditTravelGroup> {
                               ),
                           itemCount: currentChatMessages.length,
                           itemBuilder: (context, index) {
+                            print(travelGroup.id);
+
                             return Row(
                               children: [
                                 CircleAvatar(
@@ -188,17 +191,48 @@ class _EditTravelGroupState extends State<EditTravelGroup> {
                       onPressed: () async {
                         print(_messageController.text);
                         print(userId);
-                        await groupData
-                            .sendMessage(
-                                travelGroup.id, _messageController.text)
-                            .then((value) {
-                          _messageController.clear();
-                          groupData.getChat(travelGroup.id).then((messages) {
-                            setState(() {
-                              currentChatMessages = messages;
+                        if (_messageController.text.isEmpty) {
+                          showDialog(
+                            context: context,
+                            builder: (context) => Platform.isIOS
+                                ? CupertinoAlertDialog(
+                                    title: Text('Empty message'),
+                                    content: Text('Please type a message'),
+                                    actions: [
+                                      TextButton(
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                        },
+                                        child: Text('OK'),
+                                      ),
+                                    ],
+                                  )
+                                : AlertDialog(
+                                    title: Text('Empty message'),
+                                    content: Text('Please type a message'),
+                                    actions: [
+                                      TextButton(
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                        },
+                                        child: Text('OK'),
+                                      ),
+                                    ],
+                                  ),
+                          );
+                        } else {
+                          await groupData
+                              .sendMessage(
+                                  travelGroup.id, _messageController.text)
+                              .then((value) {
+                            _messageController.clear();
+                            groupData.getChat(travelGroup.id).then((messages) {
+                              setState(() {
+                                currentChatMessages = messages;
+                              });
                             });
                           });
-                        });
+                        }
                       },
                       icon: Icon(Icons.send),
                     ),
@@ -383,79 +417,14 @@ class _EditTravelGroupState extends State<EditTravelGroup> {
         if (value == 'create_poll') {
           // Add functionality for create_poll button
         } else if (value == 'show_common_dates') {
-          showDialog(
-            context: context,
-            builder: (BuildContext context) {
-              return Container(
-                padding: EdgeInsets.all(10),
-                margin: EdgeInsets.all(10),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: Material(
-                  color: Colors.white,
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      //close button
-                      Row(
-                        children: [
-                          Spacer(),
-                          IconButton(
-                            onPressed: () {
-                              Navigator.of(context).pop();
-                            },
-                            icon: Icon(Icons.close),
-                          ),
-                        ],
-                      ),
-                      Text(
-                        'Common Dates',
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      Divider(
-                        color: Colors.grey,
-                        thickness: 1,
-                      ),
-                      IgnorePointer(
-                        child: SfDateRangePicker(
-                          backgroundColor: Colors.white,
-                          headerStyle: DateRangePickerHeaderStyle(
-                            textAlign: TextAlign.center,
-                          ),
-                          selectionMode: DateRangePickerSelectionMode.values[2],
-                          initialSelectedRange: PickerDateRange(
-                            DateTime.parse(travelGroup.commonStartDate),
-                            DateTime.parse(travelGroup.commonEndDate),
-                          ),
-                          startRangeSelectionColor:
-                              Theme.of(context).primaryColor,
-                          endRangeSelectionColor:
-                              Theme.of(context).primaryColor,
-                        ),
-                      ),
-                      SizedBox(height: 20),
-                      Text(
-                        'Start Date: ${DateFormat.yMMMd().format(
-                          DateTime.parse(travelGroup.commonStartDate),
-                        )}\nEnd Date: ${DateFormat.yMMMd().format(
-                          DateTime.parse(travelGroup.commonEndDate),
-                        )}',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontSize: 18,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              );
-            },
-          );
+          groupData
+              .updateCommonDates(currentGroupIdForSuggestions)
+              .then((value) => {
+                    if (value == true)
+                      {
+                        showCalendar(context, travelGroup),
+                      }
+                  });
         } else if (value == 'add_participants') {
           showAddFriendDialog(context);
         } else if (value == 'update_group_info') {
@@ -622,18 +591,31 @@ class _EditTravelGroupState extends State<EditTravelGroup> {
               showDialog(
                 context: context,
                 builder: (BuildContext context) {
-                  return CupertinoAlertDialog(
-                    title: Text('Error'),
-                    content: Text('Something went wrong'),
-                    actions: [
-                      CupertinoDialogAction(
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        },
-                        child: Text('Ok'),
-                      ),
-                    ],
-                  );
+                  return Platform.isIOS
+                      ? CupertinoAlertDialog(
+                          title: Text('Error'),
+                          content: Text('Something went wrong'),
+                          actions: [
+                            CupertinoDialogAction(
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                              child: Text('Ok'),
+                            ),
+                          ],
+                        )
+                      : AlertDialog(
+                          title: Text('Error'),
+                          content: Text('Something went wrong'),
+                          actions: [
+                            TextButton(
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                              child: Text('Ok'),
+                            ),
+                          ],
+                        );
                 },
               );
             }
@@ -678,6 +660,80 @@ class _EditTravelGroupState extends State<EditTravelGroup> {
         ),
       ],
       icon: Icon(Icons.more_vert),
+    );
+  }
+
+  Future<dynamic> showCalendar(BuildContext context, TravelGroup travelGroup) {
+    return showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Container(
+          padding: EdgeInsets.all(10),
+          margin: EdgeInsets.all(10),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: Material(
+            color: Colors.white,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                //close button
+                Row(
+                  children: [
+                    Spacer(),
+                    IconButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      icon: Icon(Icons.close),
+                    ),
+                  ],
+                ),
+                Text(
+                  'Common Dates',
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                Divider(
+                  color: Colors.grey,
+                  thickness: 1,
+                ),
+                IgnorePointer(
+                  child: SfDateRangePicker(
+                    backgroundColor: Colors.white,
+                    headerStyle: DateRangePickerHeaderStyle(
+                      textAlign: TextAlign.center,
+                    ),
+                    selectionMode: DateRangePickerSelectionMode.values[2],
+                    initialSelectedRange: PickerDateRange(
+                      DateTime.parse(travelGroup.commonStartDate),
+                      DateTime.parse(travelGroup.commonEndDate),
+                    ),
+                    startRangeSelectionColor: Theme.of(context).primaryColor,
+                    endRangeSelectionColor: Theme.of(context).primaryColor,
+                  ),
+                ),
+                SizedBox(height: 20),
+                Text(
+                  'Start Date: ${DateFormat.yMMMd().format(
+                    DateTime.parse(travelGroup.commonStartDate),
+                  )}\nEnd Date: ${DateFormat.yMMMd().format(
+                    DateTime.parse(travelGroup.commonEndDate),
+                  )}',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 18,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 
@@ -940,35 +996,63 @@ void showAddFriendDialog(BuildContext context) {
                                     if (value) {
                                       showDialog(
                                           context: context,
-                                          builder: (context) =>
-                                              CupertinoAlertDialog(
-                                                title: Text('Success'),
-                                                content: Text(
-                                                    'Successfully added ${currentFriendUsernames[index]} to group'),
-                                                actions: [
-                                                  TextButton(
-                                                      onPressed: () {
-                                                        Navigator.pop(context);
-                                                      },
-                                                      child: Text('OK'))
-                                                ],
-                                              ));
+                                          builder: (context) => Platform.isIOS
+                                              ? CupertinoAlertDialog(
+                                                  title: Text('Success'),
+                                                  content: Text(
+                                                      'Successfully added ${currentFriendUsernames[index]} to group'),
+                                                  actions: [
+                                                    TextButton(
+                                                        onPressed: () {
+                                                          Navigator.pop(
+                                                              context);
+                                                        },
+                                                        child: Text('OK'))
+                                                  ],
+                                                )
+                                              : AlertDialog(
+                                                  title: Text('Success'),
+                                                  content: Text(
+                                                      'Successfully added ${currentFriendUsernames[index]} to group'),
+                                                  actions: [
+                                                    TextButton(
+                                                        onPressed: () {
+                                                          Navigator.pop(
+                                                              context);
+                                                        },
+                                                        child: Text('OK'))
+                                                  ],
+                                                ));
                                     } else {
                                       showDialog(
                                           context: context,
-                                          builder: (context) =>
-                                              CupertinoAlertDialog(
-                                                title: Text('Error'),
-                                                content: Text(
-                                                    'Failed to add ${currentFriendUsernames[index]} to group'),
-                                                actions: [
-                                                  TextButton(
-                                                      onPressed: () {
-                                                        Navigator.pop(context);
-                                                      },
-                                                      child: Text('OK'))
-                                                ],
-                                              ));
+                                          builder: (context) => Platform.isIOS
+                                              ? CupertinoAlertDialog(
+                                                  title: Text('Error'),
+                                                  content: Text(
+                                                      'Failed to add ${currentFriendUsernames[index]} to group'),
+                                                  actions: [
+                                                    TextButton(
+                                                        onPressed: () {
+                                                          Navigator.pop(
+                                                              context);
+                                                        },
+                                                        child: Text('OK'))
+                                                  ],
+                                                )
+                                              : AlertDialog(
+                                                  title: Text('Error'),
+                                                  content: Text(
+                                                      'Failed to add ${currentFriendUsernames[index]} to group'),
+                                                  actions: [
+                                                    TextButton(
+                                                        onPressed: () {
+                                                          Navigator.pop(
+                                                              context);
+                                                        },
+                                                        child: Text('OK'))
+                                                  ],
+                                                ));
                                     }
                                   }),
                                 );

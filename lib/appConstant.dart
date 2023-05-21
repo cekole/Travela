@@ -49,6 +49,7 @@ List currentAccomodations = [];
 List currentTransportations = [];
 
 String currentTripId = '';
+int requestNumber = 0;
 
 User currentUser = User(
   id: '',

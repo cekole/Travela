@@ -499,7 +499,7 @@ class GroupProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  Future updateCommonDates(String groupId) async {
+  Future<bool> updateCommonDates(String groupId) async {
     final url = baseUrl + 'groups/$groupId/updateCommonDates';
     print(url);
     final response = await http.put(
@@ -512,9 +512,10 @@ class GroupProvider with ChangeNotifier {
     print(response.statusCode);
     if (response.statusCode == 200) {
       print('updateCommonDates succeeded');
-      return json.decode(response.body);
+      return true;
     } else {
       print('updateCommonDates failed');
+      return false;
     }
   }
 

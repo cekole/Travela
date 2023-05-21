@@ -49,12 +49,19 @@ class FriendsPage extends StatelessWidget {
                               },
                             ),
                             actions: [
-                              CupertinoDialogAction(
-                                onPressed: () {
-                                  Navigator.of(context).pop();
-                                },
-                                child: Text('Cancel'),
-                              ),
+                              Platform.isIOS
+                                  ? CupertinoDialogAction(
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                      },
+                                      child: Text('Cancel'),
+                                    )
+                                  : TextButton(
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                      },
+                                      child: Text('Cancel'),
+                                    ),
                               CupertinoDialogAction(
                                 onPressed: () {
                                   print(currentUser.name);
@@ -77,44 +84,82 @@ class FriendsPage extends StatelessWidget {
                                           showDialog(
                                             context: context,
                                             builder: (context) {
-                                              return CupertinoAlertDialog(
-                                                title: Text('Success'),
-                                                content: Text(
-                                                    'Friend request sent successfully'),
-                                                actions: [
-                                                  CupertinoDialogAction(
-                                                    onPressed: () {
-                                                      Navigator.of(context)
-                                                          .pushNamedAndRemoveUntil(
-                                                        '/home',
-                                                        (route) => false,
-                                                      );
-                                                      pageNum = 2;
-                                                    },
-                                                    child: Text('Ok'),
-                                                  ),
-                                                ],
-                                              );
+                                              return Platform.isIOS
+                                                  ? CupertinoAlertDialog(
+                                                      title: Text('Success'),
+                                                      content: Text(
+                                                          'Friend request sent successfully'),
+                                                      actions: [
+                                                        CupertinoDialogAction(
+                                                          onPressed: () {
+                                                            Navigator.of(
+                                                                    context)
+                                                                .pushNamedAndRemoveUntil(
+                                                              '/home',
+                                                              (route) => false,
+                                                            );
+                                                            pageNum = 2;
+                                                          },
+                                                          child: Text('Ok'),
+                                                        ),
+                                                      ],
+                                                    )
+                                                  : AlertDialog(
+                                                      title: Text('Success'),
+                                                      content: Text(
+                                                          'Friend request sent successfully'),
+                                                      actions: [
+                                                        TextButton(
+                                                          onPressed: () {
+                                                            Navigator.of(
+                                                                    context)
+                                                                .pushNamedAndRemoveUntil(
+                                                              '/home',
+                                                              (route) => false,
+                                                            );
+                                                            pageNum = 2;
+                                                          },
+                                                          child: Text('Ok'),
+                                                        ),
+                                                      ],
+                                                    );
                                             },
                                           );
                                         } else {
                                           showDialog(
                                             context: context,
                                             builder: (context) {
-                                              return CupertinoAlertDialog(
-                                                title: Text('Error'),
-                                                content: Text(
-                                                    'An error occurred while sending friend request'),
-                                                actions: [
-                                                  CupertinoDialogAction(
-                                                    onPressed: () {
-                                                      Navigator.of(context)
-                                                          .pop();
-                                                    },
-                                                    child: Text('Ok'),
-                                                  ),
-                                                ],
-                                              );
+                                              return Platform.isIOS
+                                                  ? CupertinoAlertDialog(
+                                                      title: Text('Error'),
+                                                      content: Text(
+                                                          'An error occurred while sending friend request'),
+                                                      actions: [
+                                                        CupertinoDialogAction(
+                                                          onPressed: () {
+                                                            Navigator.of(
+                                                                    context)
+                                                                .pop();
+                                                          },
+                                                          child: Text('Ok'),
+                                                        ),
+                                                      ],
+                                                    )
+                                                  : AlertDialog(
+                                                      title: Text('Error'),
+                                                      content: Text(
+                                                          'An error occurred while sending friend request'),
+                                                      actions: [
+                                                        TextButton(
+                                                          onPressed: () {
+                                                            Navigator.of(
+                                                                    context)
+                                                                .pop();
+                                                          },
+                                                          child: Text('Ok'),
+                                                        ),
+                                                      ],
+                                                    );
                                             },
                                           );
                                         }
