@@ -52,28 +52,28 @@ class TransportationProvider with ChangeNotifier {
     }
   }
 
-  Future<void> addTransportation(
+  Future<Map<String, dynamic>?> addTransportation(
     String startCityId,
     String endCityId,
     String transportationType,
     String link,
-    int price,
-    DateTime start,
-    Duration duration,
+    double price,
+    String start,
+    double duration,
     String tripId,
   ) async {
     final url = baseUrl + 'transportations';
     print(url);
 
     final requestBody = json.encode({
-      'startCity': startCityId,
-      'endCity': endCityId,
+      'startCity': int.parse(startCityId),
+      'endCity': int.parse(endCityId),
       'transportationType': transportationType,
       'link': link,
       'price': price,
-      'start': start.toUtc().toIso8601String(),
-      'duration': duration.inMinutes,
-      'trip_id': tripId,
+      'start': start,
+      'duration': duration,
+      'trip_id': int.parse(tripId),
     });
 
     final response = await http.post(
@@ -174,7 +174,8 @@ class TransportationProvider with ChangeNotifier {
         final arrival = segments[segments.length - 1]['arrival'] as String;
 
         // Clear the list and then add the new items
-        currentTransportations.add([duration, price, departure, arrival]);
+        currentTransportations
+            .add([duration, price, departure, arrival, segments]);
       });
       print(currentTransportations);
       return currentTransportations;

@@ -43,6 +43,8 @@ class _HomePageState extends State<HomePage> {
             userData.getAllIncomingRequests();
             groupData.fetchAndSetGroupsByUserId(userId);
             userData.getTripSuggestions(userId);
+            userData.getUpcomingTrips(userId);
+            userData.getPreviousTrips(userId);
             fileStorageData.fetchProfilePic(userId);
           },
         );
