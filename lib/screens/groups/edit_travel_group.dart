@@ -945,6 +945,7 @@ void showAddFriendDialog(BuildContext context) {
                               context,
                               listen: false,
                             );
+                            Navigator.pushReplacementNamed(context, '/groups');
                             groupData.getGroupByUserId(userId).then(
                                   (value) => groupData
                                       .addUserToGroup(

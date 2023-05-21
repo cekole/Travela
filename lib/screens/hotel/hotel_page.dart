@@ -73,233 +73,230 @@ class _HotelPageState extends State<HotelPage> {
               borderRadius: BorderRadius.all(
                 Radius.circular(5),
               ),
-              color: Theme.of(context).primaryColor.withOpacity(0.1),
             ),
             margin: EdgeInsets.all(10),
             child: Column(
               children: [
                 //Check in date select button opens a dialog
-                ListTile(
-                  title: Text(
-                    'Check in',
-                    style: TextStyle(
+                Container(
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(10),
+                    border: Border.all(color: Colors.grey.shade300),
+                  ),
+                  child: ListTile(
+                    title: Text(
+                      'Check in',
+                    ),
+                    subtitle: Text(
+                      DateFormat('dd/MM/yyyy').format(_currentStartDateCheckIn),
+                      style: TextStyle(fontSize: 16),
+                    ),
+                    trailing: Icon(
+                      Icons.calendar_today,
                       color: Colors.grey[600],
-                      fontSize: 16,
                     ),
-                  ),
-                  subtitle: Text(
-                    DateFormat('dd/MM/yyyy').format(_currentStartDateCheckIn),
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 20,
-                    ),
-                  ),
-                  trailing: Icon(
-                    Icons.calendar_today,
-                    color: Colors.grey[600],
-                  ),
-                  onTap: () async {
-                    showDialog(
-                      context: context,
-                      builder: (context) => Container(
-                        padding: EdgeInsets.all(10),
-                        margin: EdgeInsets.all(10),
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        child: Material(
-                          child: Column(
-                            children: [
-                              Row(
-                                children: [
-                                  Spacer(),
-                                  IconButton(
-                                    onPressed: () {
-                                      Navigator.of(context).pop();
-                                    },
-                                    icon: Icon(Icons.close),
-                                  ),
-                                ],
-                              ),
-                              Text(
-                                'Select your check in date',
-                                style: TextStyle(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              Divider(),
-                              SfDateRangePicker(
-                                controller: _dateRangePickerController,
-                                headerStyle: DateRangePickerHeaderStyle(
-                                  textAlign: TextAlign.center,
-                                ),
-                                enablePastDates: false,
-                                onSelectionChanged: _onSelectionChanged,
-                                selectionMode:
-                                    DateRangePickerSelectionMode.single,
-                                initialDisplayDate: DateTime.now(),
-                              ),
-                              Row(
-                                children: [
-                                  Spacer(),
-                                  TextButton(
-                                    onPressed: () {
-                                      setState(() {
-                                        _currentStartDateCheckIn =
-                                            rangeStartDate;
-                                        _currentEndDateCheckIn = rangeEndDate;
+                    onTap: () async {
+                      showDialog(
+                        context: context,
+                        builder: (context) => Container(
+                          padding: EdgeInsets.all(10),
+                          margin: EdgeInsets.all(10),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: Material(
+                            child: Column(
+                              children: [
+                                Row(
+                                  children: [
+                                    Spacer(),
+                                    IconButton(
+                                      onPressed: () {
                                         Navigator.of(context).pop();
-                                      });
-                                    },
-                                    child: Text('Done'),
+                                      },
+                                      icon: Icon(Icons.close),
+                                    ),
+                                  ],
+                                ),
+                                Text(
+                                  'Select your check in date',
+                                  style: TextStyle(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
                                   ),
-                                ],
-                              ),
-                            ],
+                                ),
+                                Divider(),
+                                SfDateRangePicker(
+                                  controller: _dateRangePickerController,
+                                  headerStyle: DateRangePickerHeaderStyle(
+                                    textAlign: TextAlign.center,
+                                  ),
+                                  enablePastDates: false,
+                                  onSelectionChanged: _onSelectionChanged,
+                                  selectionMode:
+                                      DateRangePickerSelectionMode.single,
+                                  initialDisplayDate: DateTime.now(),
+                                ),
+                                Row(
+                                  children: [
+                                    Spacer(),
+                                    TextButton(
+                                      onPressed: () {
+                                        setState(() {
+                                          _currentStartDateCheckIn =
+                                              rangeStartDate;
+                                          _currentEndDateCheckIn = rangeEndDate;
+                                          Navigator.of(context).pop();
+                                        });
+                                      },
+                                      child: Text('Done'),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
                           ),
                         ),
-                      ),
-                    );
-                  },
+                      );
+                    },
+                  ),
                 ),
-                Divider(
-                  color: Colors.grey[600],
-                ),
-                ListTile(
-                  title: Text(
-                    'Check out',
-                    style: TextStyle(
+                SizedBox(height: 10),
+                Container(
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(10),
+                    border: Border.all(color: Colors.grey.shade300),
+                  ),
+                  child: ListTile(
+                    title: Text(
+                      'Check out',
+                    ),
+                    subtitle: Text(
+                      DateFormat('dd/MM/yyyy')
+                          .format(_currentStartDateCheckOut),
+                      style: TextStyle(fontSize: 16),
+                    ),
+                    trailing: Icon(
+                      Icons.calendar_today,
                       color: Colors.grey[600],
-                      fontSize: 16,
                     ),
-                  ),
-                  subtitle: Text(
-                    DateFormat('dd/MM/yyyy').format(_currentStartDateCheckOut),
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 20,
-                    ),
-                  ),
-                  trailing: Icon(
-                    Icons.calendar_today,
-                    color: Colors.grey[600],
-                  ),
-                  onTap: () async {
-                    showDialog(
-                      context: context,
-                      builder: (context) => Container(
-                        padding: EdgeInsets.all(10),
-                        margin: EdgeInsets.all(10),
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        child: Material(
-                          child: Column(
-                            children: [
-                              Row(
-                                children: [
-                                  Spacer(),
-                                  IconButton(
-                                    onPressed: () {
-                                      Navigator.of(context).pop();
-                                    },
-                                    icon: Icon(Icons.close),
-                                  ),
-                                ],
-                              ),
-                              Text(
-                                'Select your check out date',
-                                style: TextStyle(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold,
+                    onTap: () async {
+                      showDialog(
+                        context: context,
+                        builder: (context) => Container(
+                          padding: EdgeInsets.all(10),
+                          margin: EdgeInsets.all(10),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: Material(
+                            child: Column(
+                              children: [
+                                Row(
+                                  children: [
+                                    Spacer(),
+                                    IconButton(
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                      },
+                                      icon: Icon(Icons.close),
+                                    ),
+                                  ],
                                 ),
-                              ),
-                              Divider(),
-                              SfDateRangePicker(
-                                controller: _dateRangePickerController,
-                                headerStyle: DateRangePickerHeaderStyle(
-                                  textAlign: TextAlign.center,
-                                ),
-                                enablePastDates: false,
-                                onSelectionChanged: _onSelectionChanged,
-                                selectionMode:
-                                    DateRangePickerSelectionMode.single,
-                                initialDisplayDate: DateTime.now(),
-                              ),
-                              Row(
-                                children: [
-                                  Spacer(),
-                                  TextButton(
-                                    onPressed: () {
-                                      setState(() {
-                                        _currentStartDateCheckOut =
-                                            rangeStartDate;
-                                        _currentEndDateCheckOut = rangeEndDate;
-                                      });
-                                      Navigator.of(context).pop();
-                                    },
-                                    child: Text('Submit'),
+                                Text(
+                                  'Select your check out date',
+                                  style: TextStyle(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
                                   ),
-                                ],
-                              ),
-                            ],
+                                ),
+                                Divider(),
+                                SfDateRangePicker(
+                                  controller: _dateRangePickerController,
+                                  headerStyle: DateRangePickerHeaderStyle(
+                                    textAlign: TextAlign.center,
+                                  ),
+                                  enablePastDates: false,
+                                  onSelectionChanged: _onSelectionChanged,
+                                  selectionMode:
+                                      DateRangePickerSelectionMode.single,
+                                  initialDisplayDate: DateTime.now(),
+                                ),
+                                Row(
+                                  children: [
+                                    Spacer(),
+                                    TextButton(
+                                      onPressed: () {
+                                        setState(() {
+                                          _currentStartDateCheckOut =
+                                              rangeStartDate;
+                                          _currentEndDateCheckOut =
+                                              rangeEndDate;
+                                        });
+                                        Navigator.of(context).pop();
+                                      },
+                                      child: Text('Submit'),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
                           ),
                         ),
-                      ),
-                    );
-                  },
+                      );
+                    },
+                  ),
                 ),
-                Divider(
-                  color: Colors.grey[600],
-                ),
-                ListTile(
-                  title: Text(
-                    'Number of people',
-                    style: TextStyle(
-                      color: Colors.grey[600],
-                      fontSize: 16,
+                SizedBox(height: 10),
+                Container(
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(10),
+                    border: Border.all(color: Colors.grey.shade300),
+                  ),
+                  child: ListTile(
+                    title: Text(
+                      'Number of people',
                     ),
-                  ),
-                  subtitle: Text(
-                    '$numberOfPeople people',
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 20,
+                    subtitle: Text(
+                      '$numberOfPeople people',
+                      style: TextStyle(fontSize: 16),
                     ),
-                  ),
-                  trailing: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      IconButton(
-                        onPressed: () {
-                          setState(() {
-                            if (numberOfPeople > 1) {
-                              numberOfPeople--;
-                            }
-                          });
-                        },
-                        icon: Icon(
-                          Icons.remove,
-                          color: Colors.grey[600],
+                    trailing: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        IconButton(
+                          onPressed: () {
+                            setState(() {
+                              if (numberOfPeople > 1) {
+                                numberOfPeople--;
+                              }
+                            });
+                          },
+                          icon: Icon(
+                            Icons.remove,
+                            color: Colors.grey[600],
+                          ),
                         ),
-                      ),
-                      IconButton(
-                        onPressed: () {
-                          setState(() {
-                            numberOfPeople++;
-                          });
-                        },
-                        icon: Icon(
-                          Icons.add,
-                          color: Colors.grey[600],
+                        IconButton(
+                          onPressed: () {
+                            setState(() {
+                              numberOfPeople++;
+                            });
+                          },
+                          icon: Icon(
+                            Icons.add,
+                            color: Colors.grey[600],
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
+                    onTap: () {},
                   ),
-                  onTap: () {},
                 ),
               ],
             ),
@@ -307,7 +304,7 @@ class _HotelPageState extends State<HotelPage> {
           SizedBox(
             height: 10,
           ),
-          TextButton(
+          ElevatedButton(
             onPressed: () async {
               final accomodationData =
                   Provider.of<AccomodationProvider>(context, listen: false);
@@ -327,7 +324,6 @@ class _HotelPageState extends State<HotelPage> {
             },
             child: Text(
               'Search',
-              style: TextStyle(color: Theme.of(context).primaryColor),
             ),
           ),
         ],
