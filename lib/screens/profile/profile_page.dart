@@ -64,7 +64,8 @@ class _ProfilePageState extends State<ProfilePage> {
 
   @override
   Widget build(BuildContext context) {
-    final fileStorageData = Provider.of<FileStorageProvider>(context);
+    final fileStorageData =
+        Provider.of<FileStorageProvider>(context, listen: false);
     final pic = fileStorageData.fetchProfilePic(userId);
     imageUrl = pic.toString();
 
@@ -99,7 +100,7 @@ class _ProfilePageState extends State<ProfilePage> {
                               return CircleAvatar(
                                 radius: 40,
                                 backgroundColor: Colors.grey,
-                                child: imageUrl.isNotEmpty
+                                child: profilePic != null
                                     ? Image.memory(profilePic,
                                         fit: BoxFit.cover)
                                     : Image.asset(
