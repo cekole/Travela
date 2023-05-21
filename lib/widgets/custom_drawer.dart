@@ -50,6 +50,14 @@ class CustomDrawer extends StatelessWidget {
             },
           ),
           ListTile(
+              leading: Icon(Icons.support_agent),
+              title: Text('Support'),
+              onTap: () {
+                Navigator.pushNamedAndRemoveUntil(
+                    context, '/support_page', (route) => false);
+                pageNum = 4;
+              }),
+          ListTile(
               leading: Icon(Icons.logout),
               title: Text('Logout'),
               onTap: () {
