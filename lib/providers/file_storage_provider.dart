@@ -41,6 +41,33 @@ class FileStorageProvider with ChangeNotifier {
     }
   }
 
+  Future uploadPhotoToTripLocation(
+      String filePath, String tripId, String locationId) async {
+    final url =
+        baseUrl + 'files/uploadPhotoToTrip/$tripId/ToLocation/$locationId';
+    print(url);
+
+    var request = http.MultipartRequest('POST', Uri.parse(url));
+    request.headers['Content-Type'] = 'multipart/form-data';
+    request.headers['Authorization'] = 'Bearer $bearerToken';
+
+    var file = await http.MultipartFile.fromPath('file', filePath);
+    request.files.add(file);
+
+    try {
+      var response = await request.send();
+      print(response.statusCode);
+
+      if (response.statusCode == 200) {
+        print('uploadPhotoToTripLocation success');
+      } else {
+        print('uploadPhotoToTripLocation failed');
+      }
+    } catch (e) {
+      print('Error: $e');
+    }
+  }
+
   Future<Uint8List> fetchProfilePic(String uId) async {
     final url = baseUrl + 'files/getProfilePic/$uId';
     print(url);
@@ -74,25 +101,6 @@ class FileStorageProvider with ChangeNotifier {
       return;
     }
     profilePic = extractedData[0]['profilePic'];
-  }
-
-// request param diye bir şey var o nasıl olcaka ona bak
-  Future<void> uploadPhotoToTripLocation(String uId, String locationId) async {
-    final url = baseUrl + 'files/uploadPhotoToTrip/$uId/ToLocation/$locationId';
-    print(url);
-    final response = await http.post(
-      Uri.parse(url),
-      headers: {
-        'Authorization': 'Bearer  $bearerToken',
-      },
-    );
-    print(response.statusCode);
-    if (response.statusCode == 200) {
-      print('uploadProfilePic success');
-      return json.decode(response.body);
-    } else {
-      print('uploadProfilePic failed');
-    }
   }
 
   Future<void> getPhotosOfTrip(String tripId) async {
