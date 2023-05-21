@@ -182,21 +182,27 @@ class GroupProvider with ChangeNotifier {
     }
   }
 
-  Future updateGroup(String id, String groupName, String ownerId) async {
+  Future<bool> updateGroup(String id, String groupName, String ownerId) async {
     final url = baseUrl + 'groups/$id';
     print(url);
-    final response = await http.put(Uri.parse(url), headers: {
-      'Authorization': 'Bearer  $bearerToken',
-    }, body: {
-      'groupName': groupName,
-      'ownerId': ownerId,
-    });
+    final response = await http.put(
+      Uri.parse(url),
+      headers: {
+        'Authorization': 'Bearer  $bearerToken',
+        'Content-Type': 'application/json',
+      },
+      body: json.encode({
+        'groupName': groupName,
+        'ownerId': ownerId,
+      }),
+    );
     print(response.statusCode);
     if (response.statusCode == 200) {
       print('updateGroup succeeded');
-      return json.decode(response.body);
+      return true;
     } else {
       print('updateGroup failed');
+      return false;
     }
   }
 
