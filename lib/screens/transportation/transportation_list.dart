@@ -44,7 +44,7 @@ class TransportationList extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Price: €$price',
+                    'Total Price: €$price',
                     style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,

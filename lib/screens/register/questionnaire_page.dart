@@ -256,8 +256,6 @@ class _QuestionnarePageState extends State<QuestionnarePage> {
                             );
                           } else {
                             for (var destination in _selectedDestinations) {
-                              print(destination.city);
-
                               print('user id is ${userId}');
                               print('destination id is ${destination.id}');
                               userData.addVisitedCity(userId, destination.id);

@@ -52,36 +52,30 @@ class AccomodationProvider with ChangeNotifier {
     return loadedAccomodation;
   }
 
-  Future<void> addAccomodation(Accomodation accomodation) async {
+  Future<Map<String, dynamic>?> addAccomodation(
+      Map<String, dynamic> accomodationData) async {
+    final url = Uri.parse(requestUrl);
+    print(url);
+
     final response = await http.post(
-      Uri.parse(requestUrl),
+      url,
       headers: {
         'Content-Type': 'application/json',
-        'Accept': 'application/json',
+        'Authorization': 'Bearer $bearerToken',
       },
-      body: json.encode({
-        'name': accomodation.name,
-        'price': accomodation.price,
-        'link': accomodation.link,
-        'address': accomodation.address,
-        'description': accomodation.description,
-        'type': accomodation.type,
-        'rating': accomodation.rating,
-        'image': accomodation.image,
-      }),
+      body: jsonEncode(accomodationData),
     );
-    final newAccomodation = Accomodation(
-      name: accomodation.name,
-      price: accomodation.price,
-      link: accomodation.link,
-      address: accomodation.address,
-      description: accomodation.description,
-      type: accomodation.type,
-      rating: accomodation.rating,
-      image: accomodation.image,
-    );
-    _accomodations.add(newAccomodation);
-    notifyListeners();
+    print(accomodationData);
+
+    print(response.statusCode);
+    if (response.statusCode == 200) {
+      print('Accomodation added successfully');
+      final data = jsonDecode(response.body) as Map<String, dynamic>;
+      print(data);
+      return data;
+    }
+
+    return null;
   }
 
   Future<void> updateAccomodation(

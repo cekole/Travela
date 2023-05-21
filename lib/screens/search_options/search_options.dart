@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:travela_mobile/models/destination.dart';
 
 class SearchOptions extends StatelessWidget {
   const SearchOptions({super.key});
@@ -10,7 +11,8 @@ class SearchOptions extends StatelessWidget {
     final size = MediaQuery.of(context).size;
     final height = size.height;
     final width = size.width;
-    final destination = ModalRoute.of(context)!.settings.arguments as String;
+    final destination =
+        ModalRoute.of(context)!.settings.arguments as Destination;
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).primaryColor,

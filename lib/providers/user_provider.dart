@@ -415,7 +415,6 @@ class UserProvider with ChangeNotifier {
       },
     );
     print(response.statusCode);
-    print(response.body);
 
     if (response.statusCode == 200) {
       print('get trip drafts success');
@@ -445,7 +444,6 @@ class UserProvider with ChangeNotifier {
       },
     );
     print(response.statusCode);
-    print(response.body);
 
     if (response.statusCode == 200) {
       print('getUpcomingTrips success');
@@ -475,7 +473,6 @@ class UserProvider with ChangeNotifier {
       },
     );
     print(response.statusCode);
-    print(response.body);
 
     if (response.statusCode == 200) {
       print('getPastTrips success');
@@ -505,7 +502,6 @@ class UserProvider with ChangeNotifier {
       },
     );
     print(response.statusCode);
-    print(response.body);
 
     if (response.statusCode == 200) {
       print('getAllFriendsVisitedCities success');
@@ -620,7 +616,6 @@ class UserProvider with ChangeNotifier {
       },
     );
     print(response.statusCode);
-    print(response.body);
 
     if (response.statusCode == 200) {
       print('getFavouriteCities success');

@@ -95,6 +95,38 @@ class TripProvider with ChangeNotifier {
     }
   }
 
+  Future<List<Map<String, dynamic>>> getLocationsByTripId(String tripId) async {
+    final url = baseUrl + 'trips/$tripId/locations';
+    print(url);
+    try {
+      final response = await http.get(
+        Uri.parse(url),
+        headers: {
+          'Authorization': 'Bearer $bearerToken',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final jsonData = json.decode(response.body) as List<dynamic>;
+
+        // Map the response data to a list of locations
+        final locations = jsonData.map((locationData) {
+          return locationData as Map<String, dynamic>;
+        }).toList();
+
+        return locations;
+      } else {
+        // Handle error response
+        print('Request failed with status: ${response.statusCode}');
+        return [];
+      }
+    } catch (e) {
+      // Handle network or other exceptions
+      print('Exception occurred: $e');
+      return [];
+    }
+  }
+
   Future addTransportation(String tripId, String tripDescription,
       String groupId, String tripName) async {
     final url = baseUrl + 'trips/$tripId/transportations/add';

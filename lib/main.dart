@@ -112,7 +112,7 @@ class MyApp extends StatelessWidget {
           '/hotel_page': (context) => const HotelPage(),
           '/transportation_options': (context) =>
               const TransportationOptionsPage(),
-          '/accomodation_list': (context) => const AccomodationList(),
+          '/accomodation_list': (context) => const AccommodationList(),
           '/favorites': (context) => FavoritesPage(),
           '/destination_list': (context) => const DestinationListPage(),
           '/flights_page': (context) => const FlightsPage(),

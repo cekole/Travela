@@ -6,6 +6,7 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 import 'package:travela_mobile/appConstant.dart';
+import 'package:travela_mobile/models/destination.dart';
 import 'package:travela_mobile/providers/accomodation_provider.dart';
 import 'package:travela_mobile/providers/trip_provider.dart';
 import 'package:travela_mobile/providers/user_provider.dart';
@@ -53,8 +54,10 @@ class _HotelPageState extends State<HotelPage> {
 
   @override
   Widget build(BuildContext context) {
-    final destination = ModalRoute.of(context)!.settings.arguments as String;
-    final city = destination.split(',')[0];
+    final destinationFull =
+        ModalRoute.of(context)!.settings.arguments as Destination;
+    final destination = destinationFull.city;
+    final city = destination;
     print(city);
 
     final size = MediaQuery.of(context).size;
@@ -319,6 +322,7 @@ class _HotelPageState extends State<HotelPage> {
                   .then((value) {
                 Navigator.of(context).pushNamed(
                   '/accomodation_list',
+                  arguments: destinationFull,
                 );
               });
             },

@@ -53,29 +53,38 @@ class TransportationProvider with ChangeNotifier {
   }
 
   Future<void> addTransportation(
-      City startCity,
-      City endCity,
-      String transportationType,
-      String link,
-      int price,
-      DateTime start,
-      Duration duration,
-      String trip_id) async {
+    String startCityId,
+    String endCityId,
+    String transportationType,
+    String link,
+    int price,
+    DateTime start,
+    Duration duration,
+    String tripId,
+  ) async {
     final url = baseUrl + 'transportations';
     print(url);
-    final response = await http.post(Uri.parse(url), headers: {
-      'Authorization': 'Bearer  $bearerToken',
-      'Content-Type': 'application/json',
-    }, body: {
-      'startCity': startCity,
-      'endCity': endCity,
+
+    final requestBody = json.encode({
+      'startCity': startCityId,
+      'endCity': endCityId,
       'transportationType': transportationType,
       'link': link,
       'price': price,
-      'start': start,
-      'duration': duration,
-      'trip_id': trip_id,
+      'start': start.toUtc().toIso8601String(),
+      'duration': duration.inMinutes,
+      'trip_id': tripId,
     });
+
+    final response = await http.post(
+      Uri.parse(url),
+      headers: {
+        'Authorization': 'Bearer $bearerToken',
+        'Content-Type': 'application/json',
+      },
+      body: requestBody,
+    );
+
     print(response.statusCode);
     if (response.statusCode == 200) {
       print('addTransportation success');
