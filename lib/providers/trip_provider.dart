@@ -31,6 +31,70 @@ class TripProvider with ChangeNotifier {
     }
   }
 
+  Future<int> addTrip(
+    String tripName,
+    String tripDescription,
+    int groupId,
+  ) async {
+    final url = '${baseUrl}trips';
+    print(url);
+
+    final body = {
+      'tripName': tripName,
+      'tripDescription': tripDescription,
+      'group_id': groupId,
+    };
+
+    final headers = {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer $bearerToken',
+    };
+
+    try {
+      final response = await http.post(
+        Uri.parse(url),
+        headers: headers,
+        body: json.encode(body),
+      );
+
+      if (response.statusCode == 200) {
+        final responseData = json.decode(response.body);
+        final tripId = responseData['trip_id'];
+        print('Trip added successfully! Trip ID: $tripId');
+        return tripId;
+      } else {
+        print('Failed to add trip. Status code: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error: $e');
+    }
+    return 0;
+  }
+
+  Future<void> addLocation(int tripId, int cityId) async {
+    final url = '${baseUrl}trips/$tripId/locations/add/$cityId';
+    print(url);
+
+    final headers = {
+      'Authorization': 'Bearer $bearerToken',
+    };
+
+    try {
+      final response = await http.put(
+        Uri.parse(url),
+        headers: headers,
+      );
+
+      if (response.statusCode == 200) {
+        print('Location added successfully!');
+      } else {
+        print('Failed to add location. Status code: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error: $e');
+    }
+  }
+
   Future addTransportation(String tripId, String tripDescription,
       String groupId, String tripName) async {
     final url = baseUrl + 'trips/$tripId/transportations/add';

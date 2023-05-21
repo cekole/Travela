@@ -33,11 +33,19 @@ class _EditTravelGroupState extends State<EditTravelGroup> {
   RangeValues _currentDistanceRangeValues = const RangeValues(0, 1000);
   String _currentSeason = 'Summer';
 
+  List currentChatMessages = [];
+
   @override
   void initState() {
     super.initState();
     final groupData = Provider.of<GroupProvider>(context, listen: false);
     groupData.getTripSuggestions(currentGroupIdForSuggestions);
+    groupData.getChat(currentGroupIdForSuggestions).then((messages) {
+      setState(() {
+        currentChatMessages = messages;
+      });
+    });
+    ;
   }
 
   @override
@@ -82,7 +90,7 @@ class _EditTravelGroupState extends State<EditTravelGroup> {
                     ),
                   ],
                 ),
-                child: ListView(
+                child: Column(
                   children: [
                     Padding(
                       padding: const EdgeInsets.all(8.0),
@@ -100,42 +108,48 @@ class _EditTravelGroupState extends State<EditTravelGroup> {
                       color: Colors.grey,
                       thickness: 1,
                     ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Column(
-                        children: [
-                          Row(
-                            children: [
-                              CircleAvatar(
-                                radius: 18,
-                                backgroundImage: NetworkImage(
-                                  'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png',
-                                ),
+                    //chat messages,
+                    //Ex: currentChatMessages = [{senderId: 11, senderName: aaaa, content: a, timestamp: 2023-05-21T12:27:36.030039Z}]
+                    Expanded(
+                      child: ListView.separated(
+                          separatorBuilder: (context, index) => SizedBox(
+                                height: 20,
                               ),
-                              Bubble(
-                                nip: BubbleNip.leftBottom,
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      currentGroupUsernames[0],
-                                      style: TextStyle(
-                                        color: Colors.blue,
-                                      ),
-                                    ),
-                                    Text(
-                                      'Hello',
-                                      style: TextStyle(
-                                        color: Colors.black,
-                                      ),
-                                    ),
-                                  ],
+                          itemCount: currentChatMessages.length,
+                          itemBuilder: (context, index) {
+                            return Row(
+                              children: [
+                                CircleAvatar(
+                                  radius: 18,
+                                  backgroundImage: NetworkImage(
+                                    'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png',
+                                  ),
                                 ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
+                                Bubble(
+                                  nip: BubbleNip.leftBottom,
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        currentChatMessages[index]
+                                            ['senderName'],
+                                        style: TextStyle(
+                                          color: Colors.blue,
+                                        ),
+                                      ),
+                                      Text(
+                                        currentChatMessages[index]['content'],
+                                        style: TextStyle(
+                                          color: Colors.black,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            );
+                          }),
                     ),
                   ],
                 ),
@@ -169,10 +183,17 @@ class _EditTravelGroupState extends State<EditTravelGroup> {
                       onPressed: () {
                         print(_messageController.text);
                         print(userId);
-                        groupData.sendMessage(
-                          travelGroup.id,
-                          _messageController.text,
-                        );
+                        groupData
+                            .sendMessage(
+                                travelGroup.id, _messageController.text)
+                            .then((value) {
+                          _messageController.clear();
+                          groupData.getChat(travelGroup.id).then((messages) {
+                            setState(() {
+                              currentChatMessages = messages;
+                            });
+                          });
+                        });
                       },
                       icon: Icon(Icons.send),
                     ),
@@ -181,10 +202,11 @@ class _EditTravelGroupState extends State<EditTravelGroup> {
               ),
               SizedBox(height: 20),
               ElevatedButton(
-                  onPressed: () {
-                    searchDialog(context);
-                  },
-                  child: Text('Arrange Trip')),
+                onPressed: () {
+                  searchDialog(context);
+                },
+                child: Text('Arrange Trip'),
+              ),
               SizedBox(height: 20),
               ElevatedButton(
                   onPressed: () {
@@ -304,6 +326,7 @@ class _EditTravelGroupState extends State<EditTravelGroup> {
       ),
       onSelected: (value) {
         if (value == 'create_poll') {
+          print(currentChatMessages);
           // Add functionality for create_poll button
         } else if (value == 'show_common_dates') {
           showDialog(
@@ -537,7 +560,7 @@ class _EditTravelGroupState extends State<EditTravelGroup> {
     return showDialog(
       context: context,
       builder: (context) => Container(
-        margin: EdgeInsets.all(8.0),
+        margin: EdgeInsets.all(4.0),
         padding: EdgeInsets.all(8.0),
         decoration: BoxDecoration(
           color: Colors.white,
@@ -571,185 +594,6 @@ class _EditTravelGroupState extends State<EditTravelGroup> {
               Divider(
                 thickness: 1,
               ),
-              /* Container(
-                decoration: BoxDecoration(
-                  color: Colors.grey[200],
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                padding: EdgeInsets.all(10),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Row(
-                            children: [
-                              Text('Price Range'),
-                              Expanded(
-                                child: RangeSlider(
-                                  activeColor: Theme.of(context).primaryColor,
-                                  values: _currentPriceRangeValues,
-                                  max: 100,
-                                  labels: RangeLabels(
-                                    _currentPriceRangeValues.start
-                                        .round()
-                                        .toString(),
-                                    _currentPriceRangeValues.end
-                                        .round()
-                                        .toString(),
-                                  ),
-                                  onChanged: (values) {
-                                    setState(() {
-                                      _currentPriceRangeValues = values;
-                                    });
-                                  },
-                                ),
-                              ),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Column(
-                                    children: [
-                                      Container(
-                                        padding: EdgeInsets.all(5),
-                                        decoration: BoxDecoration(
-                                          border: Border.all(
-                                            color:
-                                                Theme.of(context).primaryColor,
-                                          ),
-                                          borderRadius:
-                                              BorderRadius.circular(5),
-                                        ),
-                                        child: Text(
-                                          _currentPriceRangeValues.start
-                                              .round()
-                                              .toString(),
-                                        ),
-                                      ),
-                                      Text('Min'),
-                                    ],
-                                  ),
-                                  VerticalDivider(),
-                                  Column(
-                                    children: [
-                                      Container(
-                                        padding: EdgeInsets.all(5),
-                                        decoration: BoxDecoration(
-                                          border: Border.all(
-                                            color:
-                                                Theme.of(context).primaryColor,
-                                          ),
-                                          borderRadius:
-                                              BorderRadius.circular(5),
-                                        ),
-                                        child: Text(
-                                          _currentPriceRangeValues.end
-                                              .round()
-                                              .toString(),
-                                        ),
-                                      ),
-                                      Text('Max'),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                          Divider(),
-                          Row(
-                            children: [
-                              Text('Distance(km)'),
-                              Expanded(
-                                child: RangeSlider(
-                                  activeColor: Theme.of(context).primaryColor,
-                                  values: _currentDistanceRangeValues,
-                                  max: 1000,
-                                  labels: RangeLabels(
-                                    _currentDistanceRangeValues.start
-                                        .round()
-                                        .toString(),
-                                    _currentDistanceRangeValues.end
-                                        .round()
-                                        .toString(),
-                                  ),
-                                  onChanged: (values) {
-                                    setState(() {
-                                      _currentDistanceRangeValues = values;
-                                    });
-                                  },
-                                ),
-                              ),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Column(
-                                    children: [
-                                      Container(
-                                        padding: EdgeInsets.all(5),
-                                        decoration: BoxDecoration(
-                                          border: Border.all(
-                                            color:
-                                                Theme.of(context).primaryColor,
-                                          ),
-                                          borderRadius:
-                                              BorderRadius.circular(5),
-                                        ),
-                                        child: Text(
-                                          _currentDistanceRangeValues.start
-                                              .round()
-                                              .toString(),
-                                        ),
-                                      ),
-                                      Text('Min'),
-                                    ],
-                                  ),
-                                  VerticalDivider(),
-                                  Column(
-                                    children: [
-                                      Container(
-                                        padding: EdgeInsets.all(5),
-                                        decoration: BoxDecoration(
-                                          border: Border.all(
-                                            color:
-                                                Theme.of(context).primaryColor,
-                                          ),
-                                          borderRadius:
-                                              BorderRadius.circular(5),
-                                        ),
-                                        child: Text(
-                                          _currentDistanceRangeValues.end
-                                              .round()
-                                              .toString(),
-                                        ),
-                                      ),
-                                      Text('Max'),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ), 
-              SizedBox(
-                height: 10,
-              ),
-              SizedBox(
-                height: 10,
-              ),
-              ElevatedButton(
-                onPressed: () {},
-                child: Text('Apply'),
-              ),
-              */
-              SizedBox(
-                height: 10,
-              ),
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: SuggestionsForGroup(
@@ -757,12 +601,26 @@ class _EditTravelGroupState extends State<EditTravelGroup> {
                 ),
               ),
               SizedBox(
-                height: 50,
+                height: 10,
               ),
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: PopularPlaces(
                   isArranged: true,
+                ),
+              ),
+              //arrange button
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: TextButton(
+                  onPressed: () {
+                    /* Navigator.of(context).pushNamed('/destination_list'); */
+                  },
+                  child: Text(
+                    'Add To Draft',
+                    style: TextStyle(
+                        color: Theme.of(context).primaryColor, fontSize: 16),
+                  ),
                 ),
               ),
             ],

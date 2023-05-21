@@ -6,6 +6,7 @@ import 'package:shimmer/shimmer.dart';
 import 'package:travela_mobile/appConstant.dart';
 import 'package:travela_mobile/models/destination.dart';
 import 'package:travela_mobile/providers/activities_provider.dart';
+import 'package:travela_mobile/providers/trip_provider.dart';
 import 'package:travela_mobile/providers/user_provider.dart';
 import 'package:travela_mobile/providers/destinations_provider.dart';
 import 'package:travela_mobile/screens/home/home_page.dart';
@@ -273,6 +274,21 @@ class _PlaceCardState extends State<PlaceCard> {
                       margin: EdgeInsets.only(top: 10),
                       child: ElevatedButton(
                         onPressed: () {
+                          final tripData =
+                              Provider.of<TripProvider>(context, listen: false);
+                          tripData
+                              .addTrip(
+                            's',
+                            '',
+                            int.parse(currentGroupIdForSuggestions),
+                          )
+                              .then((value) {
+                            //get the trip id
+                            tripData.addLocation(
+                              value,
+                              int.parse(selectedDestination.id),
+                            );
+                          });
                           Navigator.of(context).pushNamed('/search_options',
                               arguments: widget.destination);
                         },

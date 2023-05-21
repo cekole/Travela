@@ -52,7 +52,7 @@ class TransportationProvider with ChangeNotifier {
     }
   }
 
-  Future addTransportation(
+  Future<void> addTransportation(
       City startCity,
       City endCity,
       String transportationType,
@@ -85,7 +85,7 @@ class TransportationProvider with ChangeNotifier {
     }
   }
 
-  Future updateTransportation(
+  Future<void> updateTransportation(
       String id,
       City startCity,
       City endCity,
