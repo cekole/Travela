@@ -72,6 +72,7 @@ class UserProvider with ChangeNotifier {
           print('you are the user');
           userId = user['user_id'].toString();
           userEmail = user['email'];
+          nameOfUser = user['name'];
 
           print(userEmail);
           currentAvailableFrom =

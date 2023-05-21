@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:provider/provider.dart';
+import 'package:travela_mobile/models/attraction.dart';
 import 'package:travela_mobile/providers/activities_provider.dart';
 import 'package:travela_mobile/providers/destinations_provider.dart';
 
@@ -24,6 +25,13 @@ class DestinationDetailPage extends StatelessWidget {
         Provider.of<ActivitiesProvider>(context, listen: false);
     final selectedActivities =
         activitiesData.getActivitiesByDestinationId(selectedDestination.id);
+    print(selectedActivities);
+
+    final attractionData =
+        Provider.of<DestinationsProvider>(context, listen: false);
+    final selectedAttractions =
+        attractionData.getAttractionsByCityId(selectedDestination.id);
+
     return Scaffold(
         body: ListView(
       children: [
