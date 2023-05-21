@@ -49,15 +49,7 @@ class _PlaceCardState extends State<PlaceCard> {
         final activitiesData =
             Provider.of<ActivitiesProvider>(context, listen: false);
 
-        final attractionData =
-            Provider.of<DestinationsProvider>(context, listen: false);
-
-        final selectedAttractions =
-            await attractionData.getAttractionsByCityId(selectedDestination.id);
-        print("aaaaaaa" + selectedAttractions[0].name);
-
-        placeCardBottomSheet(
-            context, userData, selectedDestination, selectedAttractions);
+        placeCardBottomSheet(context, userData, selectedDestination);
       },
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -107,10 +99,12 @@ class _PlaceCardState extends State<PlaceCard> {
   }
 
   Future<dynamic> placeCardBottomSheet(
-      BuildContext context,
-      UserProvider userData,
-      Destination selectedDestination,
-      List<Attraction> selectedAttractions) {
+    BuildContext context,
+    UserProvider userData,
+    Destination selectedDestination,
+  ) async {
+    final attractionData =
+        Provider.of<DestinationsProvider>(context, listen: false);
     return showModalBottomSheet(
       isScrollControlled: true,
       useRootNavigator: true,
@@ -236,62 +230,92 @@ class _PlaceCardState extends State<PlaceCard> {
               ),
               Container(
                 height: MediaQuery.of(context).size.height * 0.2,
-                child: ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  itemCount: selectedAttractions.length,
-                  itemBuilder: (context, index) {
-                    return Container(
-                      width: MediaQuery.of(context).size.width * 0.4,
-                      margin: EdgeInsets.all(10),
-                      decoration: BoxDecoration(
-                        color: Colors.grey[200],
-                        borderRadius: BorderRadius.circular(20),
-                        image: DecorationImage(
-                          image:
-                              NetworkImage(selectedAttractions[index].imageUrl),
-                          fit: BoxFit.cover,
-                        ),
+                child: FutureBuilder<List<Attraction>>(
+                  future: attractionData
+                      .getAttractionsByCityId(selectedDestination.id)
+                      .then(
+                        (value) => Future.delayed(
+                            Duration(milliseconds: 500), () => value),
                       ),
-                      child: Expanded(
-                        child: Column(
-                          children: [
-                            Expanded(
-                              child: Container(
-                                height:
-                                    MediaQuery.of(context).size.height * 0.1,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.only(
-                                    topLeft: Radius.circular(20),
-                                    topRight: Radius.circular(20),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      // While data is loading, show shimmer effect
+                      return ListView.builder(
+                        scrollDirection: Axis.horizontal,
+                        itemCount:
+                            5, // Adjust the number of shimmer items as needed
+                        itemBuilder: (context, index) {
+                          return Shimmer.fromColors(
+                            baseColor: Colors.grey[300]!,
+                            highlightColor: Colors.grey[100]!,
+                            child: Container(
+                              width: MediaQuery.of(context).size.width * 0.4,
+                              margin: EdgeInsets.all(10),
+                              decoration: BoxDecoration(
+                                color: Colors.grey[200],
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                            ),
+                          );
+                        },
+                      );
+                    } else if (snapshot.hasError) {
+                      // Handle error state
+                      return Text('Error: ${snapshot.error}');
+                    } else {
+                      // When data is available, show the actual ListView
+                      final selectedAttractions = snapshot.data!;
+                      return ListView.builder(
+                        scrollDirection: Axis.horizontal,
+                        itemCount: selectedAttractions.length,
+                        itemBuilder: (context, index) {
+                          return Container(
+                            height: 100,
+                            width: MediaQuery.of(context).size.width * 0.4,
+                            margin: EdgeInsets.all(10),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              image: selectedAttractions[index].imageUrl == null
+                                  ? const DecorationImage(
+                                      image: AssetImage(
+                                          'assets/images/placeholder.png'),
+                                      fit: BoxFit.cover,
+                                    )
+                                  : DecorationImage(
+                                      image: NetworkImage(
+                                          selectedAttractions[index].imageUrl),
+                                      fit: BoxFit.cover,
+                                    ),
+                            ),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                Container(
+                                  width: double.infinity,
+                                  decoration: const BoxDecoration(
+                                    color: Colors.black54,
+                                    borderRadius: BorderRadius.only(
+                                      bottomLeft: Radius.circular(10),
+                                      bottomRight: Radius.circular(10),
+                                    ),
+                                  ),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Text(
+                                      selectedAttractions[index].name,
+                                      style: const TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
                                   ),
                                 ),
-                              ),
+                              ],
                             ),
-                            Container(
-                              padding: EdgeInsets.all(10),
-                              child: Text(
-                                selectedAttractions[index].name,
-                                style: TextStyle(
-                                  fontSize: 15,
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ),
-                            Container(
-                              padding: EdgeInsets.symmetric(vertical: 5),
-                              child: Text(
-                                selectedAttractions[index].category,
-                                style: TextStyle(
-                                  fontSize: 12,
-                                  color: Colors.grey,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    );
+                          );
+                        },
+                      );
+                    }
                   },
                 ),
               ),
