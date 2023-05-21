@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:expansion_tile_card/expansion_tile_card.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -48,22 +50,39 @@ class RequestCard extends StatelessWidget {
                         showDialog(
                           context: context,
                           builder: (context) {
-                            return CupertinoAlertDialog(
-                                title: Text('Request accepted'),
-                                actions: [
-                                  CupertinoDialogAction(
-                                    onPressed: () {
-                                      // navigate to Groups page
-                                      Navigator.of(context)
-                                          .pushNamedAndRemoveUntil(
-                                        '/home',
-                                        (route) => false,
-                                      );
-                                      pageNum = 2;
-                                    },
-                                    child: Text('Ok'),
-                                  ),
-                                ]);
+                            return Platform.isIOS
+                                ? CupertinoAlertDialog(
+                                    title: Text('Request accepted'),
+                                    actions: [
+                                        CupertinoDialogAction(
+                                          onPressed: () {
+                                            // navigate to Groups page
+                                            Navigator.of(context)
+                                                .pushNamedAndRemoveUntil(
+                                              '/home',
+                                              (route) => false,
+                                            );
+                                            pageNum = 2;
+                                          },
+                                          child: Text('Ok'),
+                                        ),
+                                      ])
+                                : AlertDialog(
+                                    title: Text('Request accepted'),
+                                    actions: [
+                                        TextButton(
+                                          onPressed: () {
+                                            // navigate to Groups page
+                                            Navigator.of(context)
+                                                .pushNamedAndRemoveUntil(
+                                              '/home',
+                                              (route) => false,
+                                            );
+                                            pageNum = 2;
+                                          },
+                                          child: Text('Ok'),
+                                        ),
+                                      ]);
                           },
                         );
                       },
@@ -76,21 +95,37 @@ class RequestCard extends StatelessWidget {
                         showDialog(
                           context: context,
                           builder: (context) {
-                            return CupertinoAlertDialog(
-                              title: Text('Request rejected'),
-                              actions: [
-                                CupertinoDialogAction(
-                                  onPressed: () {
-                                    Navigator.of(context)
-                                        .pushNamedAndRemoveUntil(
-                                      '/home',
-                                      (route) => false,
-                                    );
-                                  },
-                                  child: Text('Ok'),
-                                ),
-                              ],
-                            );
+                            return Platform.isIOS
+                                ? CupertinoAlertDialog(
+                                    title: Text('Request rejected'),
+                                    actions: [
+                                      CupertinoDialogAction(
+                                        onPressed: () {
+                                          Navigator.of(context)
+                                              .pushNamedAndRemoveUntil(
+                                            '/home',
+                                            (route) => false,
+                                          );
+                                        },
+                                        child: Text('Ok'),
+                                      ),
+                                    ],
+                                  )
+                                : AlertDialog(
+                                    title: Text('Request rejected'),
+                                    actions: [
+                                      TextButton(
+                                        onPressed: () {
+                                          Navigator.of(context)
+                                              .pushNamedAndRemoveUntil(
+                                            '/home',
+                                            (route) => false,
+                                          );
+                                        },
+                                        child: Text('Ok'),
+                                      ),
+                                    ],
+                                  );
                           },
                         );
                       },

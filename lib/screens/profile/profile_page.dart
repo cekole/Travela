@@ -401,31 +401,57 @@ class _ProfilePageState extends State<ProfilePage> {
                     showDialog(
                       context: context,
                       builder: (BuildContext context) {
-                        return CupertinoAlertDialog(
-                          title: Text('Invite Members'),
-                          content: CupertinoTextField(
-                            placeholder: 'Enter username',
-                            decoration: BoxDecoration(
-                              border:
-                                  Border.all(color: CupertinoColors.systemGrey),
-                              borderRadius: BorderRadius.circular(25),
-                            ),
-                          ),
-                          actions: [
-                            CupertinoDialogAction(
-                              onPressed: () {
-                                Navigator.of(context).pop();
-                              },
-                              child: Text('Cancel'),
-                            ),
-                            CupertinoDialogAction(
-                              onPressed: () {
-                                Navigator.of(context).pop();
-                              },
-                              child: Text('Send Invite'),
-                            ),
-                          ],
-                        );
+                        return Platform.isIOS
+                            ? CupertinoAlertDialog(
+                                title: Text('Invite Members'),
+                                content: CupertinoTextField(
+                                  placeholder: 'Enter username',
+                                  decoration: BoxDecoration(
+                                    border: Border.all(
+                                        color: CupertinoColors.systemGrey),
+                                    borderRadius: BorderRadius.circular(25),
+                                  ),
+                                ),
+                                actions: [
+                                  CupertinoDialogAction(
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                    child: Text('Cancel'),
+                                  ),
+                                  CupertinoDialogAction(
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                    child: Text('Send Invite'),
+                                  ),
+                                ],
+                              )
+                            : AlertDialog(
+                                title: Text('Invite Members'),
+                                content: TextField(
+                                  decoration: InputDecoration(
+                                    border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(25),
+                                    ),
+                                    labelText: 'Enter username',
+                                  ),
+                                ),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                    child: Text('Cancel'),
+                                  ),
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                    child: Text('Send Invite'),
+                                  ),
+                                ],
+                              );
                       },
                     );
                   },

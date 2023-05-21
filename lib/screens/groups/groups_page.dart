@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:expansion_tile_card/expansion_tile_card.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -319,11 +321,41 @@ void showAddFriendDialog(BuildContext context) {
                                     if (value) {
                                       showDialog(
                                           context: context,
-                                          builder: (context) =>
-                                              CupertinoAlertDialog(
-                                                title: Text('Success'),
+                                          builder: (context) => Platform.isIOS
+                                              ? CupertinoAlertDialog(
+                                                  title: Text('Success'),
+                                                  content: Text(
+                                                      'Successfully added ${currentFriendUsernames[index]} to group'),
+                                                  actions: [
+                                                    TextButton(
+                                                        onPressed: () {
+                                                          Navigator.pop(
+                                                              context);
+                                                        },
+                                                        child: Text('OK'))
+                                                  ],
+                                                )
+                                              : AlertDialog(
+                                                  title: Text('Success'),
+                                                  content: Text(
+                                                      'Successfully added ${currentFriendUsernames[index]} to group'),
+                                                  actions: [
+                                                    TextButton(
+                                                        onPressed: () {
+                                                          Navigator.pop(
+                                                              context);
+                                                        },
+                                                        child: Text('OK'))
+                                                  ],
+                                                ));
+                                    } else {
+                                      showDialog(
+                                        context: context,
+                                        builder: (context) => Platform.isIOS
+                                            ? CupertinoAlertDialog(
+                                                title: Text('Error'),
                                                 content: Text(
-                                                    'Successfully added ${currentFriendUsernames[index]} to group'),
+                                                    'Failed to add ${currentFriendUsernames[index]} to group'),
                                                 actions: [
                                                   TextButton(
                                                       onPressed: () {
@@ -331,23 +363,19 @@ void showAddFriendDialog(BuildContext context) {
                                                       },
                                                       child: Text('OK'))
                                                 ],
-                                              ));
-                                    } else {
-                                      showDialog(
-                                        context: context,
-                                        builder: (context) =>
-                                            CupertinoAlertDialog(
-                                          title: Text('Error'),
-                                          content: Text(
-                                              'Failed to add ${currentFriendUsernames[index]} to group'),
-                                          actions: [
-                                            TextButton(
-                                                onPressed: () {
-                                                  Navigator.pop(context);
-                                                },
-                                                child: Text('OK'))
-                                          ],
-                                        ),
+                                              )
+                                            : AlertDialog(
+                                                title: Text('Error'),
+                                                content: Text(
+                                                    'Failed to add ${currentFriendUsernames[index]} to group'),
+                                                actions: [
+                                                  TextButton(
+                                                      onPressed: () {
+                                                        Navigator.pop(context);
+                                                      },
+                                                      child: Text('OK'))
+                                                ],
+                                              ),
                                       );
                                     }
                                   }),
@@ -444,42 +472,82 @@ void showAddFriendDialog(BuildContext context) {
                                                 showDialog(
                                                   context: context,
                                                   builder: (context) {
-                                                    return CupertinoAlertDialog(
-                                                      title: Text('Success'),
-                                                      content: Text(
-                                                          'Friend request sent'),
-                                                      actions: [
-                                                        TextButton(
-                                                          onPressed: () {
-                                                            Navigator.of(
-                                                                    context)
-                                                                .pop();
-                                                          },
-                                                          child: Text('Ok'),
-                                                        ),
-                                                      ],
-                                                    );
+                                                    return Platform.isIOS
+                                                        ? CupertinoAlertDialog(
+                                                            title:
+                                                                Text('Success'),
+                                                            content: Text(
+                                                                'Friend request sent'),
+                                                            actions: [
+                                                              TextButton(
+                                                                onPressed: () {
+                                                                  Navigator.of(
+                                                                          context)
+                                                                      .pop();
+                                                                },
+                                                                child:
+                                                                    Text('Ok'),
+                                                              ),
+                                                            ],
+                                                          )
+                                                        : AlertDialog(
+                                                            title:
+                                                                Text('Success'),
+                                                            content: Text(
+                                                                'Friend request sent'),
+                                                            actions: [
+                                                              TextButton(
+                                                                onPressed: () {
+                                                                  Navigator.of(
+                                                                          context)
+                                                                      .pop();
+                                                                },
+                                                                child:
+                                                                    Text('Ok'),
+                                                              ),
+                                                            ],
+                                                          );
                                                   },
                                                 );
                                               } else {
                                                 showDialog(
                                                   context: context,
                                                   builder: (context) {
-                                                    return CupertinoAlertDialog(
-                                                      title: Text('Error'),
-                                                      content: Text(
-                                                          'Failed to send friend request'),
-                                                      actions: [
-                                                        TextButton(
-                                                          onPressed: () {
-                                                            Navigator.of(
-                                                                    context)
-                                                                .pop();
-                                                          },
-                                                          child: Text('Ok'),
-                                                        ),
-                                                      ],
-                                                    );
+                                                    return Platform.isIOS
+                                                        ? CupertinoAlertDialog(
+                                                            title:
+                                                                Text('Error'),
+                                                            content: Text(
+                                                                'Failed to send friend request'),
+                                                            actions: [
+                                                              TextButton(
+                                                                onPressed: () {
+                                                                  Navigator.of(
+                                                                          context)
+                                                                      .pop();
+                                                                },
+                                                                child:
+                                                                    Text('Ok'),
+                                                              ),
+                                                            ],
+                                                          )
+                                                        : AlertDialog(
+                                                            title:
+                                                                Text('Error'),
+                                                            content: Text(
+                                                                'Failed to send friend request'),
+                                                            actions: [
+                                                              TextButton(
+                                                                onPressed: () {
+                                                                  Navigator.of(
+                                                                          context)
+                                                                      .pop();
+                                                                },
+                                                                child:
+                                                                    Text('Ok'),
+                                                              ),
+                                                            ],
+                                                          );
                                                   },
                                                 );
                                               }

@@ -170,7 +170,7 @@ class UserProvider with ChangeNotifier {
     }
   }
 
-  Future getAllIncomingRequests() async {
+  Future<int> getAllIncomingRequests() async {
     final url = baseUrl + 'users/$userId/incomingfriendRequests';
     print(url);
     final response = await http.get(
@@ -186,17 +186,21 @@ class UserProvider with ChangeNotifier {
     if (response.statusCode == 200) {
       print('get all incoming requests success');
       final extractedData = json.decode(response.body) as List<dynamic>;
+      int requestCount = 0;
       extractedData.forEach((request) {
         if (currentRequestIds.contains(request['user_id'])) {
           print('request not added');
         } else {
           currentRequestIds.add(request['user_id']);
           currentRequestUsernames.add(request['username']);
+          requestCount++;
         }
       });
       notifyListeners();
+      return requestCount;
     } else {
       print('get all incoming requests failed');
+      return 0; // Return 0 if the request fails
     }
   }
 
