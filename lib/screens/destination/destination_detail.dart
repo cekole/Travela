@@ -25,7 +25,6 @@ class DestinationDetailPage extends StatelessWidget {
         Provider.of<ActivitiesProvider>(context, listen: false);
     final selectedActivities =
         activitiesData.getActivitiesByDestinationId(selectedDestination.id);
-    print(selectedActivities);
 
     final attractionData =
         Provider.of<DestinationsProvider>(context, listen: false);

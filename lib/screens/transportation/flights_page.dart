@@ -22,7 +22,7 @@ class _FlightsPageState extends State<FlightsPage> {
       DateTime.now().add(const Duration(days: 7));
   int _numberOfPeople = 1;
 
-  String originCode = '';
+  late String originCode;
   String destinationCode = '';
 
   DateRangePickerController _dateRangePickerController =
@@ -47,14 +47,23 @@ class _FlightsPageState extends State<FlightsPage> {
 
   @override
   void initState() {
-    currentTransportations = [];
     super.initState();
+    currentTransportations = [];
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final destinationFull =
+          ModalRoute.of(context)!.settings.arguments as Destination;
+      setState(() {
+        originCode = destinationFull.cityIataCode;
+      });
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    final destination = ModalRoute.of(context)!.settings.arguments as String;
-    final city = destination.split(',')[0];
+    final destinationFull =
+        ModalRoute.of(context)!.settings.arguments as Destination;
+    final destination = destinationFull.city;
+    final city = destination;
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).primaryColor,
@@ -155,64 +164,14 @@ class _FlightsPageState extends State<FlightsPage> {
               title: Text('From'),
               subtitle: Text(originCode),
               trailing: Icon(Icons.arrow_forward_ios),
-              onTap: () {
-                showDialog(
-                  context: context,
-                  builder: (context) => Container(
-                    padding: EdgeInsets.all(10),
-                    margin: EdgeInsets.all(10),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: Material(
-                      child: ListView(
-                        children: [
-                          Row(
-                            children: [
-                              Spacer(),
-                              IconButton(
-                                onPressed: () {
-                                  Navigator.of(context).pop();
-                                },
-                                icon: Icon(Icons.close),
-                              ),
-                            ],
-                          ),
-                          Center(
-                            child: Text(
-                              'Select City',
-                              style: TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
-                          Divider(),
-                          for (var destination
-                              in Provider.of<DestinationsProvider>(context,
-                                      listen: false)
-                                  .destinations)
-                            ListTile(
-                              title: Text(destination.city),
-                              subtitle: Text(destination.country),
-                              onTap: () {
-                                setState(() {
-                                  originCode = destination.cityIataCode;
-                                  Navigator.of(context).pop();
-                                });
-                              },
-                            ),
-                        ],
-                      ),
-                    ),
-                  ),
-                );
+              onTap: () async {
+                await locationDialog(context, isOrigin: true);
+                setState(() {});
               },
             ),
           ),
           const SizedBox(height: 16),
-          //To container
+
           Container(
             decoration: BoxDecoration(
               color: Colors.white,
@@ -223,59 +182,9 @@ class _FlightsPageState extends State<FlightsPage> {
               title: Text('To'),
               subtitle: Text(destinationCode),
               trailing: Icon(Icons.arrow_forward_ios),
-              onTap: () {
-                showDialog(
-                  context: context,
-                  builder: (context) => Container(
-                    padding: EdgeInsets.all(10),
-                    margin: EdgeInsets.all(10),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: Material(
-                      child: ListView(
-                        children: [
-                          Row(
-                            children: [
-                              Spacer(),
-                              IconButton(
-                                onPressed: () {
-                                  Navigator.of(context).pop();
-                                },
-                                icon: Icon(Icons.close),
-                              ),
-                            ],
-                          ),
-                          Center(
-                            child: Text(
-                              'Select City',
-                              style: TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
-                          Divider(),
-                          for (var destination
-                              in Provider.of<DestinationsProvider>(context,
-                                      listen: false)
-                                  .destinations)
-                            ListTile(
-                              title: Text(destination.city),
-                              subtitle: Text(destination.country),
-                              onTap: () {
-                                setState(() {
-                                  destinationCode = destination.cityIataCode;
-                                  Navigator.of(context).pop();
-                                });
-                              },
-                            ),
-                        ],
-                      ),
-                    ),
-                  ),
-                );
+              onTap: () async {
+                await locationDialog(context, isOrigin: false);
+                setState(() {});
               },
             ),
           ),
@@ -327,6 +236,109 @@ class _FlightsPageState extends State<FlightsPage> {
           ),
         ],
       ),
+    );
+  }
+
+  Future<dynamic> locationDialog(BuildContext context,
+      {required bool isOrigin}) {
+    return showDialog(
+      context: context,
+      builder: (context) {
+        TextEditingController _searchController = TextEditingController();
+        List<Destination> filteredDestinations = [];
+
+        return StatefulBuilder(
+          builder: (context, setState) {
+            // Function to update the filtered destinations list
+            void updateFilteredDestinations() {
+              final query = _searchController.text.toLowerCase();
+              filteredDestinations =
+                  Provider.of<DestinationsProvider>(context, listen: false)
+                      .destinations
+                      .where((destination) {
+                final city = destination.city.toLowerCase();
+                final country = destination.country.toLowerCase();
+
+                return city.contains(query) || country.contains(query);
+              }).toList();
+            }
+
+            // Call the function initially to populate the filtered destinations
+            updateFilteredDestinations();
+
+            return Container(
+              padding: EdgeInsets.all(10),
+              margin: EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Dialog.fullscreen(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        Spacer(),
+                        IconButton(
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                          icon: Icon(Icons.close),
+                        ),
+                      ],
+                    ),
+                    Center(
+                      child: Text(
+                        'Select City',
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                    Divider(),
+                    TextField(
+                      controller: _searchController,
+                      decoration: InputDecoration(
+                        hintText: 'Search by city or country',
+                        prefixIcon: Icon(Icons.search),
+                      ),
+                      onChanged: (value) {
+                        setState(() {
+                          updateFilteredDestinations();
+                        });
+                      },
+                    ),
+                    Expanded(
+                      child: ListView.builder(
+                        itemCount: filteredDestinations.length,
+                        itemBuilder: (context, index) {
+                          final destination = filteredDestinations[index];
+                          return ListTile(
+                            title: Text(destination.city),
+                            subtitle: Text(destination.country),
+                            onTap: () {
+                              setState(() {
+                                if (isOrigin) {
+                                  originCode = destination.cityIataCode;
+                                } else {
+                                  destinationCode = destination.cityIataCode;
+                                }
+                              });
+                              Navigator.of(context).pop();
+                            },
+                          );
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            );
+          },
+        );
+      },
     );
   }
 }

@@ -15,6 +15,7 @@ import 'package:travela_mobile/models/travel_group.dart';
 import 'package:travela_mobile/providers/destinations_provider.dart';
 import 'package:travela_mobile/providers/group_provider.dart';
 import 'package:travela_mobile/providers/recommendation_provider.dart';
+import 'package:travela_mobile/providers/trip_provider.dart';
 import 'package:travela_mobile/screens/groups/groups_page.dart';
 import 'package:travela_mobile/widgets/group/suggestionsForGroup.dart';
 import 'package:travela_mobile/widgets/home/popular_places.dart';
@@ -30,6 +31,7 @@ class EditTravelGroup extends StatefulWidget {
 class _EditTravelGroupState extends State<EditTravelGroup> {
   TextEditingController _searchController = TextEditingController();
   TextEditingController _messageController = TextEditingController();
+  TextEditingController _tripNameController = TextEditingController();
   RangeValues _currentPriceRangeValues = const RangeValues(40, 80);
   RangeValues _currentRatingRangeValues = const RangeValues(3, 5);
   RangeValues _currentDistanceRangeValues = const RangeValues(0, 1000);
@@ -182,10 +184,10 @@ class _EditTravelGroupState extends State<EditTravelGroup> {
                       ),
                     ),
                     IconButton(
-                      onPressed: () {
+                      onPressed: () async {
                         print(_messageController.text);
                         print(userId);
-                        groupData
+                        await groupData
                             .sendMessage(
                                 travelGroup.id, _messageController.text)
                             .then((value) {
@@ -205,7 +207,84 @@ class _EditTravelGroupState extends State<EditTravelGroup> {
               SizedBox(height: 20),
               ElevatedButton(
                 onPressed: () {
-                  searchDialog(context);
+                  showModalBottomSheet(
+                    shape: const RoundedRectangleBorder(
+                      borderRadius: BorderRadius.vertical(
+                        top: Radius.circular(20),
+                      ),
+                    ),
+                    context: context,
+                    builder: (context) => Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: SafeArea(
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(
+                              'Add a trip',
+                              style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            const SizedBox(
+                              height: 10,
+                            ),
+                            TextField(
+                              controller: _tripNameController,
+                              decoration: InputDecoration(
+                                labelText: 'Trip Name',
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(50),
+                                ),
+                              ),
+                            ),
+                            const SizedBox(
+                              height: 10,
+                            ),
+                            ElevatedButton(
+                              onPressed: () {
+                                String tripName = _tripNameController.text;
+                                if (tripName.isEmpty) {
+                                  AlertDialog(
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    title: Text('Error'),
+                                    content: Text('Trip name cannot be empty'),
+                                    actions: [
+                                      TextButton(
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                        },
+                                        child: Text('OK'),
+                                      ),
+                                    ],
+                                  );
+                                } else {
+                                  final tripData = Provider.of<TripProvider>(
+                                      context,
+                                      listen: false);
+                                  tripData
+                                      .addTrip(
+                                    tripName,
+                                    '',
+                                    int.parse(currentGroupIdForSuggestions),
+                                  )
+                                      .then((value) {
+                                    _tripNameController.clear();
+                                    currentTripId = value.toString();
+                                    searchDialog(context);
+                                  });
+                                }
+                              },
+                              child: Text('Add'),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  );
                 },
                 child: Text('Arrange Trip'),
               ),
@@ -328,7 +407,6 @@ class _EditTravelGroupState extends State<EditTravelGroup> {
       ),
       onSelected: (value) {
         if (value == 'create_poll') {
-          print(currentChatMessages);
           // Add functionality for create_poll button
         } else if (value == 'show_common_dates') {
           showDialog(

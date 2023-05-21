@@ -246,7 +246,6 @@ class DestinationsProvider with ChangeNotifier {
     }).toList();
 
     notifyListeners();
-    print(attractions);
     return attractions;
   }
 
