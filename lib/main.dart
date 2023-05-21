@@ -5,6 +5,7 @@ import 'package:travela_mobile/providers/accomodation_provider.dart';
 import 'package:travela_mobile/providers/activities_provider.dart';
 import 'package:travela_mobile/providers/authentication_provider.dart';
 import 'package:travela_mobile/providers/destinations_provider.dart';
+import 'package:travela_mobile/providers/message_provider.dart';
 import 'package:travela_mobile/providers/transportation_provider.dart';
 import 'package:travela_mobile/providers/group_provider.dart';
 import 'package:travela_mobile/providers/recommendation_provider.dart';
@@ -51,6 +52,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
+        ChangeNotifierProvider(create: (context) => MessageProvider()),
         ChangeNotifierProvider(create: (context) => AccomodationProvider()),
         ChangeNotifierProvider(create: (context) => FileStorageProvider()),
         ChangeNotifierProvider(create: (context) => TripProvider()),
