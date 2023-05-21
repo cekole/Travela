@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:expansion_tile_card/expansion_tile_card.dart';
 import 'package:flutter/cupertino.dart';
@@ -82,8 +83,8 @@ class _ProfilePageState extends State<ProfilePage> {
                 children: [
                   Row(
                     children: [
-                      ClipOval(
-                        child: FutureBuilder(
+                      Expanded(
+                        child: FutureBuilder<Uint8List>(
                           future: fileStorageData.fetchProfilePic(userId),
                           builder: (context, snapshot) {
                             if (snapshot.connectionState ==
@@ -95,6 +96,14 @@ class _ProfilePageState extends State<ProfilePage> {
                                   placeholderImage,
                                   fit: BoxFit.cover,
                                 ),
+                              );
+                            } else if (snapshot.hasData) {
+                              final profilePic = snapshot.data!;
+                              return CircleAvatar(
+                                radius: 40,
+                                backgroundColor: Colors.grey,
+                                child:
+                                    Image.memory(profilePic, fit: BoxFit.cover),
                               );
                             } else {
                               return CircleAvatar(
@@ -117,7 +126,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            currentUser.username,
+                            userUsername,
                             style: TextStyle(
                               color: Colors.white,
                               fontSize: 20,
@@ -126,7 +135,7 @@ class _ProfilePageState extends State<ProfilePage> {
                           ),
                           SizedBox(height: 10),
                           Text(
-                            currentUser.email,
+                            userEmail,
                             style: TextStyle(
                               color: Colors.white,
                             ),

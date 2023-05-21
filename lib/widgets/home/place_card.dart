@@ -4,6 +4,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:travela_mobile/appConstant.dart';
+import 'package:travela_mobile/models/destination.dart';
 import 'package:travela_mobile/providers/activities_provider.dart';
 import 'package:travela_mobile/providers/user_provider.dart';
 import 'package:travela_mobile/providers/destinations_provider.dart';
@@ -48,190 +49,8 @@ class _PlaceCardState extends State<PlaceCard> {
         print(selectedDestination.activities);
         final selectedActivities = selectedDestination.activities;
 
-        showModalBottomSheet(
-          isScrollControlled: true,
-          useRootNavigator: true,
-          context: context,
-          builder: (context) {
-            return Container(
-              height: MediaQuery.of(context).size.height * 0.85,
-              child: Column(
-                children: [
-                  Stack(
-                    children: [
-                      Container(
-                        height: MediaQuery.of(context).size.height * 0.4,
-                        decoration: BoxDecoration(
-                          image: DecorationImage(
-                            image: NetworkImage(widget.image),
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                      ),
-                      Positioned(
-                        top: 20,
-                        left: 20,
-                        child: IconButton(
-                          onPressed: () {
-                            Navigator.pop(context);
-                          },
-                          icon: Icon(
-                            Icons.arrow_back,
-                            color: Colors.white,
-                            size: 30,
-                            shadows: [
-                              Shadow(
-                                blurRadius: 10,
-                                color: Colors.black,
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      //like button
-                      Positioned(
-                        top: 20,
-                        right: 20,
-                        child: IconButton(
-                          icon: Icon(
-                              isFavorite
-                                  ? Icons.favorite
-                                  : Icons.favorite_border,
-                              color: Color.fromARGB(255, 10, 9, 9)),
-                          onPressed: () async {
-                            toggleFavorite();
-                            try {
-                              bool success = await userData.addFavouriteCity(
-                                  userId, selectedDestination.id);
-                              if (success) {
-                                showDialog(
-                                  context: context,
-                                  builder: (BuildContext context) =>
-                                      CupertinoAlertDialog(
-                                    title: Text('Added to Favourites'),
-                                    // OK BUTTON
-                                    actions: [
-                                      CupertinoDialogAction(
-                                        child: Text('OK'),
-                                        onPressed: () {
-                                          //navigate to home page
-                                          Navigator.pushReplacementNamed(
-                                              context, '/favorites');
-                                        },
-                                      ),
-                                    ],
-                                  ),
-                                );
-                              } else {
-                                // Handle the case when the method returns false
-                                showDialog(
-                                    context: context,
-                                    builder: (BuildContext context) =>
-                                        CupertinoAlertDialog(
-                                          title: Text('Already added'),
-                                          actions: [
-                                            CupertinoDialogAction(
-                                              child: Text('OK'),
-                                              onPressed: () {
-                                                Navigator.of(context).pop();
-                                              },
-                                            ),
-                                          ],
-                                        ));
-                              }
-                            } catch (error) {
-                              // Handle any errors that occurred during the addFavouriteCity operation
-                              print('Error: $error');
-                            }
-                          },
-                        ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  Container(
-                    padding: EdgeInsets.all(10),
-                    child: Text(
-                      selectedDestination.city,
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-
-                  //Suggested Activities
-                  Container(
-                    padding: EdgeInsets.all(10),
-                    child: Text(
-                      'Suggested Activities',
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                  Container(
-                    height: MediaQuery.of(context).size.height * 0.2,
-                    child: ListView.builder(
-                      scrollDirection: Axis.horizontal,
-                      itemCount: selectedActivities.length,
-                      itemBuilder: (context, index) {
-                        return Container(
-                          width: MediaQuery.of(context).size.width * 0.4,
-                          margin: EdgeInsets.all(10),
-                          decoration: BoxDecoration(
-                            color: Colors.grey[200],
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                          child: Column(
-                            children: [
-                              Container(
-                                height:
-                                    MediaQuery.of(context).size.height * 0.1,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.only(
-                                    topLeft: Radius.circular(20),
-                                    topRight: Radius.circular(20),
-                                  ),
-                                ),
-                              ),
-                              Container(
-                                padding: EdgeInsets.all(10),
-                                child: Text(
-                                  selectedActivities[index],
-                                  style: TextStyle(
-                                    fontSize: 15,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        );
-                      },
-                    ),
-                  ),
-
-                  widget.isArranged!
-                      ? Container(
-                          margin: EdgeInsets.only(top: 10),
-                          child: ElevatedButton(
-                            onPressed: () {
-                              Navigator.of(context).pushNamed('/search_options',
-                                  arguments: widget.destination);
-                            },
-                            child: Text('Add to Trip'),
-                          ),
-                        )
-                      : SizedBox(),
-                ],
-              ),
-            );
-          },
-        );
+        placeCardBottomSheet(
+            context, userData, selectedDestination, selectedActivities);
       },
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -274,6 +93,194 @@ class _PlaceCardState extends State<PlaceCard> {
           ),
         ],
       ),
+    );
+  }
+
+  Future<dynamic> placeCardBottomSheet(
+      BuildContext context,
+      UserProvider userData,
+      Destination selectedDestination,
+      List<String> selectedActivities) {
+    return showModalBottomSheet(
+      isScrollControlled: true,
+      useRootNavigator: true,
+      context: context,
+      builder: (context) {
+        return Container(
+          height: MediaQuery.of(context).size.height * 0.85,
+          child: Column(
+            children: [
+              Stack(
+                children: [
+                  Container(
+                    height: MediaQuery.of(context).size.height * 0.4,
+                    decoration: BoxDecoration(
+                      image: DecorationImage(
+                        image: NetworkImage(widget.image),
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  ),
+                  Positioned(
+                    top: 20,
+                    left: 20,
+                    child: IconButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      icon: Icon(
+                        Icons.arrow_back,
+                        color: Colors.white,
+                        size: 30,
+                        shadows: [
+                          Shadow(
+                            blurRadius: 10,
+                            color: Colors.black,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  //like button
+                  Positioned(
+                    top: 20,
+                    right: 20,
+                    child: IconButton(
+                      icon: Icon(
+                          isFavorite ? Icons.favorite : Icons.favorite_border,
+                          color: Color.fromARGB(255, 10, 9, 9)),
+                      onPressed: () async {
+                        toggleFavorite();
+                        try {
+                          bool success = await userData.addFavouriteCity(
+                              userId, selectedDestination.id);
+                          if (success) {
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext context) =>
+                                  CupertinoAlertDialog(
+                                title: Text('Added to Favourites'),
+                                // OK BUTTON
+                                actions: [
+                                  CupertinoDialogAction(
+                                    child: Text('OK'),
+                                    onPressed: () {
+                                      //navigate to home page
+                                      Navigator.pushReplacementNamed(
+                                          context, '/home');
+                                    },
+                                  ),
+                                ],
+                              ),
+                            );
+                          } else {
+                            // Handle the case when the method returns false
+                            showDialog(
+                                context: context,
+                                builder: (BuildContext context) =>
+                                    CupertinoAlertDialog(
+                                      title: Text('Already added'),
+                                      actions: [
+                                        CupertinoDialogAction(
+                                          child: Text('OK'),
+                                          onPressed: () {
+                                            Navigator.of(context).pop();
+                                          },
+                                        ),
+                                      ],
+                                    ));
+                          }
+                        } catch (error) {
+                          // Handle any errors that occurred during the addFavouriteCity operation
+                          print('Error: $error');
+                        }
+                      },
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(
+                height: 10,
+              ),
+              Container(
+                padding: EdgeInsets.all(10),
+                child: Text(
+                  selectedDestination.city,
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+
+              //Suggested Activities
+              Container(
+                padding: EdgeInsets.all(10),
+                child: Text(
+                  'Suggested Activities',
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+              Container(
+                height: MediaQuery.of(context).size.height * 0.2,
+                child: ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  itemCount: selectedActivities.length,
+                  itemBuilder: (context, index) {
+                    return Container(
+                      width: MediaQuery.of(context).size.width * 0.4,
+                      margin: EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                        color: Colors.grey[200],
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: Column(
+                        children: [
+                          Container(
+                            height: MediaQuery.of(context).size.height * 0.1,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(20),
+                                topRight: Radius.circular(20),
+                              ),
+                            ),
+                          ),
+                          Container(
+                            padding: EdgeInsets.all(10),
+                            child: Text(
+                              selectedActivities[index],
+                              style: TextStyle(
+                                fontSize: 15,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                ),
+              ),
+
+              widget.isArranged!
+                  ? Container(
+                      margin: EdgeInsets.only(top: 10),
+                      child: ElevatedButton(
+                        onPressed: () {
+                          Navigator.of(context).pushNamed('/search_options',
+                              arguments: widget.destination);
+                        },
+                        child: Text('Add to Trip'),
+                      ),
+                    )
+                  : SizedBox(),
+            ],
+          ),
+        );
+      },
     );
   }
 }

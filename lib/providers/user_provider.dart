@@ -41,16 +41,39 @@ class UserProvider with ChangeNotifier {
     }
   }
 
+  Future getUserById(String userId) async {
+    final url = baseUrl + 'users/$userId';
+    print(url);
+    final response = await http.get(
+      Uri.parse(url),
+      headers: {
+        'Authorization': 'Bearer  $bearerToken',
+        'Content-Type': 'application/json',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      print('getUserById success');
+      return json.decode(response.body);
+    } else {
+      print('getUserById failed');
+    }
+  }
+
   //getUserIdByUsername
   Future<void> getUserIdByUsername(String username) async {
     final value = await getAllUsers();
     for (var user in value) {
       if (user['username'] == username) {
         print(user['user_id']);
+        userUsername = user['username'];
         //if username is currentUsername below, else set friendId
         if (username == currentUser.username) {
           print('you are the user');
           userId = user['user_id'].toString();
+          userEmail = user['email'];
+
+          print(userEmail);
           currentAvailableFrom =
               user['availableFrom'] ?? DateTime.now().toString().split(' ')[0];
           currentAvailableTo = user['availableTo'] ??
@@ -64,8 +87,8 @@ class UserProvider with ChangeNotifier {
     }
   }
 
-  Future updateUserInfo(String id, String name, String username, String email,
-      String password) async {
+  Future<bool> updateUserInfo(String id, String name, String username,
+      String email, String password) async {
     final url = baseUrl + 'users/$id';
     print(url);
     final response = await http.put(Uri.parse(url), headers: {
@@ -77,11 +100,13 @@ class UserProvider with ChangeNotifier {
       'password': password
     });
     print(response.statusCode);
+    print(response.body);
     if (response.statusCode == 200) {
       print('update user info success');
-      return json.decode(response.body);
+      return true;
     } else {
       print('update user info failed');
+      return false;
     }
   }
 

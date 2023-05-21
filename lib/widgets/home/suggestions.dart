@@ -42,29 +42,10 @@ class _SuggestionsForYouState extends State<SuggestionsForYou> {
                 fontWeight: FontWeight.bold,
               ),
             ),
-            TextButton(
-              onPressed: () {
-                final userData =
-                    Provider.of<UserProvider>(context, listen: false);
-                userData.getTripSuggestions(userId);
-                List<Destination> suggestedDestinations =
-                    userData.suggestedDestinations;
-                Set<List<Destination>> destinationSet = {};
-                destinationSet.add(suggestedDestinations);
-                Navigator.pushNamed(
-                  context,
-                  '/popular',
-                  arguments: destinationSet,
-                );
-              },
-              child: Text(
-                'See All',
-                style: TextStyle(
-                  color: Theme.of(context).primaryColor,
-                ),
-              ),
-            ),
           ],
+        ),
+        SizedBox(
+          height: 15,
         ),
         SizedBox(
           height: MediaQuery.of(context).size.height * 0.25,

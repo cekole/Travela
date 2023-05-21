@@ -77,7 +77,7 @@ class TripsPage extends StatelessWidget {
                     ),
                     title: Text(upcomingTrips.length > 0
                         ? upcomingTrips[0].name
-                        : 'No Upcoming Trips'),
+                        : 'Italy Trip'),
                     subtitle: upcomingTrips.length > 0
                         ? Text(upcomingTrips[0].period)
                         : Text(''),
@@ -181,6 +181,19 @@ class TripsPage extends StatelessWidget {
                                       },
                                       child: Text('Update Trip'),
                                     ),
+                                    TextButton(
+                                      onPressed: () {
+                                        final tripData =
+                                            Provider.of<TripProvider>(context,
+                                                listen: false);
+                                        tripData.deleteTrip(currentTripId);
+                                        Navigator.pop(context);
+                                      },
+                                      child: Text(
+                                        'Delete Trip',
+                                        style: TextStyle(color: Colors.red),
+                                      ),
+                                    )
                                   ],
                                 ),
                               ),
@@ -227,7 +240,7 @@ class TripsPage extends StatelessWidget {
                       child: Icon(Icons.directions_car),
                     ),
                     title: // çağla ekleyecek
-                        Text("buraya çağlaekleyince gelecek"),
+                        Text("Trip To Greece"),
                     subtitle: pastTrips.length > 0
                         ? Text(pastTrips[0].period)
                         : Text(''),

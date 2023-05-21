@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:email_validator/email_validator.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -40,6 +41,9 @@ class _EditProfileState extends State<EditProfile> {
 
   @override
   Widget build(BuildContext context) {
+    final fileStorage =
+        Provider.of<FileStorageProvider>(context, listen: false);
+    // fileStorage.uploadProfilePic(image!.path, userId);
     String password = "12345678";
     final userData = Provider.of<UserProvider>(context);
     return Scaffold(
@@ -83,7 +87,7 @@ class _EditProfileState extends State<EditProfile> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          currentUser.username,
+                          userUsername,
                           style: TextStyle(
                             color: Colors.black,
                             fontSize: 20,
@@ -92,7 +96,7 @@ class _EditProfileState extends State<EditProfile> {
                         ),
                         SizedBox(height: 10),
                         Text(
-                          currentUser.email,
+                          userEmail,
                           style: TextStyle(
                             color: Colors.grey,
                           ),
@@ -142,30 +146,67 @@ class _EditProfileState extends State<EditProfile> {
                   print("user" + usernameController.text);
                   print("name" + nameController.text);
                   print(password);
-                  final fileStorage =
-                      Provider.of<FileStorageProvider>(context, listen: false);
-                  fileStorage.uploadProfilePic(image!.path, userId);
-                  userData
-                      .updateUserInfo(
-                          userId,
-                          nameController.text,
-                          usernameController.text,
-                          emailController.text,
-                          password)
-                      .then((value) => showDialog(
-                          context: context,
-                          builder: (ctx) => CupertinoAlertDialog(
-                                title: Text('Success'),
-                                content: Text('Profile updated successfully'),
-                                actions: [
-                                  TextButton(
-                                    onPressed: () {
-                                      Navigator.of(ctx).pop();
-                                    },
-                                    child: Text('Ok'),
-                                  ),
-                                ],
-                              )));
+                  if (!EmailValidator.validate(emailController.text)) {
+                    showDialog(
+                        context: context,
+                        builder: (BuildContext context) => CupertinoAlertDialog(
+                              title: Text('Invalid Email'),
+                              content:
+                                  Text('Please enter a valid email address'),
+                              actions: [
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.pop(context);
+                                  },
+                                  child: Text('OK'),
+                                ),
+                              ],
+                            ));
+                  } else {
+                    userData
+                        .updateUserInfo(
+                            userId,
+                            nameController.text,
+                            usernameController.text,
+                            emailController.text,
+                            password)
+                        .then((value) {
+                      if (value) {
+                        showDialog(
+                            context: context,
+                            builder: (BuildContext context) =>
+                                CupertinoAlertDialog(
+                                  title: Text('Success'),
+                                  content:
+                                      Text('Profile is successfully updated!'),
+                                  actions: [
+                                    TextButton(
+                                      onPressed: () {
+                                        Navigator.pop(context);
+                                      },
+                                      child: Text('OK'),
+                                    ),
+                                  ],
+                                ));
+                      } else {
+                        showDialog(
+                            context: context,
+                            builder: (BuildContext context) =>
+                                CupertinoAlertDialog(
+                                  title: Text('Error'),
+                                  content: Text('Profile cannot be updated'),
+                                  actions: [
+                                    TextButton(
+                                      onPressed: () {
+                                        Navigator.pop(context);
+                                      },
+                                      child: Text('OK'),
+                                    ),
+                                  ],
+                                ));
+                      }
+                    });
+                  }
                 },
                 child: Text('Save'),
               ),
