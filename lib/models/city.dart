@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 class City {
   final String id;
   final String cityName;
