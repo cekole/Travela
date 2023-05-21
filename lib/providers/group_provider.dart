@@ -14,6 +14,7 @@ import 'package:travela_mobile/models/user.dart';
 class GroupProvider with ChangeNotifier {
   List<TravelGroup> _groups = [];
   List<Destination> _groupTripSuggestions = [];
+  List<Map<String, dynamic>> _chatMessages = [];
 
   List<TravelGroup> get groups {
     return [..._groups];
@@ -364,22 +365,31 @@ class GroupProvider with ChangeNotifier {
     }
   }
 
-  Future getChat(String id) async {
+  Future<List<Map<String, dynamic>>> getChat(String id) async {
     final url = baseUrl + 'groups/$id/chat';
-    print(url);
     final response = await http.get(
       Uri.parse(url),
       headers: {
-        'Authorization': 'Bearer  $bearerToken',
-        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $bearerToken',
       },
     );
-    print(response.statusCode);
+
     if (response.statusCode == 200) {
-      print('chat succeeded');
-      return json.decode(response.body);
+      print('Chat retrieval succeeded');
+      final chatData = json.decode(response.body) as List<dynamic>;
+      final List<Map<String, dynamic>> messages = [];
+      for (var chatMessage in chatData) {
+        messages.add({
+          'senderId': chatMessage['sender']['user_id'],
+          'senderName': chatMessage['sender']['username'],
+          'content': chatMessage['content'],
+          'timestamp': chatMessage['timestamp'],
+        });
+      }
+      return messages;
     } else {
-      print('chat failed');
+      print('Chat retrieval failed');
+      return [];
     }
   }
 
@@ -396,7 +406,7 @@ class GroupProvider with ChangeNotifier {
         {
           'content': content,
           'senderId': userId,
-          'timestamp': DateTime.now().toIso8601String() + 'Z',
+          'timestamp': DateTime.now().toIso8601String(),
         },
       ),
     );

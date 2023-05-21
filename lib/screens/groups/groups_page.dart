@@ -53,8 +53,9 @@ class _GroupsPageState extends State<GroupsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       drawerEnableOpenDragGesture: false,
-      drawer: CustomDrawer(),
+      drawer: const CustomDrawer(),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: Opacity(
         opacity: _isExpandedCalendar || _isExpandedGroup ? 0.1 : 1,
