@@ -105,7 +105,7 @@ class _QuestionnarePageState extends State<QuestionnarePage> {
                           child: ListView.separated(
                             itemCount: 10,
                             itemBuilder: (context, index) {
-                              return AnswerCard(
+                              return AnswerCardQ(
                                 destination:
                                     destinatinationsData.destinations[index],
                                 onSelect: (destination) {},
@@ -155,7 +155,7 @@ class _QuestionnarePageState extends State<QuestionnarePage> {
                                   }
                                   return SizedBox.shrink();
                                 }
-                                return AnswerCard(
+                                return AnswerCardQ(
                                   destination: filteredDestinations[index],
                                   onSelect: (destination) {
                                     if (_selectedDestinations.length < 3) {
@@ -250,8 +250,8 @@ class _QuestionnarePageState extends State<QuestionnarePage> {
   }
 }
 
-class AnswerCard extends StatefulWidget {
-  const AnswerCard({
+class AnswerCardQ extends StatefulWidget {
+  const AnswerCardQ({
     super.key,
     required this.destination,
     required this.onSelect,
@@ -261,10 +261,10 @@ class AnswerCard extends StatefulWidget {
   final Function(Destination) onSelect;
 
   @override
-  State<AnswerCard> createState() => _AnswerCardState();
+  State<AnswerCardQ> createState() => _AnswerCardState();
 }
 
-class _AnswerCardState extends State<AnswerCard> {
+class _AnswerCardState extends State<AnswerCardQ> {
   bool isSelected = false;
   @override
   Widget build(BuildContext context) {
