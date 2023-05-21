@@ -9,6 +9,8 @@ int pageNum = 0;
 
 String userId = '';
 String friendId = '';
+String userEmail = '';
+String userUsername = '';
 
 List currentFriendIds = [];
 List currentFriendUsernames = [];
