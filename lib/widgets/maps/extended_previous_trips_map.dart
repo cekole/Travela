@@ -1,12 +1,38 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_map/flutter_map.dart';
-import "package:latlong2/latlong.dart";
-import 'package:travela_mobile/appConstant.dart';
+import 'dart:io';
 
-class ExtendedPreviousTripsMap extends StatelessWidget {
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_map/flutter_map.dart';
+import 'package:image_picker/image_picker.dart';
+import "package:latlong2/latlong.dart";
+import 'package:provider/provider.dart';
+import 'package:travela_mobile/appConstant.dart';
+import 'package:travela_mobile/providers/file_storage_provider.dart';
+
+class ExtendedPreviousTripsMap extends StatefulWidget {
   const ExtendedPreviousTripsMap({
     Key? key,
   }) : super(key: key);
+
+  @override
+  State<ExtendedPreviousTripsMap> createState() =>
+      _ExtendedPreviousTripsMapState();
+}
+
+class _ExtendedPreviousTripsMapState extends State<ExtendedPreviousTripsMap> {
+  File? image;
+  Future pickImage() async {
+    try {
+      final image = await ImagePicker().pickImage(source: ImageSource.gallery);
+
+      final imageTemporary = File(image!.path);
+      setState(() {
+        this.image = imageTemporary;
+      });
+    } on PlatformException catch (e) {
+      print(e);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -61,17 +87,49 @@ class ExtendedPreviousTripsMap extends StatelessWidget {
                                     ),
                                   ),
                                   actions: [
-                                    TextButton(
-                                      onPressed: () {
-                                        Navigator.of(context).pop();
-                                      },
-                                      child: Text(
-                                        'Close',
-                                        style: TextStyle(
-                                          fontSize: 15,
+                                    Row(children: [
+                                      TextButton(
+                                        onPressed: () {
+                                          pickImage().then((value) {
+                                            final fileStorageData = Provider.of<
+                                                    FileStorageProvider>(
+                                                context,
+                                                listen: false);
+                                            if (image != null) {
+                                              fileStorageData
+                                                  .uploadPhotoToTripLocation(
+                                                      image!.path,
+                                                      currentTripId,
+                                                      '2');
+                                              Navigator.of(context)
+                                                  .pushNamedAndRemoveUntil(
+                                                      '/home',
+                                                      (route) => false);
+                                              pageNum = 4;
+                                            }
+                                          });
+                                        },
+                                        child: Text(
+                                          'Post Photo',
+                                          style: TextStyle(
+                                            fontSize: 15,
+                                          ),
+                                          // add icon
                                         ),
                                       ),
-                                    ),
+                                      Spacer(),
+                                      TextButton(
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                        },
+                                        child: Text(
+                                          'Close',
+                                          style: TextStyle(
+                                            fontSize: 15,
+                                          ),
+                                        ),
+                                      ),
+                                    ]),
                                   ],
                                 );
                               });

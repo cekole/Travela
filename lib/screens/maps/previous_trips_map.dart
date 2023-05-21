@@ -67,11 +67,12 @@ class _PreviousTripsMapState extends State<PreviousTripsMap> {
                                       Provider.of<FileStorageProvider>(context,
                                           listen: false);
                                   if (image != null) {
-                                    fileStorageData.uploadPhotoToTripLocation(
-                                        image!.path, currentTripId, '2');
-                                    Navigator.of(context)
-                                        .pushNamedAndRemoveUntil(
-                                            '/home', (route) => false);
+                                    fileStorageData
+                                        .uploadPhotoToTripLocation(
+                                            image!.path, currentTripId, '6')
+                                        .then((value) =>
+                                            Navigator.of(context).pop());
+
                                     pageNum = 4;
                                   }
                                 });
