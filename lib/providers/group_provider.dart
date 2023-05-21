@@ -9,6 +9,7 @@ import 'package:travela_mobile/models/city.dart';
 import 'package:travela_mobile/models/country.dart';
 import 'package:travela_mobile/models/destination.dart';
 import 'package:travela_mobile/models/travel_group.dart';
+import 'package:travela_mobile/models/trip.dart';
 import 'package:travela_mobile/models/user.dart';
 
 class GroupProvider with ChangeNotifier {
@@ -16,12 +17,22 @@ class GroupProvider with ChangeNotifier {
   List<Destination> _groupTripSuggestions = [];
   List<Map<String, dynamic>> _chatMessages = [];
 
+  List<Trip> _draftTrips = [];
+
   List<TravelGroup> get groups {
     return [..._groups];
   }
 
   List<Destination> get groupTripSuggestions {
     return [..._groupTripSuggestions];
+  }
+
+  List<Map<String, dynamic>> get chatMessages {
+    return [..._chatMessages];
+  }
+
+  List<Trip> get draftTrips {
+    return [..._draftTrips];
   }
 
   Future<void> fetchAndSetGroupsByUserId(String uId) async {
@@ -297,7 +308,7 @@ class GroupProvider with ChangeNotifier {
     }
   }
 
-  Future<void> getDraftTrips(String groupId) async {
+  Future<List<Trip>> getDraftTrips(String groupId) async {
     final url = baseUrl + 'groups/$groupId/draftTrips';
     print(url);
     final response = await http.get(
@@ -308,39 +319,56 @@ class GroupProvider with ChangeNotifier {
     );
     print(response.statusCode);
     if (response.statusCode == 200) {
-      print('getDraftTrips succeeded');
-      final extractedData = json.decode(response.body) as List<dynamic>;
-      if (extractedData == null) {
-        return;
+      final List<dynamic> responseData = json.decode(response.body);
+      final List<Trip> trips = [];
+
+      for (final tripData in responseData) {
+        final trip = Trip(
+          id: tripData['trip_id'].toString(),
+          name: tripData['tripName'],
+          description: tripData['tripDescription'],
+          activities: tripData['activities'] != null
+              ? List<String>.from(tripData['activities'])
+              : [],
+          travelGroup: '',
+          photos: tripData['photos'] != null
+              ? List<String>.from(tripData['photos'])
+              : [],
+          status: tripData['status'],
+          startDate: tripData['startDate'] != null
+              ? DateTime.parse(tripData['startDate'])
+              : null,
+          endDate: tripData['endDate'] != null
+              ? DateTime.parse(tripData['endDate'])
+              : null,
+        );
+
+        trips.add(trip);
       }
 
-      extractedData.forEach(
-        (trips) {
-          draftTrips.add(trips);
-        },
-      );
-
+      _draftTrips = trips;
       notifyListeners();
-      return json.decode(response.body);
+
+      print('Get all trips success');
+      return draftTrips;
     } else {
-      print('getParticipants failed');
+      print('Get all trips failed');
+      return [];
     }
   }
 
-  Future acceptDraftTrip(String groupId, String tripId) async {
-    final url = baseUrl + 'groups/$groupId/trips/add/$tripId';
+  Future<void> acceptDraftTrip(String groupId, String tripId) async {
+    final url = baseUrl + 'groups/$groupId/acceptDraftTrip/$tripId';
     print(url);
     final response = await http.put(
       Uri.parse(url),
       headers: {
         'Authorization': 'Bearer  $bearerToken',
-        'Content-Type': 'application/json',
       },
     );
     print(response.statusCode);
     if (response.statusCode == 200) {
       print('acceptDraftTrip succeeded');
-      return json.decode(response.body);
     } else {
       print('acceptDraftTrip failed');
     }

@@ -3,6 +3,7 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 import 'package:travela_mobile/appConstant.dart';
+import 'package:travela_mobile/models/city.dart';
 import 'package:travela_mobile/models/destination.dart';
 import 'package:travela_mobile/providers/destinations_provider.dart';
 import 'package:travela_mobile/providers/transportation_provider.dart';
@@ -24,6 +25,9 @@ class _FlightsPageState extends State<FlightsPage> {
 
   late String originCode;
   String destinationCode = '';
+
+  late String originCityName;
+  String destinationCityName = '';
 
   DateRangePickerController _dateRangePickerController =
       DateRangePickerController();
@@ -54,6 +58,7 @@ class _FlightsPageState extends State<FlightsPage> {
           ModalRoute.of(context)!.settings.arguments as Destination;
       setState(() {
         originCode = destinationFull.cityIataCode;
+        originCityName = destinationFull.city;
       });
     });
   }
@@ -229,7 +234,14 @@ class _FlightsPageState extends State<FlightsPage> {
                 _numberOfPeople,
               )
                   .then((value) {
-                Navigator.of(context).pushNamed('/transportation_list');
+                Navigator.of(context).pushNamed(
+                  '/transportation_list',
+                  arguments: [
+                    destinationFull,
+                    originCityName,
+                    destinationCityName
+                  ],
+                );
               });
             },
             child: Text('Search'),
@@ -322,8 +334,10 @@ class _FlightsPageState extends State<FlightsPage> {
                               setState(() {
                                 if (isOrigin) {
                                   originCode = destination.cityIataCode;
+                                  originCityName = destination.city;
                                 } else {
                                   destinationCode = destination.cityIataCode;
+                                  destinationCityName = destination.city;
                                 }
                               });
                               Navigator.of(context).pop();

@@ -44,6 +44,7 @@ class _EditTravelGroupState extends State<EditTravelGroup> {
     super.initState();
     final groupData = Provider.of<GroupProvider>(context, listen: false);
     groupData.getTripSuggestions(currentGroupIdForSuggestions);
+    groupData.getDraftTrips(currentGroupIdForSuggestions);
     groupData.getChat(currentGroupIdForSuggestions).then((messages) {
       setState(() {
         currentChatMessages = messages;
@@ -292,101 +293,74 @@ class _EditTravelGroupState extends State<EditTravelGroup> {
               ElevatedButton(
                   onPressed: () {
                     showModalBottomSheet(
-                      isScrollControlled: true,
-                      useRootNavigator: true,
-                      context: context,
-                      builder: (context) {
-                        return Container(
-                          height: MediaQuery.of(context).size.height * 0.85,
-                          child: Column(
-                            children: [
-                              Stack(
-                                children: [
-                                  Container(
-                                    height: MediaQuery.of(context).size.height *
-                                        0.4,
-                                    decoration: BoxDecoration(),
-                                  ),
-                                  Positioned(
-                                    top: 20,
-                                    left: 20,
-                                    child: IconButton(
-                                      onPressed: () {
-                                        Navigator.pop(context);
-                                      },
-                                      icon: Icon(
-                                        Icons.arrow_back,
-                                        color: Colors.white,
-                                        size: 30,
-                                        shadows: [
-                                          Shadow(
-                                            blurRadius: 10,
-                                            color: Colors.black,
-                                          ),
-                                        ],
-                                      ),
+                        isScrollControlled: true,
+                        useRootNavigator: true,
+                        context: context,
+                        builder: (context) {
+                          //show groupData.draftTrips
+                          return Container(
+                            height: MediaQuery.of(context).size.height * 0.8,
+                            child: Column(
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Text(
+                                    'Draft Trips',
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold,
                                     ),
                                   ),
-                                ],
-                              ),
-                              ExpansionTileCard(
-                                baseColor: Theme.of(context)
-                                    .primaryColor
-                                    .withOpacity(0.2),
-                                expandedColor:
-                                    Theme.of(context).backgroundColor,
-                                leading: CircleAvatar(
-                                  backgroundColor:
-                                      Theme.of(context).backgroundColor,
-                                  child: Icon(Icons.directions_car),
                                 ),
-                                title: // çağla ekleyecek
-                                    Text("buraya çağlaekleyince gelecek"),
-                                subtitle: pastTrips.length > 0
-                                    ? Text(pastTrips[0].period)
-                                    : Text(''),
-                                children: [
-                                  Divider(
-                                    thickness: 1,
-                                    height: 1,
+                                Expanded(
+                                  child: ListView.separated(
+                                    separatorBuilder: (context, index) =>
+                                        SizedBox(
+                                      height: 10,
+                                    ),
+                                    itemCount: groupData.draftTrips.length,
+                                    itemBuilder: (context, index) {
+                                      return Container(
+                                        decoration: BoxDecoration(
+                                          color: Colors.grey[100],
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                          border: Border.all(
+                                            color: Colors.grey[300]!,
+                                            width: 1,
+                                          ),
+                                        ),
+                                        child: ListTile(
+                                          onTap: () {},
+                                          title: Text(
+                                            groupData.draftTrips[index].name,
+                                          ),
+                                          trailing: //acceptDraft
+                                              IconButton(
+                                            onPressed: () async {
+                                              await groupData
+                                                  .acceptDraftTrip(
+                                                travelGroup.id,
+                                                groupData.draftTrips[index].id,
+                                              )
+                                                  .then((value) {
+                                                Navigator.of(context).pushNamed(
+                                                    '/edit_travel_group');
+                                              });
+                                            },
+                                            icon: Icon(Icons.check),
+                                          ),
+                                        ),
+                                      );
+                                    },
                                   ),
-                                  ListTile(
-                                    title: Text('Locations'),
-                                    subtitle: pastTrips.length > 0
-                                        ? Text(pastTrips
-                                            .map((e) => e.locations)
-                                            .join(','))
-                                        : Text(''),
-                                    leading: Icon(Icons.location_on),
-                                  ),
-                                  ListTile(
-                                    title: Text('Travelers'),
-                                    subtitle: Text(
-                                        'You, Yağmur Eryılmaz, Efe Şaman, Çağla Ataoğlu, Efe Ertürk'),
-                                    leading: Icon(Icons.people),
-                                  ),
-                                  ListTile(
-                                    title: Text('Transportation'),
-                                    subtitle: Text(
-                                        'Car \n8/20/2021 12:00 PM - 8/24/2021 12:00 PM'),
-                                    leading: Icon(Icons.mode_of_travel_sharp),
-                                  ),
-                                  ListTile(
-                                    title: Text('Accomodation'),
-                                    subtitle: pastTrips.length > 0
-                                        ? Text(pastTrips
-                                            .map((e) => e.accomodation)
-                                            .join(','))
-                                        : Text(''),
-                                    leading: Icon(Icons.hotel),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        );
-                      },
-                    );
+                                ),
+                              ],
+                            ),
+                          );
+                        });
                   },
                   child: Text('Trip Options')),
             ],
@@ -765,7 +739,8 @@ class _EditTravelGroupState extends State<EditTravelGroup> {
                 padding: const EdgeInsets.all(8.0),
                 child: TextButton(
                   onPressed: () {
-                    /* Navigator.of(context).pushNamed('/destination_list'); */
+                    Navigator.pop(context);
+                    Navigator.pop(context);
                   },
                   child: Text(
                     'Add To Draft',

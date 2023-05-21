@@ -18,8 +18,19 @@ import 'package:travela_mobile/providers/group_provider.dart';
 class UserProvider with ChangeNotifier {
   List<Destination> _suggestedDestinations = [];
 
+  List<Trip> _upcomingTrips = [];
+  List<Trip> _previousTrips = [];
+
   List<Destination> get suggestedDestinations {
     return [..._suggestedDestinations];
+  }
+
+  List<Trip> get upcomingTrips {
+    return [..._upcomingTrips];
+  }
+
+  List<Trip> get previousTrips {
+    return [..._previousTrips];
   }
 
   Future getAllUsers() async {
@@ -436,25 +447,98 @@ class UserProvider with ChangeNotifier {
       Uri.parse(url),
       headers: {
         'Authorization': 'Bearer  $bearerToken',
-        'Content-Type': 'application/json',
       },
     );
     print(response.statusCode);
 
     if (response.statusCode == 200) {
-      print('getUpcomingTrips success');
-      final extractedData = json.decode(response.body) as List<dynamic>;
-      if (extractedData == null) {
-        return;
+      final List<dynamic> responseData = json.decode(response.body);
+      final List<Trip> trips = [];
+
+      for (final tripData in responseData) {
+        final trip = Trip(
+          id: tripData['trip_id'].toString(),
+          name: tripData['tripName'],
+          description: tripData['tripDescription'],
+          activities: tripData['activities'] != null
+              ? List<String>.from(tripData['activities'])
+              : [],
+          travelGroup: '',
+          photos: tripData['photos'] != null
+              ? List<String>.from(tripData['photos'])
+              : [],
+          status: tripData['status'],
+          startDate: tripData['startDate'] != null
+              ? DateTime.parse(tripData['startDate'])
+              : null,
+          endDate: tripData['endDate'] != null
+              ? DateTime.parse(tripData['endDate'])
+              : null,
+        );
+
+        trips.add(trip);
       }
-      extractedData.forEach(
-        (trip) {
-          upcomingTrips.add(trip);
-        },
-      );
+
+      _upcomingTrips = trips;
+
       notifyListeners();
+
+      print('Get all trips success');
+      return trips;
     } else {
-      print('getUpcomingTrips failed');
+      print('Get all trips failed');
+      return [];
+    }
+  }
+
+  Future getPreviousTrips(String userId) async {
+    final url = baseUrl + 'users/$userId/trips/past';
+    print(url);
+    final response = await http.get(
+      Uri.parse(url),
+      headers: {
+        'Authorization': 'Bearer  $bearerToken',
+      },
+    );
+    print(response.statusCode);
+
+    if (response.statusCode == 200) {
+      final List<dynamic> responseData = json.decode(response.body);
+      final List<Trip> trips = [];
+
+      for (final tripData in responseData) {
+        final trip = Trip(
+          id: tripData['trip_id'].toString(),
+          name: tripData['tripName'],
+          description: tripData['tripDescription'],
+          activities: tripData['activities'] != null
+              ? List<String>.from(tripData['activities'])
+              : [],
+          travelGroup: '',
+          photos: tripData['photos'] != null
+              ? List<String>.from(tripData['photos'])
+              : [],
+          status: tripData['status'],
+          startDate: tripData['startDate'] != null
+              ? DateTime.parse(tripData['startDate'])
+              : null,
+          endDate: tripData['endDate'] != null
+              ? DateTime.parse(tripData['endDate'])
+              : null,
+        );
+
+        trips.add(trip);
+      }
+
+      _previousTrips = trips;
+
+      notifyListeners();
+
+      print('Get all trips success');
+      return trips;
+    } else {
+      print('Get all trips failed');
+      return [];
     }
   }
 

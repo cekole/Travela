@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:travela_mobile/appConstant.dart';
@@ -137,8 +140,44 @@ class _AccommodationListState extends State<AccommodationList> {
       },
     ).then(
       (value) {
-        Navigator.of(context).pop();
-        Navigator.of(context).pop();
+        if (value != null) {
+          //show dialog success
+          Platform.isIOS
+              ? showCupertinoDialog(
+                  context: context,
+                  builder: (context) => CupertinoAlertDialog(
+                    title: const Text('Success'),
+                    content: Text(
+                        'Accomodation for ${locations[0]['locationName']} added successfully'),
+                    actions: [
+                      CupertinoDialogAction(
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                          Navigator.of(context).pop();
+                        },
+                        child: const Text('OK'),
+                      ),
+                    ],
+                  ),
+                )
+              : showDialog(
+                  context: context,
+                  builder: (context) => AlertDialog(
+                    title: const Text('Success'),
+                    content: Text(
+                        'Accomodation for ${locations[0]['locationName']} added successfully'),
+                    actions: [
+                      TextButton(
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                          Navigator.of(context).pop();
+                        },
+                        child: const Text('OK'),
+                      ),
+                    ],
+                  ),
+                );
+        }
       },
     );
   }

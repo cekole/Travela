@@ -27,7 +27,7 @@ class TripsPage extends StatelessWidget {
 
     final userData = Provider.of<UserProvider>(context, listen: false);
     userData.getUpcomingTrips(userId);
-    userData.getPastTrips(userId);
+    userData.getPreviousTrips(userId);
 
     return Scaffold(
       drawerEnableOpenDragGesture: false,
@@ -41,7 +41,7 @@ class TripsPage extends StatelessWidget {
         onPressed: () {
           _travelGroupModal(context);
         },
-        label: Text('Arrange Trip'),
+        label: Text('Upcoming Trips'),
         backgroundColor: Theme.of(context).primaryColor,
       ),
       body: SafeArea(
@@ -68,142 +68,46 @@ class TripsPage extends StatelessWidget {
                   Divider(
                     thickness: 2,
                   ),
-                  ExpansionTileCard(
-                    baseColor: Theme.of(context).primaryColor.withOpacity(0.2),
-                    expandedColor: Theme.of(context).backgroundColor,
-                    leading: CircleAvatar(
-                      backgroundColor: Theme.of(context).backgroundColor,
-                      child: Icon(Icons.directions_boat),
-                    ),
-                    title: Text(upcomingTrips.length > 0
-                        ? upcomingTrips[0].name
-                        : 'Italy Trip'),
-                    subtitle: upcomingTrips.length > 0
-                        ? Text(upcomingTrips[0].period)
-                        : Text(''),
-                    children: [
-                      Divider(
-                        thickness: 1,
-                        height: 1,
-                      ),
-                      ListTile(
-                        title: Text('Locations'),
-                        subtitle: upcomingTrips.length > 0
-                            ? Text(
-                                upcomingTrips.map((e) => e.locations).join(','))
-                            : Text(''),
-                        leading: Icon(Icons.location_on),
-                      ),
-                      ListTile(
-                        title: Text('Travelers'),
-                        subtitle: Text(upcomingTrips.length > 0
-                            ? upcomingTrips.map((e) => e.travelGroup).join(',')
-                            : ''),
-                        leading: Icon(Icons.people),
-                      ),
-                      ListTile(
-                        title: Text('Transportation'),
-                        subtitle: Text(upcomingTrips.length > 0
-                            ? upcomingTrips
-                                .map((e) => e.transportation)
-                                .join(',')
-                            : ''),
-                        leading: Icon(Icons.mode_of_travel_sharp),
-                      ),
-                      ListTile(
-                        title: Text('Accomodation'),
-                        subtitle: upcomingTrips.length > 0
-                            ? Text(upcomingTrips
-                                .map((e) => e.accomodation)
-                                .join(','))
-                            : Text(''),
-                        leading: Icon(Icons.hotel),
-                      ),
-                      ListTile(
-                        title: Text('Description'),
-                        subtitle: upcomingTrips.length > 0
-                            ? Text(upcomingTrips
-                                .map((e) => e.description)
-                                .join(','))
-                            : Text(''),
-                        leading: Icon(Icons.note),
-                      ),
-                      ListTile(
-                        trailing: IconButton(
-                          onPressed: () {
-                            // create a modal to change the trip info
-                            showModalBottomSheet(
-                              context: context,
-                              builder: (context) => Container(
-                                height: 300,
-                                child: Column(
-                                  children: [
-                                    SizedBox(
-                                      height: 20,
-                                    ),
-                                    Text(
-                                      'Edit Trip Info',
-                                      style: TextStyle(
-                                        fontSize: 20,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                    TextField(
-                                      decoration: InputDecoration(
-                                        hintText: 'Trip Name',
-                                      ),
-                                      onChanged: (value) {
-                                        _groupNameController.text = value;
-                                      },
-                                    ),
-                                    TextField(
-                                      decoration: InputDecoration(
-                                        hintText: 'Trip Description',
-                                      ),
-                                      onChanged: (value) {
-                                        _groupDescriptionController.text =
-                                            value;
-                                      },
-                                    ),
-                                    SizedBox(
-                                      height: 20,
-                                    ),
-                                    ElevatedButton(
-                                      onPressed: () {
-                                        final tripData =
-                                            Provider.of<TripProvider>(context,
-                                                listen: false);
-                                        tripData.updateTrip(
-                                            currentTripId, // buraya trip id gelecek bu çalışmaz şu an
-                                            _groupNameController.text,
-                                            _groupDescriptionController.text,
-                                            currentGroupId);
-                                      },
-                                      child: Text('Update Trip'),
-                                    ),
-                                    TextButton(
-                                      onPressed: () {
-                                        final tripData =
-                                            Provider.of<TripProvider>(context,
-                                                listen: false);
-                                        tripData.deleteTrip(currentTripId);
-                                        Navigator.pop(context);
-                                      },
-                                      child: Text(
-                                        'Delete Trip',
-                                        style: TextStyle(color: Colors.red),
-                                      ),
-                                    )
-                                  ],
-                                ),
-                              ),
-                            );
-                          },
-                          icon: Icon(Icons.edit),
+                  for (var trip in userData.upcomingTrips)
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 8.0),
+                      child: ExpansionTileCard(
+                        baseColor:
+                            Theme.of(context).primaryColor.withOpacity(0.2),
+                        expandedColor: Theme.of(context).backgroundColor,
+                        leading: CircleAvatar(
+                          backgroundColor: Theme.of(context).backgroundColor,
+                          child: Icon(
+                            Icons.flight,
+                            color: Theme.of(context).primaryColor,
+                          ),
                         ),
-                      )
-                    ],
-                  ),
+                        title: Text(trip.name),
+                        subtitle: Text(trip.status),
+                        children: [
+                          Divider(
+                            thickness: 1.0,
+                            height: 1.0,
+                          ),
+                          Align(
+                            alignment: Alignment.centerLeft,
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 16.0,
+                                vertical: 8.0,
+                              ),
+                              child: Text(
+                                trip.description,
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodyText2!
+                                    .copyWith(fontSize: 16),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
                   SizedBox(
                     height: 20,
                   ),
@@ -229,55 +133,46 @@ class TripsPage extends StatelessWidget {
                       ),
                     ],
                   ),
-                  Divider(
-                    thickness: 2,
-                  ),
-                  ExpansionTileCard(
-                    baseColor: Theme.of(context).primaryColor.withOpacity(0.2),
-                    expandedColor: Theme.of(context).backgroundColor,
-                    leading: CircleAvatar(
-                      backgroundColor: Theme.of(context).backgroundColor,
-                      child: Icon(Icons.directions_car),
+                  for (var trip in userData.previousTrips)
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 8.0),
+                      child: ExpansionTileCard(
+                        baseColor:
+                            Theme.of(context).primaryColor.withOpacity(0.2),
+                        expandedColor: Theme.of(context).backgroundColor,
+                        leading: CircleAvatar(
+                          backgroundColor: Theme.of(context).backgroundColor,
+                          child: Icon(
+                            Icons.flight,
+                            color: Theme.of(context).primaryColor,
+                          ),
+                        ),
+                        title: Text(trip.name),
+                        subtitle: Text(trip.status),
+                        children: [
+                          Divider(
+                            thickness: 1.0,
+                            height: 1.0,
+                          ),
+                          Align(
+                            alignment: Alignment.centerLeft,
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 16.0,
+                                vertical: 8.0,
+                              ),
+                              child: Text(
+                                trip.description,
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodyText2!
+                                    .copyWith(fontSize: 16),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
-                    title: // çağla ekleyecek
-                        Text("Trip To Greece"),
-                    subtitle: pastTrips.length > 0
-                        ? Text(pastTrips[0].period)
-                        : Text(''),
-                    children: [
-                      Divider(
-                        thickness: 1,
-                        height: 1,
-                      ),
-                      ListTile(
-                        title: Text('Locations'),
-                        subtitle: pastTrips.length > 0
-                            ? Text(pastTrips.map((e) => e.locations).join(','))
-                            : Text(''),
-                        leading: Icon(Icons.location_on),
-                      ),
-                      ListTile(
-                        title: Text('Travelers'),
-                        subtitle: Text(
-                            'You, Yağmur Eryılmaz, Efe Şaman, Çağla Ataoğlu, Efe Ertürk'),
-                        leading: Icon(Icons.people),
-                      ),
-                      ListTile(
-                        title: Text('Transportation'),
-                        subtitle: Text(
-                            'Car \n8/20/2021 12:00 PM - 8/24/2021 12:00 PM'),
-                        leading: Icon(Icons.mode_of_travel_sharp),
-                      ),
-                      ListTile(
-                        title: Text('Accomodation'),
-                        subtitle: pastTrips.length > 0
-                            ? Text(
-                                pastTrips.map((e) => e.accomodation).join(','))
-                            : Text(''),
-                        leading: Icon(Icons.hotel),
-                      ),
-                    ],
-                  ),
                   Divider(
                     thickness: 2,
                   ),
@@ -540,182 +435,6 @@ Future<dynamic> searchDialog(BuildContext context) {
             Divider(
               thickness: 1,
             ),
-            /* Container(
-                decoration: BoxDecoration(
-                  color: Colors.grey[200],
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                padding: EdgeInsets.all(10),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Row(
-                            children: [
-                              Text('Price Range'),
-                              Expanded(
-                                child: RangeSlider(
-                                  activeColor: Theme.of(context).primaryColor,
-                                  values: _currentPriceRangeValues,
-                                  max: 100,
-                                  labels: RangeLabels(
-                                    _currentPriceRangeValues.start
-                                        .round()
-                                        .toString(),
-                                    _currentPriceRangeValues.end
-                                        .round()
-                                        .toString(),
-                                  ),
-                                  onChanged: (values) {
-                                    setState(() {
-                                      _currentPriceRangeValues = values;
-                                    });
-                                  },
-                                ),
-                              ),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Column(
-                                    children: [
-                                      Container(
-                                        padding: EdgeInsets.all(5),
-                                        decoration: BoxDecoration(
-                                          border: Border.all(
-                                            color:
-                                                Theme.of(context).primaryColor,
-                                          ),
-                                          borderRadius:
-                                              BorderRadius.circular(5),
-                                        ),
-                                        child: Text(
-                                          _currentPriceRangeValues.start
-                                              .round()
-                                              .toString(),
-                                        ),
-                                      ),
-                                      Text('Min'),
-                                    ],
-                                  ),
-                                  VerticalDivider(),
-                                  Column(
-                                    children: [
-                                      Container(
-                                        padding: EdgeInsets.all(5),
-                                        decoration: BoxDecoration(
-                                          border: Border.all(
-                                            color:
-                                                Theme.of(context).primaryColor,
-                                          ),
-                                          borderRadius:
-                                              BorderRadius.circular(5),
-                                        ),
-                                        child: Text(
-                                          _currentPriceRangeValues.end
-                                              .round()
-                                              .toString(),
-                                        ),
-                                      ),
-                                      Text('Max'),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                          Divider(),
-                          Row(
-                            children: [
-                              Text('Distance(km)'),
-                              Expanded(
-                                child: RangeSlider(
-                                  activeColor: Theme.of(context).primaryColor,
-                                  values: _currentDistanceRangeValues,
-                                  max: 1000,
-                                  labels: RangeLabels(
-                                    _currentDistanceRangeValues.start
-                                        .round()
-                                        .toString(),
-                                    _currentDistanceRangeValues.end
-                                        .round()
-                                        .toString(),
-                                  ),
-                                  onChanged: (values) {
-                                    setState(() {
-                                      _currentDistanceRangeValues = values;
-                                    });
-                                  },
-                                ),
-                              ),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Column(
-                                    children: [
-                                      Container(
-                                        padding: EdgeInsets.all(5),
-                                        decoration: BoxDecoration(
-                                          border: Border.all(
-                                            color:
-                                                Theme.of(context).primaryColor,
-                                          ),
-                                          borderRadius:
-                                              BorderRadius.circular(5),
-                                        ),
-                                        child: Text(
-                                          _currentDistanceRangeValues.start
-                                              .round()
-                                              .toString(),
-                                        ),
-                                      ),
-                                      Text('Min'),
-                                    ],
-                                  ),
-                                  VerticalDivider(),
-                                  Column(
-                                    children: [
-                                      Container(
-                                        padding: EdgeInsets.all(5),
-                                        decoration: BoxDecoration(
-                                          border: Border.all(
-                                            color:
-                                                Theme.of(context).primaryColor,
-                                          ),
-                                          borderRadius:
-                                              BorderRadius.circular(5),
-                                        ),
-                                        child: Text(
-                                          _currentDistanceRangeValues.end
-                                              .round()
-                                              .toString(),
-                                        ),
-                                      ),
-                                      Text('Max'),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ), 
-              SizedBox(
-                height: 10,
-              ),
-              SizedBox(
-                height: 10,
-              ),
-              ElevatedButton(
-                onPressed: () {},
-                child: Text('Apply'),
-              ),
-              */
             SizedBox(
               height: 10,
             ),

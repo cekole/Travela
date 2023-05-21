@@ -7,27 +7,64 @@ import 'package:travela_mobile/appConstant.dart';
 import 'package:http/http.dart' as http;
 import 'package:travela_mobile/models/city.dart';
 import 'package:travela_mobile/models/country.dart';
+import 'package:travela_mobile/models/trip.dart';
 import 'package:travela_mobile/models/user.dart';
 import 'package:travela_mobile/models/travel_group.dart';
 
 class TripProvider with ChangeNotifier {
-  Future getAll() async {
+  List<Trip> _trips = [];
+
+  List<Trip> get trips {
+    return [..._trips];
+  }
+
+  Future<List<Trip>> getAll() async {
     final url = baseUrl + 'trips';
-    print(url);
     final response = await http.get(
       Uri.parse(url),
       headers: {
-        'Authorization': 'Bearer  $bearerToken',
+        'Authorization': 'Bearer $bearerToken',
         'Content-Type': 'application/json',
       },
     );
-    print(response.statusCode);
 
     if (response.statusCode == 200) {
-      print('get all trips success');
-      return json.decode(response.body);
+      final List<dynamic> responseData = json.decode(response.body);
+      final List<Trip> trips = [];
+
+      for (final tripData in responseData) {
+        final trip = Trip(
+          id: tripData['trip_id'].toString(),
+          name: tripData['tripName'],
+          description: tripData['tripDescription'],
+          activities: tripData['activities'] != null
+              ? List<String>.from(tripData['activities'])
+              : [],
+          travelGroup: '',
+          photos: tripData['photos'] != null
+              ? List<String>.from(tripData['photos'])
+              : [],
+          status: tripData['status'],
+          startDate: tripData['startDate'] != null
+              ? DateTime.parse(tripData['startDate'])
+              : null,
+          endDate: tripData['endDate'] != null
+              ? DateTime.parse(tripData['endDate'])
+              : null,
+        );
+
+        trips.add(trip);
+      }
+
+      _trips = trips;
+
+      notifyListeners();
+
+      print('Get all trips success');
+      return trips;
     } else {
-      print('get all trips failed');
+      print('Get all trips failed');
+      return [];
     }
   }
 
