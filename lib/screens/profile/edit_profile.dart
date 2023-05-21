@@ -65,13 +65,65 @@ class _EditProfileState extends State<EditProfile> {
                     children: [
                       CircleAvatar(
                         radius: 40,
-                        backgroundImage: image == null
-                            ? null
-                            : MemoryImage(profilePic, scale: 1),
+                        backgroundColor: Colors.grey,
+                        backgroundImage: MemoryImage(profilePic),
                       ),
                       IconButton(
                         onPressed: () {
-                          pickImage();
+                          pickImage().then((value) => showDialog(
+                                context: context,
+                                builder: (context) => Platform.isIOS
+                                    ? CupertinoAlertDialog(
+                                        title: Text('Upload Profile Picture'),
+                                        content: Text(
+                                            'Are you sure you want to upload this picture?'),
+                                        actions: [
+                                          TextButton(
+                                            onPressed: () {
+                                              Navigator.of(context).pop();
+                                            },
+                                            child: Text('No'),
+                                          ),
+                                          TextButton(
+                                            onPressed: () {
+                                              if (image != null) {
+                                                fileStorage.uploadProfilePic(
+                                                    image!.path, userId);
+                                                Navigator.of(context)
+                                                    .pushNamedAndRemoveUntil(
+                                                        '/home',
+                                                        (route) => false);
+                                                pageNum = 4;
+                                              }
+                                            },
+                                            child: Text('Yes'),
+                                          ),
+                                        ],
+                                      )
+                                    : AlertDialog(
+                                        title: Text('Upload Profile Picture'),
+                                        content: Text(
+                                            'Are you sure you want to upload this picture?'),
+                                        actions: [
+                                          TextButton(
+                                            onPressed: () {
+                                              Navigator.of(context).pop();
+                                            },
+                                            child: Text('No'),
+                                          ),
+                                          TextButton(
+                                            onPressed: () {
+                                              if (image != null) {
+                                                fileStorage.uploadProfilePic(
+                                                    image!.path, userId);
+                                                Navigator.of(context).pop();
+                                              }
+                                            },
+                                            child: Text('Yes'),
+                                          ),
+                                        ],
+                                      ),
+                              ));
                         },
                         icon: Icon(
                           Icons.camera_alt,
