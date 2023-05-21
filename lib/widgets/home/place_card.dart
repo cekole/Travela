@@ -32,6 +32,7 @@ class PlaceCard extends StatefulWidget {
 }
 
 class _PlaceCardState extends State<PlaceCard> {
+  final placeholderImage = AssetImage('assets/images/placeholder.jpg');
   bool isFavorite = false;
 
   void toggleFavorite() {
@@ -306,19 +307,18 @@ class _PlaceCardState extends State<PlaceCard> {
                               margin: EdgeInsets.all(10),
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(10),
-                                image:
-                                    selectedAttractions[index].imageUrl == null
-                                        ? const DecorationImage(
-                                            image: AssetImage(
-                                                'assets/images/placeholder.png'),
-                                            fit: BoxFit.cover,
-                                          )
-                                        : DecorationImage(
-                                            image: NetworkImage(
-                                                selectedAttractions[index]
-                                                    .imageUrl),
-                                            fit: BoxFit.cover,
-                                          ),
+                                image: selectedAttractions[index].imageUrl == ""
+                                    ? const DecorationImage(
+                                        image: AssetImage(
+                                            'assets/images/destinations/placeholder.jpg'),
+                                        fit: BoxFit.cover,
+                                      )
+                                    : DecorationImage(
+                                        image: NetworkImage(
+                                            selectedAttractions[index]
+                                                .imageUrl),
+                                        fit: BoxFit.cover,
+                                      ),
                               ),
                               child: Column(
                                 mainAxisAlignment: MainAxisAlignment.end,
