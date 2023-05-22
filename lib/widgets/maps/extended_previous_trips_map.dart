@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -23,21 +24,55 @@ class ExtendedPreviousTripsMap extends StatefulWidget {
 
 class _ExtendedPreviousTripsMapState extends State<ExtendedPreviousTripsMap> {
   File? image;
-  Future pickImage() async {
-    try {
-      final image = await ImagePicker().pickImage(source: ImageSource.gallery);
+  late List<Uint8List> photoDataList; // List to store photo data
 
-      final imageTemporary = File(image!.path);
-      setState(() {
-        this.image = imageTemporary;
-      });
+  Future<void> pickImage() async {
+    try {
+      final imagePicker = ImagePicker();
+      final image = await imagePicker.pickImage(source: ImageSource.gallery);
+
+      if (image != null) {
+        final imageTemporary = File(image.path);
+        setState(() {
+          this.image = imageTemporary;
+        });
+      }
     } on PlatformException catch (e) {
       print(e);
     }
   }
 
+  Future<List<Uint8List>> getPhotos(List<String> tripIds) async {
+    List<Uint8List> dataList = [];
+    final tripData = Provider.of<TripProvider>(context, listen: false);
+    final fileStorageData =
+        Provider.of<FileStorageProvider>(context, listen: false);
+    for (var tripId in tripIds) {
+      final trip = await tripData.getById(tripId);
+
+      if (trip != null && trip.photos != null) {
+        for (var photo in trip.photos) {
+          if (photo != null) {
+            final photoData = await fileStorageData.getFile(photo);
+
+            if (photoData is Uint8List) {
+              dataList.add(photoData);
+            }
+          }
+        }
+      }
+    }
+
+    return dataList;
+  }
+
   @override
   Widget build(BuildContext context) {
+    // Retrieve necessary data providers
+    final tripData = Provider.of<TripProvider>(context, listen: false);
+    final fileStorageData =
+        Provider.of<FileStorageProvider>(context, listen: false);
+
     return Stack(
       children: [
         FlutterMap(
@@ -55,7 +90,6 @@ class _ExtendedPreviousTripsMapState extends State<ExtendedPreviousTripsMap> {
             MarkerLayerOptions(
               markers: [
                 for (var i = 0; i < currentVisitedCities.length; i++)
-                  //marker with modal
                   Marker(
                     width: 80.0,
                     height: 80.0,
@@ -73,100 +107,82 @@ class _ExtendedPreviousTripsMapState extends State<ExtendedPreviousTripsMap> {
                         onPressed: () async {
                           final String currentCityName =
                               currentVisitedCities[i][2];
-                          var selectedLocationId = '';
+                          var selectedLocationIds = <String>[];
+                          var selectedTripIds = <String>[];
                           var selectedTripId = '';
+                          var selectedLocationId = '';
 
-                          final tripData =
-                              Provider.of<TripProvider>(context, listen: false);
+                          final trips = await tripData.getAll();
+                          for (var trip in trips) {
+                            final locations =
+                                await tripData.getLocationsByTripId(trip.id);
+                            for (var location in locations) {
+                              if (location['locationName']
+                                      .toString()
+                                      .toLowerCase() ==
+                                  currentCityName.toLowerCase()) {
+                                selectedLocationId =
+                                    location['location_id'].toString();
+                                selectedTripId =
+                                    location['trip']['trip_id'].toString();
+                                print(selectedTripId);
+                                print(selectedLocationId);
+                                selectedLocationIds
+                                    .add(location['location_id'].toString());
+                                selectedTripIds.add(
+                                    location['trip']['trip_id'].toString());
+                              }
+                            }
+                          }
+                          print('out');
+                          print(selectedLocationId);
+                          print(selectedTripId);
 
-                          await tripData.getAll();
-                          tripData.trips.forEach(
-                            (element) {
-                              tripData.getLocationsByTripId(element.id).then(
-                                (value) {
-                                  value.forEach(
-                                    (element) {
-                                      if (element['locationName']
-                                              .toString()
-                                              .toLowerCase() ==
-                                          currentCityName.toLowerCase()) {
-                                        selectedLocationId =
-                                            element['location_id'].toString();
-                                        selectedTripId = element['trip']
-                                                ['trip_id']
-                                            .toString();
-                                      }
-                                    },
-                                  );
-                                },
-                              );
-                            },
-                          );
-                          showDialog(
-                              context: context,
-                              builder: (BuildContext context) {
-                                selectedTripId = '90';
-                                final trip = tripData.trips.firstWhere(
-                                  (element) => element.id == selectedTripId,
-                                  orElse: () => Trip(
-                                    id: '',
-                                    name: '',
-                                    description: '',
-                                    activities: [],
-                                    travelGroup: '',
-                                    photos: [],
-                                    status: 'draft',
-                                    startDate: startDate,
-                                    endDate: endDate,
-                                  ),
-                                );
-                                List<Uint8List> photoDataList = [];
-                                final fileStorageData =
-                                    Provider.of<FileStorageProvider>(context,
-                                        listen: false);
+                          photoDataList = [];
 
-                                if (trip != null && trip.photos != null) {
-                                  for (var photo in trip.photos) {
-                                    if (photo != null) {
-                                      fileStorageData.getFile(photo);
-                                    }
+                          for (var tripId in selectedTripIds) {
+                            final trip = await tripData.getById(tripId);
+
+                            if (trip != null && trip.photos != null) {
+                              for (var photo in trip.photos) {
+                                if (photo != null) {
+                                  final photoData =
+                                      await fileStorageData.getFile(photo);
+
+                                  if (photoData is Uint8List) {
+                                    photoDataList.add(photoData);
                                   }
                                 }
+                              }
+                            }
+                          }
 
-                                fileStorageData.getFile(trip.photos[0]);
-
-                                return AlertDialog(
-                                  title: Text(
-                                    currentVisitedCities[i][2],
-                                    style: TextStyle(
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                  content: Row(
-                                    children: [
-                                      trip.photos.isEmpty || trip.photos == null
-                                          ? Container()
-                                          : CircleAvatar(
-                                              child: Container(
-                                                decoration: BoxDecoration(),
-                                                child: Image.memory(
-                                                  fileStorageData.tripPhoto!,
-                                                  fit: BoxFit.cover,
-                                                ),
-                                              ),
-                                            ),
-                                      Text(
-                                        currentVisitedCities[i][3],
-                                        style: TextStyle(
-                                          fontSize: 15,
-                                        ),
+                          showModalBottomSheet(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(20),
+                                topRight: Radius.circular(20),
+                              ),
+                            ),
+                            context: context,
+                            builder: (BuildContext context) {
+                              return Container(
+                                height:
+                                    MediaQuery.of(context).size.height * 0.75,
+                                padding: EdgeInsets.all(20),
+                                child: Column(
+                                  children: [
+                                    Text(
+                                      currentVisitedCities[i][2],
+                                      style: TextStyle(
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.bold,
                                       ),
-                                    ],
-                                  ),
-                                  actions: [
-                                    Row(children: [
-                                      TextButton(
+                                    ),
+                                    SizedBox(height: 10),
+                                    Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: TextButton(
                                         style: ButtonStyle(
                                           foregroundColor:
                                               MaterialStateProperty.all<Color>(
@@ -175,10 +191,6 @@ class _ExtendedPreviousTripsMapState extends State<ExtendedPreviousTripsMap> {
                                         ),
                                         onPressed: () {
                                           pickImage().then((value) async {
-                                            final fileStorageData = Provider.of<
-                                                    FileStorageProvider>(
-                                                context,
-                                                listen: false);
                                             if (image != null) {
                                               await fileStorageData
                                                   .uploadPhotoToTripLocation(
@@ -193,28 +205,59 @@ class _ExtendedPreviousTripsMapState extends State<ExtendedPreviousTripsMap> {
                                         },
                                         child: Text(
                                           'Post Photo',
-                                          style: TextStyle(
-                                            fontSize: 15,
-                                          ),
-                                          // add icon
+                                          style: TextStyle(fontSize: 15),
                                         ),
                                       ),
-                                      Spacer(),
-                                      TextButton(
-                                        onPressed: () {
-                                          Navigator.of(context).pop();
-                                        },
-                                        child: Text(
-                                          'Close',
-                                          style: TextStyle(
-                                            fontSize: 15,
+                                    ),
+                                    photoDataList.isEmpty
+                                        ? Text('No photos yet')
+                                        : SizedBox(
+                                            height: 150,
+                                            child: ListView.separated(
+                                              scrollDirection: Axis.horizontal,
+                                              separatorBuilder:
+                                                  (context, index) =>
+                                                      SizedBox(width: 15),
+                                              itemCount: photoDataList.length,
+                                              itemBuilder: (context, index) {
+                                                return Container(
+                                                  padding: EdgeInsets.all(5),
+                                                  margin: EdgeInsets.only(
+                                                    right: 10,
+                                                  ),
+                                                  height: 100,
+                                                  decoration: BoxDecoration(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                      10,
+                                                    ),
+                                                    boxShadow: [
+                                                      BoxShadow(
+                                                        color: Colors.grey
+                                                            .withOpacity(0.5),
+                                                        spreadRadius: 2,
+                                                        blurRadius: 5,
+                                                        offset: Offset(0,
+                                                            3), // changes position of shadow
+                                                      ),
+                                                    ],
+                                                    border: Border.all(
+                                                      color: Colors.grey,
+                                                      width: 1,
+                                                    ),
+                                                  ),
+                                                  child: Image.memory(
+                                                    photoDataList[index],
+                                                  ),
+                                                );
+                                              },
+                                            ),
                                           ),
-                                        ),
-                                      ),
-                                    ]),
                                   ],
-                                );
-                              });
+                                ),
+                              );
+                            },
+                          );
                         },
                       ),
                     ),

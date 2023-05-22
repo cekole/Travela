@@ -19,6 +19,7 @@ import 'package:travela_mobile/providers/recommendation_provider.dart';
 import 'package:travela_mobile/providers/trip_provider.dart';
 import 'package:travela_mobile/screens/groups/groups_page.dart';
 import 'package:travela_mobile/widgets/group/suggestionsForGroup.dart';
+import 'package:travela_mobile/widgets/home/place_card.dart';
 import 'package:travela_mobile/widgets/home/popular_places.dart';
 import 'package:travela_mobile/widgets/home/suggestions.dart';
 
@@ -130,11 +131,69 @@ class _EditTravelGroupState extends State<EditTravelGroup> {
                             width: double.infinity,
                             padding: EdgeInsets.all(10),
                             child: ElevatedButton(
-                                onPressed: () {
-                                  arrangeTripcationModal(
-                                      context, groupData, travelGroup);
-                                },
-                                child: Text('Trip Options')),
+                              onPressed: () {
+                                arrangeTripcationModal(
+                                    context, groupData, travelGroup);
+                              },
+                              child: Text('Trip Options'),
+                            ),
+                          ),
+                          //Check out Popular Places
+                          SizedBox(height: 50),
+                          Text(
+                            'Popular Places',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                          Divider(
+                            color: Colors.grey,
+                            thickness: 1,
+                          ),
+                          Container(
+                            height: MediaQuery.of(context).size.height * 0.25,
+                            child: FutureBuilder(
+                              future: Future.delayed(Duration(seconds: 1)),
+                              builder: (context, snapshot) {
+                                return Consumer<DestinationsProvider>(
+                                  builder: (context, destinationsData, child) {
+                                    if (destinationsData
+                                        .popularDestinationsList.isEmpty) {
+                                      return ListView.builder(
+                                        scrollDirection: Axis.horizontal,
+                                        itemCount: 5,
+                                        itemBuilder: (context, index) {
+                                          return PlaceCard(
+                                            destination: 'Loading...',
+                                            image:
+                                                'assets/images/placeholder.png',
+                                            isArranged: false,
+                                          );
+                                        },
+                                      );
+                                    } else {
+                                      return ListView.builder(
+                                        scrollDirection: Axis.horizontal,
+                                        itemCount: destinationsData
+                                            .popularDestinationsList.length,
+                                        itemBuilder: (context, index) {
+                                          return PlaceCard(
+                                            destination:
+                                                '${destinationsData.popularDestinationsList[index].city}, ${destinationsData.popularDestinationsList[index].country}',
+                                            image: destinationsData
+                                                .popularDestinationsList[index]
+                                                .imageUrl,
+                                            isArranged: false,
+                                          );
+                                        },
+                                      );
+                                    }
+                                  },
+                                );
+                              },
+                            ),
                           ),
                         ],
                       ),
@@ -530,15 +589,14 @@ class _EditTravelGroupState extends State<EditTravelGroup> {
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      Divider(
-                        color: Colors.grey,
-                        thickness: 1,
-                      ),
+                      SizedBox(height: 20),
                       TextField(
                         controller: groupNameController,
                         decoration: InputDecoration(
                           hintText: 'Enter new group name',
-                          border: InputBorder.none,
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
                           contentPadding: EdgeInsets.only(
                             left: 15,
                           ),
@@ -1089,48 +1147,49 @@ void showAddFriendDialog(BuildContext context) {
                               context,
                               listen: false,
                             );
-                            Navigator.pushReplacementNamed(context, '/groups');
+
                             groupData.getGroupByUserId(userId).then(
                                   (value) => groupData
                                       .addUserToGroup(
                                     currentGroupId,
                                     currentFriendIds[index].toString(),
                                   )
-                                      .then((value) {
-                                    if (value) {
-                                      showDialog(
-                                          context: context,
-                                          builder: (context) =>
-                                              Theme.of(context).platform ==
-                                                      TargetPlatform.iOS
-                                                  ? CupertinoAlertDialog(
-                                                      title: Text('Success'),
-                                                      content: Text(
-                                                          'Successfully added ${currentFriendUsernames[index]} to group'),
-                                                      actions: [
-                                                        TextButton(
-                                                            onPressed: () {
-                                                              Navigator.pop(
-                                                                  context);
-                                                            },
-                                                            child: Text('OK'))
-                                                      ],
-                                                    )
-                                                  : AlertDialog(
-                                                      title: Text('Success'),
-                                                      content: Text(
-                                                          'Successfully added ${currentFriendUsernames[index]} to group'),
-                                                      actions: [
-                                                        TextButton(
-                                                            onPressed: () {
-                                                              Navigator.pop(
-                                                                  context);
-                                                            },
-                                                            child: Text('OK'))
-                                                      ],
-                                                    ));
-                                    } else {
-                                      showDialog(
+                                      .then(
+                                    (value) {
+                                      if (value) {
+                                        showDialog(
+                                            context: context,
+                                            builder: (context) =>
+                                                Theme.of(context).platform ==
+                                                        TargetPlatform.iOS
+                                                    ? CupertinoAlertDialog(
+                                                        title: Text('Success'),
+                                                        content: Text(
+                                                            'Successfully added ${currentFriendUsernames[index]} to group'),
+                                                        actions: [
+                                                          TextButton(
+                                                              onPressed: () {
+                                                                Navigator.pop(
+                                                                    context);
+                                                              },
+                                                              child: Text('OK'))
+                                                        ],
+                                                      )
+                                                    : AlertDialog(
+                                                        title: Text('Success'),
+                                                        content: Text(
+                                                            'Successfully added ${currentFriendUsernames[index]} to group'),
+                                                        actions: [
+                                                          TextButton(
+                                                              onPressed: () {
+                                                                Navigator.pop(
+                                                                    context);
+                                                              },
+                                                              child: Text('OK'))
+                                                        ],
+                                                      ));
+                                      } else {
+                                        showDialog(
                                           context: context,
                                           builder: (context) =>
                                               Theme.of(context).platform ==
@@ -1160,8 +1219,15 @@ void showAddFriendDialog(BuildContext context) {
                                                             },
                                                             child: Text('OK'))
                                                       ],
-                                                    ));
-                                    }
+                                                    ),
+                                        );
+                                      }
+                                    },
+                                  ).then((value) {
+                                    Navigator.of(context)
+                                        .pushNamedAndRemoveUntil(
+                                            '/home', (route) => false);
+                                    pageNum = 2;
                                   }),
                                 );
 

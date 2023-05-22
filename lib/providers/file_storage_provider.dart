@@ -114,24 +114,6 @@ class FileStorageProvider with ChangeNotifier {
     }
   }
 
-  Future<void> getProfilePic(String uId) async {
-    final url = baseUrl + 'files/getProfilePic/$uId';
-    print(url);
-    final response = await http.get(
-      Uri.parse(url),
-      headers: {
-        'Authorization': 'Bearer  $bearerToken',
-      },
-    );
-    print(response.statusCode);
-    final extractedData = json.decode(response.body) as List<dynamic>;
-    if (extractedData == null) {
-      return;
-    }
-    _profilePic = extractedData[0]['profilePic'];
-    notifyListeners();
-  }
-
   Future<void> getPhotosOfTrip(String tripId) async {
     final url = baseUrl + 'files/getProfilePic/$tripId';
     print(url);
