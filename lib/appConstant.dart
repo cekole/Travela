@@ -38,7 +38,6 @@ List<Trip> currentTripDrafts = [];
 List currentVisitedCities = [];
 List currentFriendsVisitedCities = [];
 
-var profilePic;
 List<String> tripPhotos = [];
 
 List<Trip> upcomingTrips = [];

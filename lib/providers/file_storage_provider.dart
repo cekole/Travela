@@ -15,6 +15,32 @@ import 'package:travela_mobile/models/travel_group.dart';
 import 'package:travela_mobile/models/user.dart';
 
 class FileStorageProvider with ChangeNotifier {
+  Uint8List? _profilePic;
+  Uint8List? _tripPhoto;
+
+  Uint8List? get profilePic => _profilePic;
+
+  Uint8List? get tripPhoto => _tripPhoto;
+
+  Future<Uint8List> getFile(String fileName) async {
+    final url = baseUrl + 'files/$fileName';
+    print(url);
+    final response = await http.get(
+      Uri.parse(url),
+      headers: {
+        'Authorization': 'Bearer  $bearerToken',
+      },
+    );
+    print(response.statusCode);
+    if (response.statusCode == 200) {
+      _tripPhoto = response.bodyBytes;
+      notifyListeners();
+      return response.bodyBytes;
+    } else {
+      throw Exception('Failed to fetch profile picture');
+    }
+  }
+
   Future<void> uploadProfilePic(String filePath, String uId) async {
     final url = baseUrl + 'files/uploadProfilePicToUser/$uId';
     print(url);
@@ -31,7 +57,8 @@ class FileStorageProvider with ChangeNotifier {
       print(response.statusCode);
 
       if (response.statusCode == 200) {
-        profilePic = await response.stream.toBytes();
+        _profilePic = await response.stream.toBytes();
+        notifyListeners();
         print('uploadProfilePic success');
       } else {
         print('uploadProfilePic failed');
@@ -41,7 +68,7 @@ class FileStorageProvider with ChangeNotifier {
     }
   }
 
-  Future uploadPhotoToTripLocation(
+  Future<void> uploadPhotoToTripLocation(
       String filePath, String tripId, String locationId) async {
     final url =
         baseUrl + 'files/uploadPhotoToTrip/$tripId/ToLocation/$locationId';
@@ -79,7 +106,8 @@ class FileStorageProvider with ChangeNotifier {
     );
     print(response.statusCode);
     if (response.statusCode == 200) {
-      profilePic = response.bodyBytes;
+      _profilePic = response.bodyBytes;
+      notifyListeners();
       return response.bodyBytes;
     } else {
       throw Exception('Failed to fetch profile picture');
@@ -100,7 +128,8 @@ class FileStorageProvider with ChangeNotifier {
     if (extractedData == null) {
       return;
     }
-    profilePic = extractedData[0]['profilePic'];
+    _profilePic = extractedData[0]['profilePic'];
+    notifyListeners();
   }
 
   Future<void> getPhotosOfTrip(String tripId) async {

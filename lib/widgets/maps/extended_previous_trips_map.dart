@@ -7,7 +7,9 @@ import 'package:image_picker/image_picker.dart';
 import "package:latlong2/latlong.dart";
 import 'package:provider/provider.dart';
 import 'package:travela_mobile/appConstant.dart';
+import 'package:travela_mobile/models/trip.dart';
 import 'package:travela_mobile/providers/file_storage_provider.dart';
+import 'package:travela_mobile/providers/trip_provider.dart';
 
 class ExtendedPreviousTripsMap extends StatefulWidget {
   const ExtendedPreviousTripsMap({
@@ -68,10 +70,71 @@ class _ExtendedPreviousTripsMapState extends State<ExtendedPreviousTripsMap> {
                           color: Colors.red,
                           size: 40,
                         ),
-                        onPressed: () {
+                        onPressed: () async {
+                          final String currentCityName =
+                              currentVisitedCities[i][2];
+                          var selectedLocationId = '';
+                          var selectedTripId = '';
+
+                          final tripData =
+                              Provider.of<TripProvider>(context, listen: false);
+
+                          await tripData.getAll();
+                          tripData.trips.forEach(
+                            (element) {
+                              tripData.getLocationsByTripId(element.id).then(
+                                (value) {
+                                  value.forEach(
+                                    (element) {
+                                      if (element['locationName']
+                                              .toString()
+                                              .toLowerCase() ==
+                                          currentCityName.toLowerCase()) {
+                                        selectedLocationId =
+                                            element['location_id'].toString();
+                                        selectedTripId = element['trip']
+                                                ['trip_id']
+                                            .toString();
+                                      }
+                                    },
+                                  );
+                                },
+                              );
+                            },
+                          );
                           showDialog(
                               context: context,
                               builder: (BuildContext context) {
+                                selectedTripId = '90';
+                                final trip = tripData.trips.firstWhere(
+                                  (element) => element.id == selectedTripId,
+                                  orElse: () => Trip(
+                                    id: '',
+                                    name: '',
+                                    description: '',
+                                    activities: [],
+                                    travelGroup: '',
+                                    photos: [],
+                                    status: 'draft',
+                                    startDate: startDate,
+                                    endDate: endDate,
+                                  ),
+                                );
+                                List<Uint8List> photoDataList = [];
+                                final fileStorageData =
+                                    Provider.of<FileStorageProvider>(context,
+                                        listen: false);
+
+                                if (trip != null && trip.photos != null) {
+                                  for (var photo in trip.photos) {
+                                    if (photo != null) {
+                                      fileStorageData.getFile(photo);
+                                    }
+                                  }
+                                }
+
+                                fileStorageData.getFile(trip.photos[0]);
+
                                 return AlertDialog(
                                   title: Text(
                                     currentVisitedCities[i][2],
@@ -80,32 +143,51 @@ class _ExtendedPreviousTripsMapState extends State<ExtendedPreviousTripsMap> {
                                       fontWeight: FontWeight.bold,
                                     ),
                                   ),
-                                  content: Text(
-                                    currentVisitedCities[i][3],
-                                    style: TextStyle(
-                                      fontSize: 15,
-                                    ),
+                                  content: Row(
+                                    children: [
+                                      trip.photos.isEmpty || trip.photos == null
+                                          ? Container()
+                                          : CircleAvatar(
+                                              child: Container(
+                                                decoration: BoxDecoration(),
+                                                child: Image.memory(
+                                                  fileStorageData.tripPhoto!,
+                                                  fit: BoxFit.cover,
+                                                ),
+                                              ),
+                                            ),
+                                      Text(
+                                        currentVisitedCities[i][3],
+                                        style: TextStyle(
+                                          fontSize: 15,
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                   actions: [
                                     Row(children: [
                                       TextButton(
+                                        style: ButtonStyle(
+                                          foregroundColor:
+                                              MaterialStateProperty.all<Color>(
+                                            Theme.of(context).primaryColor,
+                                          ),
+                                        ),
                                         onPressed: () {
-                                          pickImage().then((value) {
+                                          pickImage().then((value) async {
                                             final fileStorageData = Provider.of<
                                                     FileStorageProvider>(
                                                 context,
                                                 listen: false);
                                             if (image != null) {
-                                              fileStorageData
+                                              await fileStorageData
                                                   .uploadPhotoToTripLocation(
-                                                      image!.path,
-                                                      currentTripId,
-                                                      '2');
-                                              Navigator.of(context)
-                                                  .pushNamedAndRemoveUntil(
-                                                      '/home',
-                                                      (route) => false);
-                                              pageNum = 4;
+                                                image!.path,
+                                                selectedTripId,
+                                                selectedLocationId,
+                                              );
+                                              Navigator.of(context).pop();
+                                              Navigator.of(context).pop();
                                             }
                                           });
                                         },

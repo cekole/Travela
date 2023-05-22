@@ -112,11 +112,14 @@ class TripsPage extends StatelessWidget {
                             final accomodationList = accomodationData
                                 .fetchAllAccomodations()
                                 .then((value) {
-                              accomodationForLocation = value
-                                  .where((element) =>
-                                      element.location['location_id'] ==
-                                      locations[0]['location_id'])
-                                  .toList();
+                              if (value.isNotEmpty) {
+                                accomodationForLocation = value
+                                    .where((element) =>
+                                        element.location['location_id'] ==
+                                        locations[0]['location_id'])
+                                    .toList();
+                              }
+
                               if (tripData.transportations.isNotEmpty) {
                                 startDestination =
                                     destinationData.destinations.firstWhere(

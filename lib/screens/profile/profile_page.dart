@@ -35,16 +35,8 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   void initState() {
     super.initState();
-    fetchProfilePicture();
-  }
-
-  void fetchProfilePicture() async {
-    final fileStorageData =
-        Provider.of<FileStorageProvider>(context, listen: false);
-    final pic = await fileStorageData.fetchProfilePic(userId);
-    setState(() {
-      imageUrl = pic != null ? pic.toString() : placeholderImage;
-    });
+    Provider.of<FileStorageProvider>(context, listen: false)
+        .fetchProfilePic(userId);
   }
 
   DateTime _currentStartDate = DateTime.now();
@@ -77,8 +69,6 @@ class _ProfilePageState extends State<ProfilePage> {
   Widget build(BuildContext context) {
     final fileStorageData =
         Provider.of<FileStorageProvider>(context, listen: false);
-    final pic = fileStorageData.fetchProfilePic(userId);
-    imageUrl = pic.toString();
 
     return CustomScrollView(
       slivers: [
@@ -94,22 +84,17 @@ class _ProfilePageState extends State<ProfilePage> {
                   Row(
                     children: [
                       Expanded(
-                        child: FutureBuilder<Uint8List>(
-                          future: fileStorageData.fetchProfilePic(userId),
-                          builder: (context, snapshot) {
-                            final profilePic = snapshot.data ?? Uint8List(0);
-                            return CircleAvatar(
-                              radius: 40,
-                              backgroundColor: Colors.grey,
-                              backgroundImage: snapshot.connectionState ==
-                                      ConnectionState.waiting
-                                  ? Image.asset(
-                                      placeholderImage,
-                                      fit: BoxFit.cover,
-                                    ).image
-                                  : MemoryImage(profilePic),
-                            );
-                          },
+                        child: CircleAvatar(
+                          radius: 40,
+                          backgroundColor: Colors.grey,
+                          backgroundImage: fileStorageData.profilePic == null
+                              ? Image.asset(
+                                  placeholderImage,
+                                  fit: BoxFit.cover,
+                                ).image
+                              : MemoryImage(
+                                  fileStorageData.profilePic!,
+                                ),
                         ),
                       ),
                       SizedBox(width: 20),

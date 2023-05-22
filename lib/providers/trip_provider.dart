@@ -140,7 +140,6 @@ class TripProvider with ChangeNotifier {
 
   Future<List<Map<String, dynamic>>> getLocationsByTripId(String tripId) async {
     final url = baseUrl + 'trips/$tripId/locations';
-    print(url);
     try {
       final response = await http.get(
         Uri.parse(url),

@@ -41,7 +41,7 @@ class _EditTravelGroupState extends State<EditTravelGroup> {
   String _currentSeason = 'Summer';
 
   void scrollToBottom() {
-    WidgetsBinding.instance!.addPostFrameCallback((_) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
       _scrollController.animateTo(
         _scrollController.position.maxScrollExtent,
         duration: const Duration(milliseconds: 5),
@@ -463,7 +463,8 @@ class _EditTravelGroupState extends State<EditTravelGroup> {
                                 travelGroup.id,
                                 groupData.draftTrips[index].id,
                               )
-                                  .then((value) {
+                                  .then((value) async {
+                                await groupData.getDraftTrips(travelGroup.id);
                                 Navigator.of(context).pop();
                               });
                             },

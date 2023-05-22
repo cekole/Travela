@@ -73,6 +73,7 @@ class _HotelPageState extends State<HotelPage> {
         title: const Text('Accommodation'),
       ),
       body: ListView(
+        padding: const EdgeInsets.all(8.0),
         children: [
           Container(
             decoration: BoxDecoration(
@@ -297,27 +298,68 @@ class _HotelPageState extends State<HotelPage> {
           SizedBox(
             height: 10,
           ),
-          ElevatedButton(
-            onPressed: () async {
-              final accomodationData =
-                  Provider.of<AccomodationProvider>(context, listen: false);
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: ElevatedButton(
+              onPressed: () async {
+                final accomodationData =
+                    Provider.of<AccomodationProvider>(context, listen: false);
 
-              accomodationData
-                  .searchAccomodation(
-                city.toLowerCase(),
-                _currentEndDateCheckIn.toString().split(' ')[0],
-                _currentEndDateCheckOut.toString().split(' ')[0],
-                numberOfPeople,
-              )
-                  .then((value) {
-                if (value != null) {
-                  List valueList = value as List;
-                  if (valueList.isEmpty) {
+                accomodationData
+                    .searchAccomodation(
+                  city.toLowerCase(),
+                  _currentEndDateCheckIn.toString().split(' ')[0],
+                  _currentEndDateCheckOut.toString().split(' ')[0],
+                  numberOfPeople,
+                )
+                    .then((value) {
+                  if (value != null) {
+                    List valueList = value as List;
+                    if (valueList.isEmpty) {
+                      Theme.of(context).platform == TargetPlatform.iOS
+                          ? showCupertinoDialog(
+                              context: context,
+                              builder: (context) => CupertinoAlertDialog(
+                                title: Text('No accomodation found'),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                    child: Text('Ok'),
+                                  ),
+                                ],
+                              ),
+                            )
+                          : showDialog(
+                              context: context,
+                              builder: (context) => AlertDialog(
+                                title: Text('No accomodation found'),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                    child: Text('Ok'),
+                                  ),
+                                ],
+                              ),
+                            );
+                    } else {
+                      Navigator.of(context).pushNamed(
+                        '/accomodation_list',
+                        arguments: destinationFull,
+                      );
+                    }
+                  } else if (value == null ||
+                      _currentEndDateCheckOut
+                          .isBefore(_currentEndDateCheckIn)) {
                     Theme.of(context).platform == TargetPlatform.iOS
                         ? showCupertinoDialog(
                             context: context,
                             builder: (context) => CupertinoAlertDialog(
-                              title: Text('No accomodation found'),
+                              title: Text(
+                                  'Check out date is before check in. Try again !'),
                               actions: [
                                 TextButton(
                                   onPressed: () {
@@ -331,7 +373,8 @@ class _HotelPageState extends State<HotelPage> {
                         : showDialog(
                             context: context,
                             builder: (context) => AlertDialog(
-                              title: Text('No accomodation found'),
+                              title: Text(
+                                  'Check out date is before check in. Try again!'),
                               actions: [
                                 TextButton(
                                   onPressed: () {
@@ -342,50 +385,12 @@ class _HotelPageState extends State<HotelPage> {
                               ],
                             ),
                           );
-                  } else {
-                    Navigator.of(context).pushNamed(
-                      '/accomodation_list',
-                      arguments: destinationFull,
-                    );
                   }
-                } else if (value == null ||
-                    _currentEndDateCheckOut.isBefore(_currentEndDateCheckIn)) {
-                  Theme.of(context).platform == TargetPlatform.iOS
-                      ? showCupertinoDialog(
-                          context: context,
-                          builder: (context) => CupertinoAlertDialog(
-                            title: Text(
-                                'Check out date is before check in. Try again !'),
-                            actions: [
-                              TextButton(
-                                onPressed: () {
-                                  Navigator.of(context).pop();
-                                },
-                                child: Text('Ok'),
-                              ),
-                            ],
-                          ),
-                        )
-                      : showDialog(
-                          context: context,
-                          builder: (context) => AlertDialog(
-                            title: Text(
-                                'Check out date is before check in. Try again!'),
-                            actions: [
-                              TextButton(
-                                onPressed: () {
-                                  Navigator.of(context).pop();
-                                },
-                                child: Text('Ok'),
-                              ),
-                            ],
-                          ),
-                        );
-                }
-              });
-            },
-            child: Text(
-              'Search',
+                });
+              },
+              child: Text(
+                'Search',
+              ),
             ),
           ),
         ],
