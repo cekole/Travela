@@ -9,7 +9,7 @@ import 'package:http/http.dart' as http;
 import 'package:travela_mobile/models/poll_option.dart';
 
 class MessageProvider with ChangeNotifier {
-  Future<void> addGPoll(List<PollOption> options) async {
+  Future<void> addPoll(List<PollOption> options) async {
     final url = baseUrl + 'messages/poll';
     print(url);
     final response = await http.post(Uri.parse(url),
@@ -29,6 +29,56 @@ class MessageProvider with ChangeNotifier {
     }
   }
 
+  Future<void> addPollOption(String id, PollOption pollOptionDTO) async {
+    final url = '$baseUrl/poll/$id/option';
+    final response = await http.put(Uri.parse(url),
+        headers: {
+          'Authorization': 'Bearer  $bearerToken',
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode(pollOptionDTO));
+    if (response.statusCode != 200) {
+      throw Exception('Failed to add poll option');
+    }
+  }
+
+  Future<void> votePollOption(String id, String optionId) async {
+    final url = '$baseUrl/poll/$id/vote/$optionId';
+    final response = await http.put(
+      Uri.parse(url),
+      headers: {
+        'Authorization': 'Bearer  $bearerToken',
+        'Content-Type': 'application/json',
+      },
+    );
+
+    if (response.statusCode != 200) {
+      throw Exception('Failed to vote poll option');
+    }
+  }
+
+  Future<void> getPollByUserId(String id) async {
+    final url = '$baseUrl/poll/getByUserId/$id';
+    final response = await http.get(
+      Uri.parse(url),
+      headers: {
+        'Authorization': 'Bearer  $bearerToken',
+        'Content-Type': 'application/json',
+      },
+    );
+    if (response.statusCode != 200) {
+      throw Exception('Failed to get polls by user ID');
+    }
+  }
+
+  Future<void> deleteMessage(String id) async {
+    final url = '$baseUrl/$id';
+    final response = await http.delete(Uri.parse(url));
+    if (response.statusCode != 200) {
+      throw Exception('Failed to delete message');
+    }
+  }
+
   Future<void> get(String uId) async {
     final url = baseUrl + 'groups/user/$uId';
     print(url);
@@ -40,7 +90,7 @@ class MessageProvider with ChangeNotifier {
     );
     print(response.statusCode);
     if (response.statusCode == 200) {
-      print('getGroupByUserId succeeded');
+      print('getByUserId succeeded');
       final extractedData = json.decode(response.body) as List<dynamic>;
       if (extractedData == null) {
         return;
@@ -53,7 +103,7 @@ class MessageProvider with ChangeNotifier {
 
       return json.decode(response.body);
     } else {
-      print('getGroupByUserId failed');
+      print('getByUserId failed');
     }
   }
 }

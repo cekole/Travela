@@ -307,6 +307,63 @@ class _EditProfileState extends State<EditProfile> {
                       context: context,
                       builder: (ctx) => Platform.isIOS
                           ? CupertinoAlertDialog(
+                              title: Text('Update Password'),
+                              content:
+                                  Text(' Continue to change your password?'),
+                              actions: [
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.of(ctx).pop();
+                                  },
+                                  child: Text('No'),
+                                ),
+                                TextButton(
+                                  onPressed: () {
+                                    userData.deleteUser(userId);
+                                    Navigator.of(ctx).pop();
+                                    Navigator.of(context)
+                                        .pushNamedAndRemoveUntil(
+                                            '/login', (route) => false);
+                                  },
+                                  child: Text('Yes'),
+                                ),
+                              ],
+                            )
+                          : AlertDialog(
+                              title: Text('Update Password'),
+                              content:
+                                  Text(' Continue to change your password?'),
+                              actions: [
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.of(ctx).pop();
+                                  },
+                                  child: Text('No'),
+                                ),
+                                TextButton(
+                                  onPressed: () {
+                                    userData.deleteUser(userId);
+                                    Navigator.of(ctx).pop();
+                                    Navigator.of(context)
+                                        .pushNamedAndRemoveUntil(
+                                            '/login', (route) => false);
+                                  },
+                                  child: Text('Yes'),
+                                ),
+                              ],
+                            ));
+                },
+                child: Text(
+                  'Change Password',
+                  style: TextStyle(color: Theme.of(context).primaryColor),
+                ),
+              ),
+              TextButton(
+                onPressed: () {
+                  showDialog(
+                      context: context,
+                      builder: (ctx) => Platform.isIOS
+                          ? CupertinoAlertDialog(
                               title: Text('Delete Account'),
                               content: Text(
                                   'Are you sure you want to delete your account?'),
