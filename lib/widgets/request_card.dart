@@ -50,7 +50,8 @@ class RequestCard extends StatelessWidget {
                         showDialog(
                           context: context,
                           builder: (context) {
-                            return Platform.isIOS
+                            return Theme.of(context).platform ==
+                                    TargetPlatform.iOS
                                 ? CupertinoAlertDialog(
                                     title: Text('Request accepted'),
                                     actions: [
@@ -95,7 +96,8 @@ class RequestCard extends StatelessWidget {
                         showDialog(
                           context: context,
                           builder: (context) {
-                            return Platform.isIOS
+                            return Theme.of(context).platform ==
+                                    TargetPlatform.iOS
                                 ? CupertinoAlertDialog(
                                     title: Text('Request rejected'),
                                     actions: [

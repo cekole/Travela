@@ -293,41 +293,43 @@ class _ProfilePageState extends State<ProfilePage> {
                                     .then((value) {
                                   showDialog(
                                     context: context,
-                                    builder: (context) => Platform.isIOS
-                                        ? CupertinoAlertDialog(
-                                            title: Text('Success'),
-                                            content: Text(
-                                                'Your available dates have been updated'),
-                                            actions: [
-                                              TextButton(
-                                                onPressed: () {
-                                                  Navigator.of(context)
-                                                      .pushNamedAndRemoveUntil(
-                                                          '/home',
-                                                          (route) => false);
-                                                  pageNum = 4;
-                                                },
-                                                child: Text('OK'),
+                                    builder: (context) =>
+                                        Theme.of(context).platform ==
+                                                TargetPlatform.iOS
+                                            ? CupertinoAlertDialog(
+                                                title: Text('Success'),
+                                                content: Text(
+                                                    'Your available dates have been updated'),
+                                                actions: [
+                                                  TextButton(
+                                                    onPressed: () {
+                                                      Navigator.of(context)
+                                                          .pushNamedAndRemoveUntil(
+                                                              '/home',
+                                                              (route) => false);
+                                                      pageNum = 4;
+                                                    },
+                                                    child: Text('OK'),
+                                                  ),
+                                                ],
+                                              )
+                                            : AlertDialog(
+                                                title: Text('Success'),
+                                                content: Text(
+                                                    'Your available dates have been updated'),
+                                                actions: [
+                                                  TextButton(
+                                                    onPressed: () {
+                                                      Navigator.of(context)
+                                                          .pushNamedAndRemoveUntil(
+                                                              '/home',
+                                                              (route) => false);
+                                                      pageNum = 4;
+                                                    },
+                                                    child: Text('OK'),
+                                                  ),
+                                                ],
                                               ),
-                                            ],
-                                          )
-                                        : AlertDialog(
-                                            title: Text('Success'),
-                                            content: Text(
-                                                'Your available dates have been updated'),
-                                            actions: [
-                                              TextButton(
-                                                onPressed: () {
-                                                  Navigator.of(context)
-                                                      .pushNamedAndRemoveUntil(
-                                                          '/home',
-                                                          (route) => false);
-                                                  pageNum = 4;
-                                                },
-                                                child: Text('OK'),
-                                              ),
-                                            ],
-                                          ),
                                   );
                                 });
                               },
@@ -392,7 +394,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     showDialog(
                       context: context,
                       builder: (BuildContext context) {
-                        return Platform.isIOS
+                        return Theme.of(context).platform == TargetPlatform.iOS
                             ? CupertinoAlertDialog(
                                 title: Text('Invite Members'),
                                 content: CupertinoTextField(

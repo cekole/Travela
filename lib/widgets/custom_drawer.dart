@@ -61,11 +61,12 @@ class CustomDrawer extends StatelessWidget {
               leading: Icon(Icons.logout),
               title: Text('Logout'),
               onTap: () {
-                Platform.isIOS
+                Theme.of(context).platform == TargetPlatform.iOS
                     ? showCupertinoDialog(
                         context: context,
                         builder: (context) {
-                          return Platform.isIOS
+                          return Theme.of(context).platform ==
+                                  TargetPlatform.iOS
                               ? CupertinoAlertDialog(
                                   title: Text('Logout'),
                                   content:
@@ -114,37 +115,34 @@ class CustomDrawer extends StatelessWidget {
                                     ),
                                   ],
                                 );
-                        })
-                    : kIsWeb
-                        ? Container()
-                        : showDialog(
-                            context: context,
-                            builder: (context) {
-                              return AlertDialog(
-                                title: Text('Logout'),
-                                content:
-                                    Text('Are you sure you want to logout?'),
-                                actions: [
-                                  TextButton(
-                                    child: Text('Cancel'),
-                                    onPressed: () {
-                                      Navigator.pop(context);
-                                    },
-                                  ),
-                                  TextButton(
-                                    child: Text('Logout'),
-                                    onPressed: () {
-                                      Navigator.popAndPushNamed(
-                                          context, '/login');
-                                      final userData =
-                                          Provider.of<UserProvider>(context,
-                                              listen: false);
-                                      userData.resetCurrentValues();
-                                    },
-                                  ),
-                                ],
-                              );
-                            });
+                        },
+                      )
+                    : showDialog(
+                        context: context,
+                        builder: (context) {
+                          return AlertDialog(
+                            title: Text('Logout'),
+                            content: Text('Are you sure you want to logout?'),
+                            actions: [
+                              TextButton(
+                                child: Text('Cancel'),
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                              ),
+                              TextButton(
+                                child: Text('Logout'),
+                                onPressed: () {
+                                  Navigator.popAndPushNamed(context, '/login');
+                                  final userData = Provider.of<UserProvider>(
+                                      context,
+                                      listen: false);
+                                  userData.resetCurrentValues();
+                                },
+                              ),
+                            ],
+                          );
+                        });
               }),
         ],
       ),

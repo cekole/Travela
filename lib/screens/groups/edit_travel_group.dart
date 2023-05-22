@@ -212,31 +212,32 @@ class _EditTravelGroupState extends State<EditTravelGroup> {
                         if (_messageController.text.isEmpty) {
                           showDialog(
                             context: context,
-                            builder: (context) => Platform.isIOS
-                                ? CupertinoAlertDialog(
-                                    title: Text('Empty message'),
-                                    content: Text('Please type a message'),
-                                    actions: [
-                                      TextButton(
-                                        onPressed: () {
-                                          Navigator.of(context).pop();
-                                        },
-                                        child: Text('OK'),
+                            builder: (context) =>
+                                Theme.of(context).platform == TargetPlatform.iOS
+                                    ? CupertinoAlertDialog(
+                                        title: Text('Empty message'),
+                                        content: Text('Please type a message'),
+                                        actions: [
+                                          TextButton(
+                                            onPressed: () {
+                                              Navigator.of(context).pop();
+                                            },
+                                            child: Text('OK'),
+                                          ),
+                                        ],
+                                      )
+                                    : AlertDialog(
+                                        title: Text('Empty message'),
+                                        content: Text('Please type a message'),
+                                        actions: [
+                                          TextButton(
+                                            onPressed: () {
+                                              Navigator.of(context).pop();
+                                            },
+                                            child: Text('OK'),
+                                          ),
+                                        ],
                                       ),
-                                    ],
-                                  )
-                                : AlertDialog(
-                                    title: Text('Empty message'),
-                                    content: Text('Please type a message'),
-                                    actions: [
-                                      TextButton(
-                                        onPressed: () {
-                                          Navigator.of(context).pop();
-                                        },
-                                        child: Text('OK'),
-                                      ),
-                                    ],
-                                  ),
                           );
                         } else {
                           await groupData
@@ -299,7 +300,9 @@ class _EditTravelGroupState extends State<EditTravelGroup> {
                                 if (tripName.isEmpty) {
                                   showDialog(
                                     context: context,
-                                    builder: (context) => Platform.isIOS
+                                    builder: (context) => Theme.of(context)
+                                                .platform ==
+                                            TargetPlatform.iOS
                                         ? CupertinoAlertDialog(
                                             title: Text('Empty trip name'),
                                             content:
@@ -510,7 +513,8 @@ class _EditTravelGroupState extends State<EditTravelGroup> {
                                         showDialog(
                                           context: context,
                                           builder: (BuildContext context) {
-                                            return Platform.isIOS
+                                            return Theme.of(context).platform ==
+                                                    TargetPlatform.iOS
                                                 ? CupertinoAlertDialog(
                                                     title: Text(
                                                         'Group Name Updated'),
@@ -553,7 +557,8 @@ class _EditTravelGroupState extends State<EditTravelGroup> {
                                         showDialog(
                                           context: context,
                                           builder: (BuildContext context) {
-                                            return Platform.isIOS
+                                            return Theme.of(context).platform ==
+                                                    TargetPlatform.iOS
                                                 ? CupertinoAlertDialog(
                                                     title: Text('Error'),
                                                     content: Text(
@@ -624,7 +629,7 @@ class _EditTravelGroupState extends State<EditTravelGroup> {
               showDialog(
                 context: context,
                 builder: (BuildContext context) {
-                  return Platform.isIOS
+                  return Theme.of(context).platform == TargetPlatform.iOS
                       ? CupertinoAlertDialog(
                           title: Text('Error'),
                           content: Text('Something went wrong'),
@@ -1046,63 +1051,67 @@ void showAddFriendDialog(BuildContext context) {
                                     if (value) {
                                       showDialog(
                                           context: context,
-                                          builder: (context) => Platform.isIOS
-                                              ? CupertinoAlertDialog(
-                                                  title: Text('Success'),
-                                                  content: Text(
-                                                      'Successfully added ${currentFriendUsernames[index]} to group'),
-                                                  actions: [
-                                                    TextButton(
-                                                        onPressed: () {
-                                                          Navigator.pop(
-                                                              context);
-                                                        },
-                                                        child: Text('OK'))
-                                                  ],
-                                                )
-                                              : AlertDialog(
-                                                  title: Text('Success'),
-                                                  content: Text(
-                                                      'Successfully added ${currentFriendUsernames[index]} to group'),
-                                                  actions: [
-                                                    TextButton(
-                                                        onPressed: () {
-                                                          Navigator.pop(
-                                                              context);
-                                                        },
-                                                        child: Text('OK'))
-                                                  ],
-                                                ));
+                                          builder: (context) =>
+                                              Theme.of(context).platform ==
+                                                      TargetPlatform.iOS
+                                                  ? CupertinoAlertDialog(
+                                                      title: Text('Success'),
+                                                      content: Text(
+                                                          'Successfully added ${currentFriendUsernames[index]} to group'),
+                                                      actions: [
+                                                        TextButton(
+                                                            onPressed: () {
+                                                              Navigator.pop(
+                                                                  context);
+                                                            },
+                                                            child: Text('OK'))
+                                                      ],
+                                                    )
+                                                  : AlertDialog(
+                                                      title: Text('Success'),
+                                                      content: Text(
+                                                          'Successfully added ${currentFriendUsernames[index]} to group'),
+                                                      actions: [
+                                                        TextButton(
+                                                            onPressed: () {
+                                                              Navigator.pop(
+                                                                  context);
+                                                            },
+                                                            child: Text('OK'))
+                                                      ],
+                                                    ));
                                     } else {
                                       showDialog(
                                           context: context,
-                                          builder: (context) => Platform.isIOS
-                                              ? CupertinoAlertDialog(
-                                                  title: Text('Error'),
-                                                  content: Text(
-                                                      'Failed to add ${currentFriendUsernames[index]} to group'),
-                                                  actions: [
-                                                    TextButton(
-                                                        onPressed: () {
-                                                          Navigator.pop(
-                                                              context);
-                                                        },
-                                                        child: Text('OK'))
-                                                  ],
-                                                )
-                                              : AlertDialog(
-                                                  title: Text('Error'),
-                                                  content: Text(
-                                                      'Failed to add ${currentFriendUsernames[index]} to group'),
-                                                  actions: [
-                                                    TextButton(
-                                                        onPressed: () {
-                                                          Navigator.pop(
-                                                              context);
-                                                        },
-                                                        child: Text('OK'))
-                                                  ],
-                                                ));
+                                          builder: (context) =>
+                                              Theme.of(context).platform ==
+                                                      TargetPlatform.iOS
+                                                  ? CupertinoAlertDialog(
+                                                      title: Text('Error'),
+                                                      content: Text(
+                                                          'Failed to add ${currentFriendUsernames[index]} to group'),
+                                                      actions: [
+                                                        TextButton(
+                                                            onPressed: () {
+                                                              Navigator.pop(
+                                                                  context);
+                                                            },
+                                                            child: Text('OK'))
+                                                      ],
+                                                    )
+                                                  : AlertDialog(
+                                                      title: Text('Error'),
+                                                      content: Text(
+                                                          'Failed to add ${currentFriendUsernames[index]} to group'),
+                                                      actions: [
+                                                        TextButton(
+                                                            onPressed: () {
+                                                              Navigator.pop(
+                                                                  context);
+                                                            },
+                                                            child: Text('OK'))
+                                                      ],
+                                                    ));
                                     }
                                   }),
                                 );

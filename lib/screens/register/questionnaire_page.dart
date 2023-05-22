@@ -228,7 +228,8 @@ class _QuestionnarePageState extends State<QuestionnarePage> {
                             showDialog(
                               context: context,
                               builder: (context) {
-                                return Platform.isIOS
+                                return Theme.of(context).platform ==
+                                        TargetPlatform.iOS
                                     ? CupertinoAlertDialog(
                                         title: Text('Error'),
                                         content: Text(

@@ -235,28 +235,29 @@ class _FlightsPageState extends State<FlightsPage> {
                   _numberOfPeople == 0) {
                 showDialog(
                   context: context,
-                  builder: (context) => Platform.isIOS
-                      ? CupertinoAlertDialog(
-                          title: Text('Please fill all the fields'),
-                          actions: [
-                              TextButton(
-                                onPressed: () {
-                                  Navigator.of(context).pop();
-                                },
-                                child: Text('OK'),
-                              ),
-                            ])
-                      : AlertDialog(
-                          title: Text('Please fill all the fields'),
-                          actions: [
-                            TextButton(
-                              onPressed: () {
-                                Navigator.of(context).pop();
-                              },
-                              child: Text('OK'),
+                  builder: (context) =>
+                      Theme.of(context).platform == TargetPlatform.iOS
+                          ? CupertinoAlertDialog(
+                              title: Text('Please fill all the fields'),
+                              actions: [
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                    child: Text('OK'),
+                                  ),
+                                ])
+                          : AlertDialog(
+                              title: Text('Please fill all the fields'),
+                              actions: [
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                  child: Text('OK'),
+                                ),
+                              ],
                             ),
-                          ],
-                        ),
                 );
               } else {
                 transportationData
