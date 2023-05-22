@@ -10,6 +10,7 @@ import 'package:travela_mobile/appConstant.dart';
 import 'package:travela_mobile/models/attraction.dart';
 import 'package:travela_mobile/models/destination.dart';
 import 'package:travela_mobile/providers/destinations_provider.dart';
+import 'package:travela_mobile/providers/trip_provider.dart';
 import 'package:travela_mobile/providers/user_provider.dart';
 import 'package:travela_mobile/screens/register/questionnaire_page.dart';
 import 'package:travela_mobile/widgets/home/place_card.dart';
@@ -24,6 +25,7 @@ class PopularDestinations extends StatefulWidget {
 
 class _PopularDestinationsState extends State<PopularDestinations> {
   TextEditingController _searchController = TextEditingController();
+  bool _isTrip = false;
 
   @override
   void initState() {
@@ -37,9 +39,14 @@ class _PopularDestinationsState extends State<PopularDestinations> {
   Widget build(BuildContext context) {
     final destinationsData =
         Provider.of<DestinationsProvider>(context, listen: false);
-    final destinations =
-        ModalRoute.of(context)!.settings.arguments as Set<List<Destination>>;
+    final args = ModalRoute.of(context)!.settings.arguments as List;
+    final destinations = args[0] as Set<List<Destination>>;
     print(destinations.length);
+    if (args[1]) {
+      setState(() {
+        _isTrip = true;
+      });
+    }
     //get the list of destinations from the arguments
     final List<Destination> destinationList = destinations.toList()[0];
 
@@ -90,6 +97,7 @@ class _PopularDestinationsState extends State<PopularDestinations> {
                             destination:
                                 destinationsData.popularDestinationsList[index],
                             onSelect: (destination) {},
+                            isTrip: _isTrip,
                           );
                         },
                         separatorBuilder: (context, index) =>
@@ -136,6 +144,7 @@ class _PopularDestinationsState extends State<PopularDestinations> {
                             return AnswerCardHome(
                               destination: filteredDestinations[index],
                               onSelect: (destination) {},
+                              isTrip: _isTrip,
                             );
                           },
                           separatorBuilder: (context, index) =>
@@ -159,10 +168,12 @@ class AnswerCardHome extends StatefulWidget {
     super.key,
     required this.destination,
     required this.onSelect,
+    required this.isTrip,
   });
 
   final Destination destination;
   final Function(Destination) onSelect;
+  final bool isTrip;
 
   @override
   State<AnswerCardHome> createState() => _AnswerCardHomeState();
@@ -476,8 +487,22 @@ class _AnswerCardHomeState extends State<AnswerCardHome> {
                   },
                 ),
               ),
-
-              SizedBox(),
+              widget.isTrip
+                  ? ElevatedButton(
+                      onPressed: () {
+                        final tripData =
+                            Provider.of<TripProvider>(context, listen: false);
+                        tripData.addLocation(
+                          int.parse(currentTripId),
+                          int.parse(selectedDestination.id),
+                        );
+                        Navigator.of(context).pushNamed(
+                          '/search_options',
+                          arguments: selectedDestination,
+                        );
+                      },
+                      child: Text('Add to Trip'))
+                  : Container(),
             ],
           ),
         );

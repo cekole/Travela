@@ -15,7 +15,7 @@ import 'package:travela_mobile/models/user.dart';
 class GroupProvider with ChangeNotifier {
   List<TravelGroup> _groups = [];
   List<Destination> _groupTripSuggestions = [];
-  List<Map<String, dynamic>> _chatMessages = [];
+  List<dynamic> _chatMessages = [];
 
   List<Trip> _draftTrips = [];
 
@@ -58,7 +58,7 @@ class GroupProvider with ChangeNotifier {
         loadedGroups.add(
           TravelGroup(
             id: group['group_id'].toString(),
-            groupName: group['groupName'],
+            groupName: utf8.decode(group['groupName'].toString().codeUnits),
             participants: [], //stored in currentGroupParticipants
             commonStartDate: group['commonStartDate'] ?? '',
             commonEndDate: group['commonEndDate'] ?? '',
@@ -80,7 +80,16 @@ class GroupProvider with ChangeNotifier {
         'Authorization': 'Bearer  $bearerToken',
       },
     );
+
     print(response.statusCode);
+    if (response.statusCode == 200) {
+      final extractedData = json.decode(response.body) as Map<String, dynamic>;
+      if (extractedData == null) {
+        return;
+      }
+      _chatMessages = extractedData['chat'];
+      notifyListeners();
+    }
   }
 
   Future<void> getGroupByUserId(String uId) async {
@@ -257,7 +266,9 @@ class GroupProvider with ChangeNotifier {
       final List<String> loadedParticipants = [];
       extractedData.forEach(
         (participant) {
-          loadedParticipants.add(participant['username']);
+          loadedParticipants.add(
+            utf8.decode(participant['username'].toString().codeUnits),
+          );
         },
       );
       currentGroupUsernames = loadedParticipants;
@@ -325,7 +336,7 @@ class GroupProvider with ChangeNotifier {
       for (final tripData in responseData) {
         final trip = Trip(
           id: tripData['trip_id'].toString(),
-          name: tripData['tripName'],
+          name: utf8.decode(tripData['tripName'].toString().codeUnits),
           description: tripData['tripDescription'],
           activities: tripData['activities'] != null
               ? List<String>.from(tripData['activities'])
@@ -410,10 +421,12 @@ class GroupProvider with ChangeNotifier {
         messages.add({
           'senderId': chatMessage['sender']['user_id'],
           'senderName': chatMessage['sender']['username'],
-          'content': chatMessage['content'],
+          'content': utf8.decode(chatMessage['content'].toString().codeUnits),
           'timestamp': chatMessage['timestamp'],
         });
       }
+      _chatMessages = messages;
+      notifyListeners();
       return messages;
     } else {
       print('Chat retrieval failed');

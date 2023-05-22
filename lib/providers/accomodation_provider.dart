@@ -24,7 +24,7 @@ class AccomodationProvider with ChangeNotifier {
     extractedData.forEach((accomodationData) {
       loadedAccomodations.add(
         Accomodation(
-          name: accomodationData['name'],
+          name: utf8.decode(accomodationData['name'].toString().codeUnits),
           price: accomodationData['price'],
           link: accomodationData['link'],
           address: accomodationData['address'],
@@ -45,7 +45,7 @@ class AccomodationProvider with ChangeNotifier {
     final response = await http.get(Uri.parse(requestUrl + '/$id'));
     final extractedData = json.decode(response.body) as Map<String, dynamic>;
     final loadedAccomodation = Accomodation(
-      name: extractedData['name'],
+      name: utf8.decode(extractedData['name'].toString().codeUnits),
       price: extractedData['price'],
       link: extractedData['link'],
       address: extractedData['address'],
@@ -129,7 +129,7 @@ class AccomodationProvider with ChangeNotifier {
       final extractedData = json.decode(response.body) as Map<String, dynamic>;
       final listExtracted = extractedData['propertyList'] as List<dynamic>;
       listExtracted.forEach((item) {
-        final name = item['name'] as String;
+        final name = utf8.decode(item['name'].toString().codeUnits) as String;
         final price = item['price'] as String;
         final imageUrl = item['imageUrl'] as String;
         //first clear the list and then add the new items

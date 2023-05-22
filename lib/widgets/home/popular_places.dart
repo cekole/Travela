@@ -32,9 +32,18 @@ class PopularPlaces extends StatelessWidget {
                 final destinationsData =
                     Provider.of<DestinationsProvider>(context, listen: false);
                 destinationsData.getPopularCities();
-                Navigator.pushNamed(context, '/popular', arguments: {
-                  destinationsData.popularDestinationsList.toList(),
-                });
+                Navigator.pushNamed(
+                  context,
+                  '/popular',
+                  arguments: [
+                    Set<List<Destination>>.from(
+                      [
+                        destinationsData.popularDestinationsList.toList(),
+                      ],
+                    ),
+                    false,
+                  ],
+                );
               },
               child: Text(
                 'See All',

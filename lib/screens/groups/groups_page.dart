@@ -145,12 +145,20 @@ class _GroupsPageState extends State<GroupsPage> {
                         onPressed: () {
                           final groupData = Provider.of<GroupProvider>(context,
                               listen: false);
-                          groupData
-                              .getParticipants(travelGroup.id)
-                              .then((value) => Navigator.of(context).pushNamed(
-                                    '/edit_travel_group',
-                                    arguments: travelGroup,
-                                  ));
+                          groupData.getGroupById(travelGroup.id).then((value) {
+                            groupData.getParticipants(travelGroup.id).then(
+                              (value) {
+                                groupData.getChat(travelGroup.id).then(
+                                  (value) {
+                                    Navigator.of(context).pushNamed(
+                                      '/edit_travel_group',
+                                      arguments: travelGroup,
+                                    );
+                                  },
+                                );
+                              },
+                            );
+                          });
                         },
                       ),
                     ),

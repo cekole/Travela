@@ -41,7 +41,10 @@ class SuggestionsForGroup extends StatelessWidget {
                 Navigator.pushNamed(
                   context,
                   '/popular',
-                  arguments: destinationSet,
+                  arguments: [
+                    destinationSet,
+                    false,
+                  ],
                 );
               },
               child: Text(

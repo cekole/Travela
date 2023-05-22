@@ -11,6 +11,7 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 import 'package:travela_mobile/appConstant.dart';
+import 'package:travela_mobile/models/destination.dart';
 import 'package:travela_mobile/models/travel_group.dart';
 import 'package:travela_mobile/providers/destinations_provider.dart';
 import 'package:travela_mobile/providers/group_provider.dart';
@@ -32,12 +33,22 @@ class _EditTravelGroupState extends State<EditTravelGroup> {
   TextEditingController _searchController = TextEditingController();
   TextEditingController _messageController = TextEditingController();
   TextEditingController _tripNameController = TextEditingController();
+  ScrollController _scrollController = ScrollController();
+
   RangeValues _currentPriceRangeValues = const RangeValues(40, 80);
   RangeValues _currentRatingRangeValues = const RangeValues(3, 5);
   RangeValues _currentDistanceRangeValues = const RangeValues(0, 1000);
   String _currentSeason = 'Summer';
 
-  List currentChatMessages = [];
+  void scrollToBottom() {
+    WidgetsBinding.instance!.addPostFrameCallback((_) {
+      _scrollController.animateTo(
+        _scrollController.position.maxScrollExtent,
+        duration: const Duration(milliseconds: 5),
+        curve: Curves.easeOut,
+      );
+    });
+  }
 
   @override
   void initState() {
@@ -46,16 +57,21 @@ class _EditTravelGroupState extends State<EditTravelGroup> {
     groupData.getTripSuggestions(currentGroupIdForSuggestions);
     groupData.updateCommonDates(currentGroupIdForSuggestions);
     groupData.getDraftTrips(currentGroupIdForSuggestions);
-    groupData.getChat(currentGroupIdForSuggestions).then((messages) {
-      setState(() {
-        currentChatMessages = messages;
-      });
-    });
-    ;
+  }
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    _messageController.dispose();
+    _tripNameController.dispose();
+    _scrollController.dispose();
+
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    scrollToBottom();
     final groupData = Provider.of<GroupProvider>(context, listen: false);
     final Size size = MediaQuery.of(context).size;
     TextEditingController groupNameController = TextEditingController();
@@ -118,10 +134,11 @@ class _EditTravelGroupState extends State<EditTravelGroup> {
                     //Ex: currentChatMessages = [{senderId: 11, senderName: aaaa, content: a, timestamp: 2023-05-21T12:27:36.030039Z}]
                     Expanded(
                       child: ListView.separated(
+                          controller: _scrollController,
                           separatorBuilder: (context, index) => SizedBox(
                                 height: 20,
                               ),
-                          itemCount: currentChatMessages.length,
+                          itemCount: groupData.chatMessages.length,
                           itemBuilder: (context, index) {
                             print(travelGroup.id);
 
@@ -140,14 +157,15 @@ class _EditTravelGroupState extends State<EditTravelGroup> {
                                         CrossAxisAlignment.start,
                                     children: [
                                       Text(
-                                        currentChatMessages[index]
+                                        groupData.chatMessages[index]
                                             ['senderName'],
                                         style: TextStyle(
                                           color: Colors.blue,
                                         ),
                                       ),
                                       Text(
-                                        currentChatMessages[index]['content'],
+                                        groupData.chatMessages[index]
+                                            ['content'],
                                         style: TextStyle(
                                           color: Colors.black,
                                         ),
@@ -227,9 +245,7 @@ class _EditTravelGroupState extends State<EditTravelGroup> {
                               .then((value) {
                             _messageController.clear();
                             groupData.getChat(travelGroup.id).then((messages) {
-                              setState(() {
-                                currentChatMessages = messages;
-                              });
+                              setState(() {});
                             });
                           });
                         }
@@ -761,14 +777,31 @@ class _EditTravelGroupState extends State<EditTravelGroup> {
               TextField(
                 controller: _searchController,
                 decoration: InputDecoration(
-                  hintText: 'Enter a place name',
+                  hintText: 'Choose another destination',
                   border: UnderlineInputBorder(
                     borderSide: BorderSide.none,
                   ),
                   prefixIcon: Icon(Icons.search),
                 ),
-                onSubmitted: (value) {
-                  Navigator.of(context).pushNamed('/destination_list');
+                onTap: () {
+                  /* Provider.of<DestinationsProvider>(context,
+                              listen: false)
+                          .destinations */
+                  //convert it to Set<List<Destination>>
+
+                  Navigator.of(context).pushNamed(
+                    '/popular',
+                    arguments: [
+                      Set<List<Destination>>.from(
+                        [
+                          Provider.of<DestinationsProvider>(context,
+                                  listen: false)
+                              .destinations
+                        ],
+                      ),
+                      true,
+                    ],
+                  );
                 },
               ),
               Divider(
