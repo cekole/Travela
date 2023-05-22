@@ -244,7 +244,15 @@ class UserProvider with ChangeNotifier {
         'Content-Type': 'application/json',
       },
     );
+
     print(response.statusCode);
+    if (response.statusCode == 200) {
+      requestNumber--;
+      print('friend request accepted');
+    } else {
+      print('friend request not accepted');
+    }
+    notifyListeners();
   }
 
   Future rejectFriendRequest(String id, String friendId) async {

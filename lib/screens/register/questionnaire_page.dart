@@ -21,6 +21,7 @@ class QuestionnarePage extends StatefulWidget {
 
 class _QuestionnarePageState extends State<QuestionnarePage> {
   TextEditingController _searchController = TextEditingController();
+  bool isMessageDisplayed = false;
   List<Destination> _selectedDestinations = [];
   @override
   void initState() {
@@ -72,14 +73,10 @@ class _QuestionnarePageState extends State<QuestionnarePage> {
                     setState(
                         () {}); // Trigger UI update when search text changes
                   },
-                  decoration: InputDecoration(
-                    labelText: 'Search',
-                    prefixIcon: Icon(Icons.search),
-                  ),
                 ),
                 SizedBox(height: 10),
                 Text(
-                  'Choose At Least 3 Destinations',
+                  'Choose your top 3 destinations',
                   style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
@@ -146,18 +143,23 @@ class _QuestionnarePageState extends State<QuestionnarePage> {
                                                   .toLowerCase(),
                                             ))
                                         .toList();
+
                                 if (index >= filteredDestinations.length) {
                                   //if none show a placeholder
                                   if (filteredDestinations.isEmpty) {
-                                    return Center(
-                                      child: Text(
-                                        'No destinations found',
-                                        style: TextStyle(
-                                          fontSize: 20,
-                                          fontWeight: FontWeight.w800,
+                                    if (destinations.isEmpty &&
+                                        !isMessageDisplayed) {
+                                      isMessageDisplayed = true;
+                                      return Center(
+                                        child: Text(
+                                          'No destinations found',
+                                          style: TextStyle(
+                                            fontSize: 20,
+                                            fontWeight: FontWeight.w800,
+                                          ),
                                         ),
-                                      ),
-                                    );
+                                      );
+                                    }
                                   }
                                   return SizedBox.shrink();
                                 }

@@ -94,6 +94,7 @@ class _RegisterPageState extends State<RegisterPage> {
                           ),
                           TextField(
                             controller: passwordController,
+                            obscureText: true,
                             style: TextStyle(),
                             decoration: InputDecoration(
                               filled: true,
@@ -112,6 +113,7 @@ class _RegisterPageState extends State<RegisterPage> {
                           ),
                           TextField(
                             controller: confirmPasswordController,
+                            obscureText: true,
                             decoration: InputDecoration(
                               filled: true,
                               hintText: "Confirm Password",

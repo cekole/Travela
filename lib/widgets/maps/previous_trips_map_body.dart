@@ -34,7 +34,7 @@ class _PreviousTripsMapBodyState extends State<PreviousTripsMapBody> {
             ),
           ),
           Text(
-            'My Previous Trips',
+            'My Visited Cities',
             style: TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.bold,

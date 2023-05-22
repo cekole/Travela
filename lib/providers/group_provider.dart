@@ -524,6 +524,7 @@ class GroupProvider with ChangeNotifier {
     );
     print(response.statusCode);
     if (response.statusCode == 200) {
+      print(response.body);
       print('updateCommonDates succeeded');
       return true;
     } else {

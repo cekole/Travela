@@ -91,6 +91,10 @@ class SearchOptions extends StatelessWidget {
                                 CupertinoDialogAction(
                                   onPressed: () {
                                     Navigator.of(context).pop();
+                                    Navigator.of(context).pop();
+                                    Navigator.of(context).pop();
+                                    Navigator.of(context).pop();
+                                    Navigator.of(context).pop();
                                   },
                                   child: const Text('Ok'),
                                 ),
@@ -107,6 +111,10 @@ class SearchOptions extends StatelessWidget {
                               actions: [
                                 TextButton(
                                   onPressed: () {
+                                    Navigator.of(context).pop();
+                                    Navigator.of(context).pop();
+                                    Navigator.of(context).pop();
+                                    Navigator.of(context).pop();
                                     Navigator.of(context).pop();
                                   },
                                   child: const Text('Yes'),

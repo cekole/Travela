@@ -351,9 +351,9 @@ class _HotelPageState extends State<HotelPage> {
                         arguments: destinationFull,
                       );
                     }
-                  } else if (value == null ||
-                      _currentEndDateCheckOut
-                          .isBefore(_currentEndDateCheckIn)) {
+                  } else if (_currentEndDateCheckOut
+                          .isBefore(_currentEndDateCheckIn) &&
+                      value == null) {
                     Theme.of(context).platform == TargetPlatform.iOS
                         ? showCupertinoDialog(
                             context: context,
@@ -375,6 +375,36 @@ class _HotelPageState extends State<HotelPage> {
                             builder: (context) => AlertDialog(
                               title: Text(
                                   'Check out date is before check in. Try again!'),
+                              actions: [
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                  child: Text('Ok'),
+                                ),
+                              ],
+                            ),
+                          );
+                  } else {
+                    Theme.of(context).platform == TargetPlatform.iOS
+                        ? showCupertinoDialog(
+                            context: context,
+                            builder: (context) => CupertinoAlertDialog(
+                              title: Text('No accomodation found'),
+                              actions: [
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                  child: Text('Ok'),
+                                ),
+                              ],
+                            ),
+                          )
+                        : showDialog(
+                            context: context,
+                            builder: (context) => AlertDialog(
+                              title: Text('No accomodation found'),
                               actions: [
                                 TextButton(
                                   onPressed: () {
