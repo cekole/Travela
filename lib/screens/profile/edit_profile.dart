@@ -46,6 +46,7 @@ class _EditProfileState extends State<EditProfile> {
     // fileStorage.uploadProfilePic(image!.path, userId);
     String password = "12345678";
     final userData = Provider.of<UserProvider>(context);
+    bool isUploading = false;
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
@@ -66,7 +67,14 @@ class _EditProfileState extends State<EditProfile> {
                       CircleAvatar(
                         radius: 40,
                         backgroundColor: Colors.grey,
-                        backgroundImage: MemoryImage(profilePic),
+                        backgroundImage: fileStorage.profilePic == null
+                            ? Image.asset(
+                                'assets/images/profile/anonymous-avatar-icon-25.jpg.png',
+                                fit: BoxFit.cover,
+                              ).image
+                            : MemoryImage(
+                                fileStorage.profilePic!,
+                              ),
                       ),
                       IconButton(
                         onPressed: () {
@@ -87,15 +95,22 @@ class _EditProfileState extends State<EditProfile> {
                                             child: Text('No'),
                                           ),
                                           TextButton(
-                                            onPressed: () {
+                                            onPressed: () async {
                                               if (image != null) {
-                                                fileStorage.uploadProfilePic(
-                                                    image!.path, userId);
-                                                Navigator.of(context)
-                                                    .pushNamedAndRemoveUntil(
-                                                        '/home',
-                                                        (route) => false);
-                                                pageNum = 4;
+                                                await fileStorage
+                                                    .uploadProfilePic(
+                                                        image!.path, userId)
+                                                    .then((value) {
+                                                  fileStorage
+                                                      .fetchProfilePic(userId)
+                                                      .then((value) {
+                                                    Navigator.of(context)
+                                                        .pushNamedAndRemoveUntil(
+                                                            '/home',
+                                                            (route) => false);
+                                                    pageNum = 4;
+                                                  });
+                                                });
                                               }
                                             },
                                             child: Text('Yes'),
@@ -114,10 +129,20 @@ class _EditProfileState extends State<EditProfile> {
                                             child: Text('No'),
                                           ),
                                           TextButton(
-                                            onPressed: () {
+                                            onPressed: () async {
                                               if (image != null) {
-                                                fileStorage.uploadProfilePic(
-                                                    image!.path, userId);
+                                                await fileStorage
+                                                    .uploadProfilePic(
+                                                        image!.path, userId)
+                                                    .then((value) {
+                                                  fileStorage
+                                                      .fetchProfilePic(userId);
+                                                });
+                                                Navigator.of(context)
+                                                    .pushNamedAndRemoveUntil(
+                                                        '/home',
+                                                        (route) => false);
+                                                pageNum = 4;
                                                 Navigator.of(context).pop();
                                               }
                                             },
@@ -165,7 +190,7 @@ class _EditProfileState extends State<EditProfile> {
                 controller: nameController,
                 decoration: InputDecoration(
                   labelText: 'Name',
-                  hintText: 'Cenk Duran',
+                  hintText: nameOfUser,
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(50),
                   ),
@@ -176,7 +201,7 @@ class _EditProfileState extends State<EditProfile> {
                 controller: usernameController,
                 decoration: InputDecoration(
                   labelText: 'Username',
-                  hintText: 'cekoley',
+                  hintText: userUsername,
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(50),
                   ),
@@ -187,7 +212,7 @@ class _EditProfileState extends State<EditProfile> {
                 controller: emailController,
                 decoration: InputDecoration(
                   labelText: 'Email',
-                  hintText: 'cekoley@gmail.com',
+                  hintText: userEmail,
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(50),
                   ),

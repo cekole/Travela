@@ -268,13 +268,35 @@ class _FlightsPageState extends State<FlightsPage> {
                   _numberOfPeople,
                 )
                     .then((value) {
-                  if (value == null) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text('No transportation found'),
-                      ),
+                  List listValue = value;
+                  if (value == null || listValue.length == 0) {
+                    showDialog(
+                      context: context,
+                      builder: (context) {
+                        return Theme.of(context).platform == TargetPlatform.iOS
+                            ? CupertinoAlertDialog(
+                                title: Text('No transportation found'),
+                                actions: [
+                                    TextButton(
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                      },
+                                      child: Text('OK'),
+                                    ),
+                                  ])
+                            : AlertDialog(
+                                title: Text('No transportation found'),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                    child: Text('OK'),
+                                  ),
+                                ],
+                              );
+                      },
                     );
-                    return;
                   } else {
                     Navigator.of(context).pushNamed(
                       '/transportation_list',

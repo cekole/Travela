@@ -32,19 +32,20 @@ class _TransportationListState extends State<TransportationList> {
     final args = ModalRoute.of(context)!.settings.arguments as List;
     final originCityName = args[1] as String;
     final destinationCityName = args[2] as String;
+    final durationInMinutes;
 
-    final durationInMinutes = int.parse(duration.substring(2, 3)) * 60 +
-        int.parse(duration.substring(5, 6));
+    if (duration.length < 6) {
+      durationInMinutes = int.parse(duration.substring(2, 3)) * 60;
+    } else {
+      durationInMinutes = int.parse(duration.substring(2, 3)) * 60 +
+          int.parse(duration.substring(5, 6));
+    }
 
     final destinationData =
         Provider.of<DestinationsProvider>(context, listen: false);
     print(originCityName);
     print(destinationCityName);
-    for (final destination in destinationData.destinations) {
-      if (destination.city == originCityName) print('org' + destination.city);
-      if (destination.city == destinationCityName)
-        print('dest' + destination.city);
-    }
+
     final originIata = destinationData.destinations.firstWhere(
       (element) => element.city == originCityName,
     );
@@ -54,14 +55,6 @@ class _TransportationListState extends State<TransportationList> {
     final now = DateTime.now().toUtc();
     final formattedDateTime =
         DateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'").format(now);
-    print(originIata.id);
-    print(destinationIata.id);
-    print('PLANE');
-    print('No link');
-    print(price);
-    print(formattedDateTime);
-    print(durationInMinutes);
-    print(currentTripId);
 
     final transportationData =
         Provider.of<TransportationProvider>(context, listen: false);
@@ -189,13 +182,25 @@ class _TransportationListState extends State<TransportationList> {
                       : Colors.white,
                 ),
                 child: ListTile(
-                  title: Text(
-                    'Total Duration: ${duration.substring(2, 3)} Hours ${duration.substring(5, 6)} Minutes',
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
+                  title: duration.length < 6
+                      ? Text(
+                          'Total Duration: ${duration.substring(2, 3)} Hours',
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        )
+                      : Text(
+                          //if ${duration.substring(5, 6)} is valid, then show it, otherwise don't
+                          //Ex: in response PT17H15M it is true, but in PT15H it is false and turns null
+                          //so we need to check if it is null or not
+
+                          'Total Duration: ${duration.substring(2, 3)} Hours ${duration.substring(5, 6)} Minutes',
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
                   subtitle: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -230,7 +235,7 @@ class _TransportationListState extends State<TransportationList> {
                                   for (var i = 0; i < segments.length; i++)
                                     ListTile(
                                       title: Text(
-                                        'Segment ${i + 1}',
+                                        'Stops ${i + 1}',
                                         style: TextStyle(
                                           fontSize: 18,
                                           fontWeight: FontWeight.bold,

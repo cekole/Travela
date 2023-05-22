@@ -159,15 +159,19 @@ class _PlaceCardState extends State<PlaceCard> {
                             isFavorite ? Icons.favorite : Icons.favorite_border,
                             color: Color.fromARGB(255, 10, 9, 9)),
                         onPressed: () async {
-                          toggleFavorite();
+                          setState(() {
+                            toggleFavorite();
+                          });
                           try {
                             bool success = await userData.addFavouriteCity(
                                 userId, selectedDestination.id);
                             if (success) {
                               showDialog(
                                 context: context,
-                                builder: (BuildContext context) => Platform
-                                        .isIOS
+                                builder: (BuildContext context) => Theme.of(
+                                                context)
+                                            .platform ==
+                                        TargetPlatform.iOS
                                     ? CupertinoAlertDialog(
                                         title: Text('Added to Favourites'),
                                         // OK BUTTON
