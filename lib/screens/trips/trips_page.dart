@@ -493,7 +493,6 @@ class TripsPage extends StatelessWidget {
               TextButton(
                 onPressed: () async {
                   await formGroup(context);
-                  searchDialog(context);
                 },
                 child: Text(
                   'Arrange an Individual Trip',

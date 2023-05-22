@@ -105,6 +105,7 @@ class _EditTravelGroupState extends State<EditTravelGroup> {
                       child: Column(
                         children: [
                           chat(size, groupData, travelGroup),
+                          SizedBox(height: 10),
                           sendMessageTextField(context, groupData, travelGroup),
                           ArrangeTripButton(context),
                           SizedBox(height: 10),
@@ -313,7 +314,7 @@ class _EditTravelGroupState extends State<EditTravelGroup> {
     SizedBox(height: 20);
     return Container(
       decoration: BoxDecoration(
-        color: Colors.grey[100],
+        color: Colors.grey[200],
         borderRadius: BorderRadius.circular(10),
         border: Border.all(
           color: Colors.grey[300]!,
@@ -949,24 +950,6 @@ class _EditTravelGroupState extends State<EditTravelGroup> {
                 ),
               ),
               //arrange button
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Container(
-                  width: double.infinity,
-                  padding: EdgeInsets.all(10),
-                  child: TextButton(
-                    onPressed: () {
-                      Navigator.pop(context);
-                      Navigator.pop(context);
-                    },
-                    child: Text(
-                      'Add To Draft',
-                      style: TextStyle(
-                          color: Theme.of(context).primaryColor, fontSize: 16),
-                    ),
-                  ),
-                ),
-              ),
             ],
           ),
         ),
