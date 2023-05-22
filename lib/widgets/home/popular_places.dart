@@ -45,11 +45,17 @@ class PopularPlaces extends StatelessWidget {
                   ],
                 );
               },
-              child: Text(
-                'See All',
-                style: TextStyle(
-                  color: Theme.of(context).primaryColor,
-                ),
+              child: Row(
+                children: [
+                  Icon(Icons.search),
+                  SizedBox(width: 8),
+                  Text(
+                    'See All',
+                    style: TextStyle(
+                      color: Colors.blue,
+                    ),
+                  ),
+                ],
               ),
             ),
           ],

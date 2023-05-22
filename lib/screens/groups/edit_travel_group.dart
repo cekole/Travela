@@ -124,36 +124,23 @@ class _EditTravelGroupState extends State<EditTravelGroup> {
                   : Container(
                       width: double.infinity,
                       child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
-                          ArrangeTripButton(context),
-                          SizedBox(height: 10),
-                          Container(
-                            width: double.infinity,
-                            padding: EdgeInsets.all(10),
-                            child: ElevatedButton(
-                              onPressed: () {
-                                arrangeTripcationModal(
-                                    context, groupData, travelGroup);
-                              },
-                              child: Text('Trip Options'),
-                            ),
-                          ),
-                          //Check out Popular Places
                           SizedBox(height: 50),
                           Text(
                             'Popular Places',
                             style: TextStyle(
-                              fontSize: 16,
+                              fontSize: 20,
                               fontWeight: FontWeight.bold,
                             ),
-                            textAlign: TextAlign.center,
+                            textAlign: TextAlign.left,
                           ),
                           Divider(
                             color: Colors.grey,
                             thickness: 1,
                           ),
                           Container(
-                            height: MediaQuery.of(context).size.height * 0.25,
+                            height: MediaQuery.of(context).size.height * 0.3,
                             child: FutureBuilder(
                               future: Future.delayed(Duration(seconds: 1)),
                               builder: (context, snapshot) {
@@ -193,6 +180,19 @@ class _EditTravelGroupState extends State<EditTravelGroup> {
                                   },
                                 );
                               },
+                            ),
+                          ),
+                          SizedBox(height: 30),
+                          ArrangeTripButton(context),
+                          Container(
+                            width: double.infinity,
+                            padding: EdgeInsets.all(10),
+                            child: ElevatedButton(
+                              onPressed: () {
+                                arrangeTripcationModal(
+                                    context, groupData, travelGroup);
+                              },
+                              child: Text('Trip Options'),
                             ),
                           ),
                         ],

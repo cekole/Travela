@@ -48,9 +48,8 @@ class _ProfilePageState extends State<ProfilePage> {
   DateTime rangeEndDate = DateTime.now().add(const Duration(days: 7));
 
   void _onSelectionChanged(DateRangePickerSelectionChangedArgs args) {
-    final groupData = Provider.of<GroupProvider>(context, listen: false);
-    currentAvailableFrom = args.value.startDate;
-    currentAvailableTo = args.value.endDate;
+    _dateRangePickerController.selectedRange = PickerDateRange(
+        args.value.startDate, args.value.endDate ?? args.value.startDate);
 
     if (args.value is PickerDateRange) {
       setState(() {
@@ -67,23 +66,6 @@ class _ProfilePageState extends State<ProfilePage> {
 
   @override
   Widget build(BuildContext context) {
-    // Inside your widget build method
-    SfDateRangePicker(
-      backgroundColor: Colors.white,
-      headerStyle: DateRangePickerHeaderStyle(
-        textAlign: TextAlign.center,
-      ),
-      selectionMode: DateRangePickerSelectionMode.values[2],
-      initialSelectedRange: PickerDateRange(
-        DateTime.parse(currentAvailableFrom),
-        DateTime.parse(currentAvailableTo),
-      ),
-      startRangeSelectionColor: Theme.of(context).primaryColor,
-      endRangeSelectionColor: Theme.of(context).primaryColor,
-      onSelectionChanged: _onSelectionChanged,
-      controller: _dateRangePickerController,
-    );
-
     final fileStorageData =
         Provider.of<FileStorageProvider>(context, listen: false);
 
