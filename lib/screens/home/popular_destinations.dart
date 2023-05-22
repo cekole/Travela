@@ -35,19 +35,33 @@ class _PopularDestinationsState extends State<PopularDestinations> {
     destinationsData.fetchAndSetCities();
   }
 
+  void filterDestinations(String searchText) {
+    final destinationsData =
+        Provider.of<DestinationsProvider>(context, listen: false);
+
+    setState(() {
+      if (searchText.isNotEmpty) {
+        destinationsData.filterDestinations(searchText);
+      } else {
+        destinationsData.clearFilter();
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final destinationsData =
         Provider.of<DestinationsProvider>(context, listen: false);
     final args = ModalRoute.of(context)!.settings.arguments as List;
     final destinations = args[0] as Set<List<Destination>>;
-    print(destinations.length);
+
     if (args[1]) {
       setState(() {
         _isTrip = true;
       });
     }
-    //get the list of destinations from the arguments
+
+    // Get the list of destinations from the arguments
     final List<Destination> destinationList = destinations.toList()[0];
 
     return Scaffold(
@@ -77,14 +91,10 @@ class _PopularDestinationsState extends State<PopularDestinations> {
             SizedBox(
               height: MediaQuery.of(context).size.height * 0.6,
               child: FutureBuilder(
-                future: Future.wait(
-                  [
-                    Provider.of<DestinationsProvider>(context, listen: false)
-                        .fetchAndSetCities(),
-                  ],
-                ).then(
-                  (value) => Future.delayed(Duration(seconds: 1)),
-                ),
+                future: Future.wait([
+                  Provider.of<DestinationsProvider>(context, listen: false)
+                      .fetchAndSetCities(),
+                ]),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return Shimmer.fromColors(
@@ -105,53 +115,39 @@ class _PopularDestinationsState extends State<PopularDestinations> {
                       ),
                     );
                   } else {
-                    return Consumer<DestinationsProvider>(
-                      builder: (context, destinationsData, child) {
-                        List<Destination> destinations =
-                            destinationsData.destinations;
-                        if (_searchController.text.isNotEmpty) {
-                          destinations = destinations.where((destination) {
-                            return destination.city
-                                .toLowerCase()
-                                .contains(_searchController.text);
-                          }).toList();
-                        }
-                        return ListView.separated(
-                          itemCount: destinationsData.destinations.length,
-                          itemBuilder: (context, index) {
-                            final filteredDestinations = destinationsData
-                                .destinations
-                                .where((destination) =>
-                                    destination.city.toLowerCase().contains(
-                                          _searchController.text.toLowerCase(),
-                                        ))
-                                .toList();
-                            if (index >= filteredDestinations.length) {
-                              //if none show a placeholder
-                              if (filteredDestinations.isEmpty) {
-                                return Center(
-                                  child: Text(
-                                    'No destinations found',
-                                    style: TextStyle(
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.w800,
-                                    ),
-                                  ),
-                                );
-                              }
-                              return SizedBox.shrink();
-                            }
-                            return AnswerCardHome(
-                              destination: filteredDestinations[index],
-                              onSelect: (destination) {},
-                              isTrip: _isTrip,
-                            );
-                          },
-                          separatorBuilder: (context, index) =>
-                              const SizedBox(height: 10),
-                        );
-                      },
-                    );
+                    List<Destination> destinations =
+                        destinationsData.destinations;
+                    if (_searchController.text.isNotEmpty) {
+                      destinations = destinations.where((destination) {
+                        return destination.city
+                            .toLowerCase()
+                            .contains(_searchController.text.toLowerCase());
+                      }).toList();
+                    }
+                    if (destinations.isEmpty) {
+                      return Center(
+                        child: Text(
+                          'No destinations found',
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.w800,
+                          ),
+                        ),
+                      );
+                    } else {
+                      return ListView.separated(
+                        itemCount: destinations.length,
+                        itemBuilder: (context, index) {
+                          return AnswerCardHome(
+                            destination: destinations[index],
+                            onSelect: (destination) {},
+                            isTrip: _isTrip,
+                          );
+                        },
+                        separatorBuilder: (context, index) =>
+                            const SizedBox(height: 10),
+                      );
+                    }
                   }
                 },
               ),

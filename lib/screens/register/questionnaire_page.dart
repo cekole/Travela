@@ -79,8 +79,11 @@ class _QuestionnarePageState extends State<QuestionnarePage> {
                 ),
                 SizedBox(height: 10),
                 Text(
-                  'Choose Your Top 3 Destinations',
-                  style: TextStyle(fontSize: 20),
+                  'Choose At Least 3 Destinations',
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
                   textAlign: TextAlign.center,
                 ),
                 Divider(

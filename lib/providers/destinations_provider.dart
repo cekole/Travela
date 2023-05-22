@@ -101,6 +101,7 @@ class DestinationsProvider with ChangeNotifier {
       isPopular: true,
     ) */
   ];
+  List<Destination> _filteredDestinations = [];
 
   List<Destination> _popularDestinations = [];
 
@@ -112,8 +113,24 @@ class DestinationsProvider with ChangeNotifier {
     return [..._popularDestinations];
   }
 
+  List<Destination> get filteredDestinations {
+    return [..._filteredDestinations];
+  }
+
   Destination findById(String id) {
     return _destinations.firstWhere((destination) => destination.id == id);
+  }
+
+  void filterDestinations(String searchText) {
+    _filteredDestinations = destinations.where((destination) {
+      return destination.city.toLowerCase().contains(searchText.toLowerCase());
+    }).toList();
+    notifyListeners();
+  }
+
+  void clearFilter() {
+    _filteredDestinations = [];
+    notifyListeners();
   }
 
   //fetch and set destinations
