@@ -125,7 +125,6 @@ class DestinationsProvider with ChangeNotifier {
         'Authorization': 'Bearer $bearerToken',
       },
     );
-    print('dsd');
     print(response.statusCode);
     final extractedData = json.decode(response.body) as List<dynamic>;
     final List<City> loadedCities = [];
@@ -137,9 +136,11 @@ class DestinationsProvider with ChangeNotifier {
       loadedCities.add(
         City(
           id: city['city_id'].toString(),
-          cityName: city['cityName'],
-          countryName:
-              city['country'] == null ? '' : city['country']['countryName'],
+          cityName: utf8.decode(city['cityName'].toString().codeUnits),
+          countryName: city['country'] == null
+              ? ''
+              : utf8
+                  .decode(city['country']['countryName'].toString().codeUnits),
           description:
               city['cityDescription'] == null ? '' : city['cityDescription'],
           imageUrl: city['cityImageURL'] == null ? '' : city['cityImageURL'],
@@ -187,7 +188,7 @@ class DestinationsProvider with ChangeNotifier {
       loadedCities.add(
         City(
           id: city['city_id'].toString(),
-          cityName: city['cityName'],
+          cityName: utf8.decode(city['cityName'].toString().codeUnits),
           countryName:
               city['country'] == null ? '' : city['country']['countryName'],
           description:
@@ -235,7 +236,8 @@ class DestinationsProvider with ChangeNotifier {
       return [];
     }
     final attractions = extractedData.map((attraction) {
-      final attractionName = attraction['attractionName'];
+      final attractionName =
+          utf8.decode(attraction['attractionName'].toString().codeUnits);
       final attractionCategory = attraction['category'];
       final attractionImage = attraction['imageUrl'];
       return Attraction(
