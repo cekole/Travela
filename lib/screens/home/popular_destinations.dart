@@ -124,7 +124,9 @@ class _PopularDestinationsState extends State<PopularDestinations> {
                             .contains(_searchController.text.toLowerCase());
                       }).toList();
                     }
-                    if (destinations.isEmpty) {
+                    bool isMessageDisplayed = false;
+                    if (destinations.isEmpty && !isMessageDisplayed) {
+                      isMessageDisplayed = true;
                       return Center(
                         child: Text(
                           'No destinations found',

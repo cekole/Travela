@@ -10,6 +10,7 @@ import 'package:shimmer/shimmer.dart';
 import 'package:travela_mobile/appConstant.dart';
 import 'package:travela_mobile/models/accomodation.dart';
 import 'package:travela_mobile/models/destination.dart';
+import 'package:travela_mobile/models/trip.dart';
 import 'package:travela_mobile/providers/accomodation_provider.dart';
 import 'package:travela_mobile/providers/destinations_provider.dart';
 import 'package:travela_mobile/providers/group_provider.dart';
@@ -132,202 +133,14 @@ class TripsPage extends StatelessWidget {
                             }).then(
                               (value) {
                                 tripData.transportations.forEach((element) {});
-                                showModalBottomSheet(
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.vertical(
-                                      top: Radius.circular(10),
-                                    ),
-                                  ),
-                                  context: context,
-                                  builder: (context) {
-                                    return Container(
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.all(
-                                          Radius.circular(10),
-                                        ),
-                                      ),
-                                      child: ListView(
-                                        children: [
-                                          //locations
-                                          Column(
-                                            children: [
-                                              Card(
-                                                elevation: 20,
-                                                shape: RoundedRectangleBorder(
-                                                  borderRadius:
-                                                      BorderRadius.circular(10),
-                                                ),
-                                                child: Column(
-                                                  children: [
-                                                    ListTile(
-                                                      title: Text('Locations'),
-                                                    ),
-                                                    Divider(
-                                                      thickness: 2,
-                                                    ),
-                                                    Container(
-                                                      height: 200,
-                                                      child: locations.isEmpty
-                                                          ? Center(
-                                                              child: Text(
-                                                                  'No locations are added'),
-                                                            )
-                                                          : ListView.builder(
-                                                              itemCount:
-                                                                  locations
-                                                                      .length,
-                                                              itemBuilder:
-                                                                  (context,
-                                                                      index) {
-                                                                return ListTile(
-                                                                  leading: Icon(
-                                                                    Icons
-                                                                        .pin_drop,
-                                                                    color: Theme.of(
-                                                                            context)
-                                                                        .primaryColor,
-                                                                  ),
-                                                                  title: Text(locations[
-                                                                          index]
-                                                                      [
-                                                                      'locationName']),
-                                                                );
-                                                              },
-                                                            ),
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                              Card(
-                                                elevation: 20,
-                                                shape: RoundedRectangleBorder(
-                                                  borderRadius:
-                                                      BorderRadius.circular(10),
-                                                ),
-                                                child: Column(
-                                                  children: [
-                                                    ListTile(
-                                                      title:
-                                                          Text('Accomodations'),
-                                                    ),
-                                                    Divider(
-                                                      thickness: 2,
-                                                    ),
-                                                    Container(
-                                                      height: 200,
-                                                      child:
-                                                          accomodationForLocation
-                                                                  .isEmpty
-                                                              ? Center(
-                                                                  child: Text(
-                                                                      'No accommodations are added yet'),
-                                                                )
-                                                              : ListView
-                                                                  .builder(
-                                                                  itemCount:
-                                                                      accomodationForLocation
-                                                                          .length,
-                                                                  itemBuilder:
-                                                                      (context,
-                                                                          index) {
-                                                                    return ListTile(
-                                                                      leading:
-                                                                          Icon(
-                                                                        Icons
-                                                                            .hotel,
-                                                                        color: Theme.of(context)
-                                                                            .primaryColor,
-                                                                      ),
-                                                                      title: Text(
-                                                                          accomodationForLocation[index]
-                                                                              .name),
-                                                                      subtitle:
-                                                                          Text(
-                                                                        accomodationForLocation[index]
-                                                                            .price
-                                                                            .substring(3),
-                                                                      ),
-                                                                    );
-                                                                  },
-                                                                ),
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                              Card(
-                                                elevation: 20,
-                                                shape: RoundedRectangleBorder(
-                                                  borderRadius:
-                                                      BorderRadius.circular(10),
-                                                ),
-                                                child: Column(
-                                                  children: [
-                                                    ListTile(
-                                                      title: Text(
-                                                          'Transportations'),
-                                                    ),
-                                                    Divider(
-                                                      thickness: 2,
-                                                    ),
-                                                    Container(
-                                                      height: 200,
-                                                      child: tripData
-                                                              .transportations
-                                                              .isEmpty
-                                                          ? Center(
-                                                              child: Text(
-                                                                  'No transportaition is added yet'),
-                                                            )
-                                                          : ListView.builder(
-                                                              itemCount: tripData
-                                                                  .transportations
-                                                                  .length,
-                                                              itemBuilder:
-                                                                  (context,
-                                                                      index) {
-                                                                return ListTile(
-                                                                  leading: Icon(
-                                                                    Icons
-                                                                        .flight,
-                                                                    color: Theme.of(
-                                                                            context)
-                                                                        .primaryColor,
-                                                                  ),
-                                                                  title: Text(
-                                                                    startDestination!
-                                                                            .city +
-                                                                        ' to ' +
-                                                                        endDestination!
-                                                                            .city,
-                                                                    style:
-                                                                        TextStyle(
-                                                                      fontWeight:
-                                                                          FontWeight
-                                                                              .bold,
-                                                                    ),
-                                                                  ),
-                                                                  subtitle:
-                                                                      Text(
-                                                                    '€' +
-                                                                        tripData
-                                                                            .transportations[index]
-                                                                            .price
-                                                                            .toString(),
-                                                                  ),
-                                                                );
-                                                              },
-                                                            ),
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ],
-                                      ),
-                                    );
-                                  },
-                                );
+                                tripDetailBottomSheet(
+                                    trip,
+                                    context,
+                                    locations,
+                                    accomodationForLocation,
+                                    tripData,
+                                    startDestination,
+                                    endDestination);
                               },
                             );
                           },
@@ -367,6 +180,192 @@ class TripsPage extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+
+  Future<dynamic> tripDetailBottomSheet(
+      Trip trip,
+      BuildContext context,
+      List<Map<String, dynamic>> locations,
+      List<Accomodation> accomodationForLocation,
+      TripProvider tripData,
+      Destination? startDestination,
+      Destination? endDestination) {
+    return showModalBottomSheet(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(
+          top: Radius.circular(10),
+        ),
+      ),
+      context: context,
+      builder: (context) {
+        return Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.all(
+              Radius.circular(10),
+            ),
+          ),
+          child: ListView(
+            children: [
+              SizedBox(
+                height: 20,
+              ),
+
+              // Locations
+              ListTile(
+                title: Text('Locations', style: TextStyle(fontSize: 20)),
+                trailing: IconButton(
+                  onPressed: () {
+                    Theme.of(context).platform == TargetPlatform.iOS
+                        ? showCupertinoDialog(
+                            context: context,
+                            builder: (context) {
+                              return CupertinoAlertDialog(
+                                title: Text('Delete Trip'),
+                                content: Text(
+                                    'Are you sure you want to delete this trip?'),
+                                actions: [
+                                  CupertinoDialogAction(
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                    child: Text('Cancel'),
+                                  ),
+                                  CupertinoDialogAction(
+                                    onPressed: () {
+                                      tripData.deleteTrip(trip.id);
+                                      Navigator.pushReplacementNamed(
+                                          context, '/home');
+                                      pageNum = 3;
+                                    },
+                                    child: Text('Delete'),
+                                  ),
+                                ],
+                              );
+                            },
+                          )
+                        : showDialog(
+                            context: context,
+                            builder: (context) {
+                              return AlertDialog(
+                                title: Text('Delete Trip'),
+                                content: Text(
+                                    'Are you sure you want to delete this trip?'),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                    child: Text('Cancel'),
+                                  ),
+                                  TextButton(
+                                    onPressed: () {
+                                      tripData.deleteTrip(trip.id);
+                                      Navigator.of(context).pop();
+                                      Navigator.of(context).pop();
+                                    },
+                                    child: Text('Delete'),
+                                  ),
+                                ],
+                              );
+                            },
+                          );
+                  },
+                  icon: Icon(Icons.delete),
+                ),
+              ),
+              Divider(
+                thickness: 2,
+              ),
+              Container(
+                height: 200,
+                child: ListView.builder(
+                  itemCount: locations.length,
+                  itemBuilder: (context, index) {
+                    final locationName = locations[index]['locationName'];
+                    final isDuplicate = locations.sublist(0, index).any(
+                        (location) => location['locationName'] == locationName);
+
+                    if (isDuplicate) {
+                      return SizedBox(); // Skip duplicate values
+                    }
+
+                    return ListTile(
+                      leading: Icon(
+                        Icons.pin_drop,
+                        color: Theme.of(context).primaryColor,
+                      ),
+                      title: Text(locationName),
+                    );
+                  },
+                ),
+              ),
+
+              // Accommodations
+              ListTile(
+                title: Text('Accommodations', style: TextStyle(fontSize: 20)),
+              ),
+              Divider(
+                thickness: 2,
+              ),
+              Container(
+                height: 200,
+                child: accomodationForLocation.isEmpty
+                    ? Center(
+                        child: Text('No accomodations found'),
+                      )
+                    : ListView.builder(
+                        itemCount: accomodationForLocation.length,
+                        itemBuilder: (context, index) {
+                          final accomodation = accomodationForLocation[index];
+                          return ListTile(
+                            leading: Icon(
+                              Icons.hotel,
+                              color: Theme.of(context).primaryColor,
+                            ),
+                            title: Text(accomodation.name),
+                            subtitle: Text(accomodation.price.substring(3)),
+                          );
+                        },
+                      ),
+              ),
+
+              // Transportations
+              ListTile(
+                title: Text('Transportations', style: TextStyle(fontSize: 20)),
+              ),
+              Divider(
+                thickness: 2,
+              ),
+              Container(
+                height: 200,
+                child: tripData.transportations.isEmpty
+                    ? Center(
+                        child: Text('No transportations found'),
+                      )
+                    : ListView.builder(
+                        itemCount: tripData.transportations.length,
+                        itemBuilder: (context, index) {
+                          final transportation =
+                              tripData.transportations[index];
+                          return ListTile(
+                            leading: Icon(
+                              Icons.flight,
+                              color: Theme.of(context).primaryColor,
+                            ),
+                            title: Text(
+                              '${startDestination!.city} to ${endDestination!.city}',
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                            subtitle: Text('€${transportation.price}'),
+                          );
+                        },
+                      ),
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 
