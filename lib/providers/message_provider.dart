@@ -11,21 +11,29 @@ import 'package:travela_mobile/models/poll_option.dart';
 class MessageProvider with ChangeNotifier {
   Future<void> addPoll(List<PollOption> options) async {
     final url = baseUrl + 'messages/poll';
-    print(url);
-    final response = await http.post(Uri.parse(url),
-        headers: {
-          'Authorization': 'Bearer  $bearerToken',
-          'Content-Type': 'application/json',
-        },
-        body: json.encode(
-          {'options': options},
-        ));
-    print(response.statusCode);
+    final pollOptions = options
+        .map((option) => {
+              'content': option.content,
+              'votes': option.votes,
+            })
+        .toList();
+
+    final response = await http.post(
+      Uri.parse(url),
+      headers: {
+        'Authorization': 'Bearer $bearerToken',
+        'Content-Type': 'application/json',
+      },
+      body: json.encode({
+        'pollOptions': pollOptions,
+      }),
+    );
+
     if (response.statusCode == 200) {
-      print('addGPoll succeeded');
+      print('addPoll succeeded');
       return json.decode(response.body);
     } else {
-      print('addGPoll failed');
+      print('addPoll failed');
     }
   }
 

@@ -150,20 +150,6 @@ class _HomeBodyState extends State<HomeBody> {
             padding: const EdgeInsets.all(8.0),
             child: Column(
               children: [
-                Container(
-                  decoration: BoxDecoration(
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey.withOpacity(0.5),
-                        spreadRadius: 1,
-                        blurRadius: 7,
-                        offset: Offset(0, 3),
-                      ),
-                    ],
-                    color: Colors.grey[200],
-                    borderRadius: BorderRadius.circular(50),
-                  ),
-                ),
                 Padding(
                   padding: EdgeInsets.all(8),
                   child: PopularPlaces(

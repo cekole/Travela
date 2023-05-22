@@ -44,12 +44,15 @@ class FriendsPage extends StatelessWidget {
                     return Theme.of(context).platform == TargetPlatform.iOS
                         ? CupertinoAlertDialog(
                             title: Text('Send friend request'),
-                            content: CupertinoTextField(
-                              controller: _controller,
-                              placeholder: 'Enter username',
-                              onChanged: (value) {
-                                print(value);
-                              },
+                            content: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: CupertinoTextField(
+                                controller: _controller,
+                                placeholder: 'Enter username',
+                                onChanged: (value) {
+                                  print(value);
+                                },
+                              ),
                             ),
                             actions: [
                               Theme.of(context).platform == TargetPlatform.iOS
