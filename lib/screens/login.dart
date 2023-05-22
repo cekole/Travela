@@ -113,57 +113,62 @@ class _LoginPageState extends State<LoginPage> {
                           SizedBox(
                             height: 20,
                           ),
-                          ElevatedButton(
-                            onPressed: () {
-                              final authenticationData =
-                                  Provider.of<AuthenticationProvider>(context,
-                                      listen: false);
-                              authenticationData
-                                  .login(
-                                email: 'testEmail@gmail.com',
-                                name: 'testName',
-                                username: emailController.text,
-                                password: passwordController.text,
-                              )
-                                  .then((value) {
-                                if (value) {
-                                  final userData = Provider.of<UserProvider>(
-                                      context,
-                                      listen: false);
-                                  userData.resetCurrentValues().then(
-                                        (value) =>
-                                            Navigator.pushReplacementNamed(
-                                                context, '/home'),
-                                      );
-                                } else {
-                                  showDialog(
-                                    context: context,
-                                    builder: (context) => CupertinoAlertDialog(
-                                      title: Text('Error'),
-                                      content: Text(
-                                          'Wrong mail or password, please try again'),
-                                      actions: [
-                                        TextButton(
-                                          onPressed: () {
-                                            Navigator.pop(context);
-                                          },
-                                          child: Text('Ok'),
-                                        ),
-                                      ],
-                                    ),
-                                  );
-                                }
-                              });
-                            },
-                            child: Text("Sign In"),
-                            style: ButtonStyle(
-                              foregroundColor: MaterialStateProperty.all<Color>(
-                                  Colors.grey.shade700),
-                              padding: MaterialStateProperty.all(
-                                  EdgeInsets.symmetric(vertical: 15)),
-                              shape: MaterialStateProperty.all(
-                                RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(50),
+                          Container(
+                            width: double.infinity,
+                            child: ElevatedButton(
+                              onPressed: () {
+                                final authenticationData =
+                                    Provider.of<AuthenticationProvider>(context,
+                                        listen: false);
+                                authenticationData
+                                    .login(
+                                  email: 'testEmail@gmail.com',
+                                  name: 'testName',
+                                  username: emailController.text,
+                                  password: passwordController.text,
+                                )
+                                    .then((value) {
+                                  if (value) {
+                                    final userData = Provider.of<UserProvider>(
+                                        context,
+                                        listen: false);
+                                    userData.resetCurrentValues().then(
+                                          (value) =>
+                                              Navigator.pushReplacementNamed(
+                                                  context, '/home'),
+                                        );
+                                  } else {
+                                    showDialog(
+                                      context: context,
+                                      builder: (context) =>
+                                          CupertinoAlertDialog(
+                                        title: Text('Error'),
+                                        content: Text(
+                                            'Wrong mail or password, please try again'),
+                                        actions: [
+                                          TextButton(
+                                            onPressed: () {
+                                              Navigator.pop(context);
+                                            },
+                                            child: Text('Ok'),
+                                          ),
+                                        ],
+                                      ),
+                                    );
+                                  }
+                                });
+                              },
+                              child: Text("Sign In"),
+                              style: ButtonStyle(
+                                foregroundColor:
+                                    MaterialStateProperty.all<Color>(
+                                        Colors.grey.shade700),
+                                padding: MaterialStateProperty.all(
+                                    EdgeInsets.symmetric(vertical: 15)),
+                                shape: MaterialStateProperty.all(
+                                  RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(50),
+                                  ),
                                 ),
                               ),
                             ),
