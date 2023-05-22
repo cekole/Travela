@@ -74,6 +74,45 @@ class TripProvider with ChangeNotifier {
     }
   }
 
+  Future<Trip?> getById(String tripId) async {
+    final url = baseUrl + 'trips/$tripId';
+    final response = await http.get(
+      Uri.parse(url),
+      headers: {
+        'Authorization': 'Bearer $bearerToken',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      final responseData = json.decode(response.body);
+      final trip = Trip(
+        id: responseData['trip_id'].toString(),
+        name: responseData['tripName'],
+        description: responseData['tripDescription'],
+        activities: responseData['activities'] != null
+            ? List<String>.from(responseData['activities'])
+            : [],
+        travelGroup: '',
+        photos: responseData['photos'] != null
+            ? List<String>.from(responseData['photos'])
+            : [],
+        status: responseData['status'],
+        startDate: responseData['startDate'] != null
+            ? DateTime.parse(responseData['startDate'])
+            : null,
+        endDate: responseData['endDate'] != null
+            ? DateTime.parse(responseData['endDate'])
+            : null,
+      );
+
+      print('Get trip by ID success');
+      return trip;
+    } else {
+      print('Get trip by ID failed');
+      return null;
+    }
+  }
+
   Future<int> addTrip(
     String tripName,
     String tripDescription,

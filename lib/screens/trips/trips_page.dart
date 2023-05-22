@@ -210,72 +210,77 @@ class TripsPage extends StatelessWidget {
           ),
           child: ListView(
             children: [
-              SizedBox(
-                height: 20,
+              Row(
+                children: [
+                  Spacer(),
+                  IconButton(
+                    onPressed: () {
+                      Theme.of(context).platform == TargetPlatform.iOS
+                          ? showCupertinoDialog(
+                              context: context,
+                              builder: (context) {
+                                return CupertinoAlertDialog(
+                                  title: Text('Delete Trip'),
+                                  content: Text(
+                                      'Are you sure you want to delete this trip?'),
+                                  actions: [
+                                    CupertinoDialogAction(
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                      },
+                                      child: Text('Cancel'),
+                                    ),
+                                    CupertinoDialogAction(
+                                      onPressed: () {
+                                        tripData.deleteTrip(trip.id);
+                                        Navigator.pushReplacementNamed(
+                                            context, '/home');
+                                        pageNum = 3;
+                                      },
+                                      child: Text('Delete'),
+                                    ),
+                                  ],
+                                );
+                              },
+                            )
+                          : showDialog(
+                              context: context,
+                              builder: (context) {
+                                return AlertDialog(
+                                  title: Text('Delete Trip'),
+                                  content: Text(
+                                      'Are you sure you want to delete this trip?'),
+                                  actions: [
+                                    TextButton(
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                      },
+                                      child: Text('Cancel'),
+                                    ),
+                                    TextButton(
+                                      onPressed: () {
+                                        tripData.deleteTrip(trip.id);
+                                        Navigator.of(context).pop();
+                                        Navigator.of(context).pop();
+                                      },
+                                      child: Text('Delete'),
+                                    ),
+                                  ],
+                                );
+                              },
+                            );
+                    },
+                    icon: Icon(
+                      Icons.delete_outline,
+                      color: Theme.of(context).errorColor,
+                    ),
+                  ),
+                ],
               ),
 
               // Locations
               ListTile(
                 title: Text('Locations', style: TextStyle(fontSize: 20)),
-                trailing: IconButton(
-                  onPressed: () {
-                    Theme.of(context).platform == TargetPlatform.iOS
-                        ? showCupertinoDialog(
-                            context: context,
-                            builder: (context) {
-                              return CupertinoAlertDialog(
-                                title: Text('Delete Trip'),
-                                content: Text(
-                                    'Are you sure you want to delete this trip?'),
-                                actions: [
-                                  CupertinoDialogAction(
-                                    onPressed: () {
-                                      Navigator.of(context).pop();
-                                    },
-                                    child: Text('Cancel'),
-                                  ),
-                                  CupertinoDialogAction(
-                                    onPressed: () {
-                                      tripData.deleteTrip(trip.id);
-                                      Navigator.pushReplacementNamed(
-                                          context, '/home');
-                                      pageNum = 3;
-                                    },
-                                    child: Text('Delete'),
-                                  ),
-                                ],
-                              );
-                            },
-                          )
-                        : showDialog(
-                            context: context,
-                            builder: (context) {
-                              return AlertDialog(
-                                title: Text('Delete Trip'),
-                                content: Text(
-                                    'Are you sure you want to delete this trip?'),
-                                actions: [
-                                  TextButton(
-                                    onPressed: () {
-                                      Navigator.of(context).pop();
-                                    },
-                                    child: Text('Cancel'),
-                                  ),
-                                  TextButton(
-                                    onPressed: () {
-                                      tripData.deleteTrip(trip.id);
-                                      Navigator.of(context).pop();
-                                      Navigator.of(context).pop();
-                                    },
-                                    child: Text('Delete'),
-                                  ),
-                                ],
-                              );
-                            },
-                          );
-                  },
-                  icon: Icon(Icons.delete),
-                ),
               ),
               Divider(
                 thickness: 2,
