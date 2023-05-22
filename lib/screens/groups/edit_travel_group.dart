@@ -34,6 +34,7 @@ class _EditTravelGroupState extends State<EditTravelGroup> {
   TextEditingController _messageController = TextEditingController();
   TextEditingController _tripNameController = TextEditingController();
   ScrollController _scrollController = ScrollController();
+  DateRangePickerController _datePickerController = DateRangePickerController();
 
   RangeValues _currentPriceRangeValues = const RangeValues(40, 80);
   RangeValues _currentRatingRangeValues = const RangeValues(3, 5);
@@ -104,7 +105,6 @@ class _EditTravelGroupState extends State<EditTravelGroup> {
                         children: [
                           chat(size, groupData, travelGroup),
                           sendMessageTextField(context, groupData, travelGroup),
-                          SizedBox(height: 20),
                           ArrangeTripButton(context),
                           SizedBox(height: 10),
                           Container(
@@ -499,6 +499,8 @@ class _EditTravelGroupState extends State<EditTravelGroup> {
               .then((value) => {
                     if (value == true)
                       {
+                        _datePickerController.displayDate =
+                            DateTime.parse(travelGroup.commonStartDate),
                         showCalendar(context, travelGroup),
                       }
                   });
@@ -549,7 +551,7 @@ class _EditTravelGroupState extends State<EditTravelGroup> {
                               .updateGroup(travelGroup.id,
                                   groupNameController.text, userId)
                               .then((value) => {
-                                    if (value)
+                                    if (value && groupNameController.text != '')
                                       {
                                         showDialog(
                                           context: context,
@@ -603,7 +605,7 @@ class _EditTravelGroupState extends State<EditTravelGroup> {
                                                 ? CupertinoAlertDialog(
                                                     title: Text('Error'),
                                                     content: Text(
-                                                        'Group name could not be updated'),
+                                                        'Group name could not be empty'),
                                                     actions: [
                                                       CupertinoDialogAction(
                                                         onPressed: () {
@@ -617,7 +619,7 @@ class _EditTravelGroupState extends State<EditTravelGroup> {
                                                 : AlertDialog(
                                                     title: Text('Error'),
                                                     content: Text(
-                                                        'Group name could not be updated'),
+                                                        'Group name could not be empty'),
                                                     actions: [
                                                       TextButton(
                                                         onPressed: () {
@@ -781,8 +783,10 @@ class _EditTravelGroupState extends State<EditTravelGroup> {
                   color: Colors.grey,
                   thickness: 1,
                 ),
+
                 IgnorePointer(
                   child: SfDateRangePicker(
+                    controller: _datePickerController,
                     backgroundColor: Colors.white,
                     headerStyle: DateRangePickerHeaderStyle(
                       textAlign: TextAlign.center,
@@ -889,15 +893,19 @@ class _EditTravelGroupState extends State<EditTravelGroup> {
               //arrange button
               Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: TextButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                    Navigator.pop(context);
-                  },
-                  child: Text(
-                    'Add To Draft',
-                    style: TextStyle(
-                        color: Theme.of(context).primaryColor, fontSize: 16),
+                child: Container(
+                  width: double.infinity,
+                  padding: EdgeInsets.all(10),
+                  child: TextButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                      Navigator.pop(context);
+                    },
+                    child: Text(
+                      'Add To Draft',
+                      style: TextStyle(
+                          color: Theme.of(context).primaryColor, fontSize: 16),
+                    ),
                   ),
                 ),
               ),

@@ -55,131 +55,146 @@ class TripsPage extends StatelessWidget {
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(8.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              SizedBox(
-                height: 20,
-              ),
-              //Upcoming Trips header
-              Text(
-                'Upcoming Trips',
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
+          child: Container(
+            color: Colors.white,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                SizedBox(
+                  height: 20,
                 ),
-              ),
-              Divider(
-                thickness: 2,
-              ),
-              Container(
-                height: 200,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: ListView.separated(
-                  separatorBuilder: (context, index) => Divider(
-                    color: Colors.grey,
-                    thickness: 1,
+                //Upcoming Trips header
+                Text(
+                  'Upcoming Trips',
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
                   ),
-                  itemCount: userData.upcomingTrips.length,
-                  itemBuilder: (context, index) {
-                    List<Map<String, dynamic>> locations = [];
-                    List<Accomodation> accomodationForLocation = [];
+                ),
+                Divider(
+                  thickness: 2,
+                ),
+                Container(
+                  height: 200,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: ListView.separated(
+                    separatorBuilder: (context, index) => Divider(
+                      color: Color.fromARGB(255, 255, 246, 246),
+                      thickness: 1,
+                    ),
+                    itemCount: userData.upcomingTrips.length,
+                    itemBuilder: (context, index) {
+                      List<Map<String, dynamic>> locations = [];
+                      List<Accomodation> accomodationForLocation = [];
 
-                    return ListTile(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.all(
-                          Radius.circular(10),
-                        ),
-                      ),
-                      onTap: () {
-                        final trip = userData.upcomingTrips[index];
-                        Destination? startDestination;
-                        Destination? endDestination;
-                        final tripData =
-                            Provider.of<TripProvider>(context, listen: false);
-                        final destinationData =
-                            Provider.of<DestinationsProvider>(context,
+                      return Container(
+                        height: 50,
+                        child: ListTile(
+                          tileColor:
+                              Theme.of(context).primaryColor.withOpacity(0.2),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(10),
+                            ),
+                          ),
+                          onTap: () {
+                            final trip = userData.upcomingTrips[index];
+                            Destination? startDestination;
+                            Destination? endDestination;
+                            final tripData = Provider.of<TripProvider>(context,
                                 listen: false);
-                        tripData.getLocationsByTripId(trip.id).then(
-                          (value) {
-                            locations = value;
-                            tripData.getTransportations(trip.id);
-                            final accomodationData =
-                                Provider.of<AccomodationProvider>(context,
+                            final destinationData =
+                                Provider.of<DestinationsProvider>(context,
                                     listen: false);
-                            final accomodationList = accomodationData
-                                .fetchAllAccomodations()
-                                .then((value) {
-                              if (value.isNotEmpty) {
-                                accomodationForLocation = value
-                                    .where((element) =>
-                                        element.location['location_id'] ==
-                                        locations[0]['location_id'])
-                                    .toList();
-                              }
-
-                              if (tripData.transportations.isNotEmpty) {
-                                startDestination =
-                                    destinationData.destinations.firstWhere(
-                                  (element) =>
-                                      element.id ==
-                                      tripData.transportations[0].startCityId,
-                                );
-
-                                endDestination = destinationData.destinations
-                                    .firstWhere((element) =>
-                                        element.id ==
-                                        tripData.transportations[0].endCityId);
-                              }
-                            }).then(
+                            tripData.getLocationsByTripId(trip.id).then(
                               (value) {
-                                tripData.transportations.forEach((element) {});
-                                tripDetailBottomSheet(
-                                    trip,
-                                    context,
-                                    locations,
-                                    accomodationForLocation,
-                                    tripData,
-                                    startDestination,
-                                    endDestination);
+                                locations = value;
+                                tripData.getTransportations(trip.id);
+                                final accomodationData =
+                                    Provider.of<AccomodationProvider>(context,
+                                        listen: false);
+                                final accomodationList = accomodationData
+                                    .fetchAllAccomodations()
+                                    .then((value) {
+                                  accomodationForLocation = value
+                                      .where((element) =>
+                                          element.location['location_id'] ==
+                                          locations[0]['location_id'])
+                                      .toList();
+                                  if (tripData.transportations.isNotEmpty) {
+                                    startDestination =
+                                        destinationData.destinations.firstWhere(
+                                      (element) =>
+                                          element.id ==
+                                          tripData
+                                              .transportations[0].startCityId,
+                                    );
+
+                                    endDestination = destinationData
+                                        .destinations
+                                        .firstWhere((element) =>
+                                            element.id ==
+                                            tripData
+                                                .transportations[0].endCityId);
+                                  }
+                                }).then(
+                                  (value) {
+                                    tripData.transportations
+                                        .forEach((element) {});
+                                    tripDetailBottomSheet(
+                                        trip,
+                                        context,
+                                        locations,
+                                        accomodationForLocation,
+                                        tripData,
+                                        startDestination,
+                                        endDestination);
+                                  },
+                                );
                               },
                             );
                           },
-                        );
-                      },
-                      leading: Icon(
-                        Icons.flight_takeoff,
-                        color: Theme.of(context).primaryColor,
-                      ),
-                      title: Text(userData.upcomingTrips[index].name),
-                      subtitle: Text(
-                        userData.upcomingTrips[index].travelGroup.toString(),
-                      ),
-                      trailing: Icon(
-                        Icons.arrow_forward_ios,
-                        color: Theme.of(context).primaryColor.withOpacity(0.7),
-                      ),
-                    );
-                  },
+                          leading: Icon(
+                            Icons.flight_takeoff,
+                            color: Theme.of(context).primaryColor,
+                          ),
+                          title: Text(userData.upcomingTrips[index].name),
+                          subtitle: Text(
+                            userData.upcomingTrips[index].travelGroup
+                                .toString(),
+                          ),
+                          trailing: Icon(
+                            Icons.arrow_forward_ios,
+                            color:
+                                Theme.of(context).primaryColor.withOpacity(0.7),
+                          ),
+                        ),
+                      );
+                    },
+                  ),
                 ),
-              ),
 
-              SizedBox(
-                height: 20,
-              ),
-              Text(
-                'Previous Trips',
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
+                SizedBox(
+                  height: 20,
                 ),
-              ),
-              Divider(
-                thickness: 2,
-              ),
-            ],
+                Container(
+                  color: Colors.white,
+                  height: 50,
+                  child: Text(
+                    'Previous Trips',
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+                Divider(
+                  thickness: 2,
+                ),
+              ],
+            ),
           ),
         ),
       ),

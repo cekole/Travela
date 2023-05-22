@@ -360,7 +360,8 @@ class _PlaceCardState extends State<PlaceCard> {
 
                 widget.isArranged!
                     ? Container(
-                        margin: EdgeInsets.only(top: 10),
+                        width: double.infinity,
+                        padding: EdgeInsets.all(10),
                         child: ElevatedButton(
                           onPressed: () {
                             final tripData = Provider.of<TripProvider>(context,

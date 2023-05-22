@@ -493,7 +493,7 @@ class _AnswerCardHomeState extends State<AnswerCardHome> {
               ),
               widget.isTrip
                   ? Container(
-                      padding: EdgeInsets.all(10),
+                      padding: EdgeInsets.all(15),
                       width: double.infinity,
                       child: ElevatedButton(
                           onPressed: () {
