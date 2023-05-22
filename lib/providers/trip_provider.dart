@@ -7,15 +7,21 @@ import 'package:travela_mobile/appConstant.dart';
 import 'package:http/http.dart' as http;
 import 'package:travela_mobile/models/city.dart';
 import 'package:travela_mobile/models/country.dart';
+import 'package:travela_mobile/models/transportation.dart';
 import 'package:travela_mobile/models/trip.dart';
 import 'package:travela_mobile/models/user.dart';
 import 'package:travela_mobile/models/travel_group.dart';
 
 class TripProvider with ChangeNotifier {
   List<Trip> _trips = [];
+  List<Transportation> _transportations = [];
 
   List<Trip> get trips {
     return [..._trips];
+  }
+
+  List<Transportation> get transportations {
+    return [..._transportations];
   }
 
   Future<List<Trip>> getAll() async {
@@ -270,12 +276,31 @@ class TripProvider with ChangeNotifier {
       Uri.parse(url),
       headers: {
         'Authorization': 'Bearer  $bearerToken',
-        'Content-Type': 'application/json',
       },
     );
     print(response.statusCode);
 
     if (response.statusCode == 200) {
+      final extractedData = json.decode(response.body) as List<dynamic>;
+      final List<Transportation> loadedTransportations = [];
+      extractedData.forEach((transportationData) {
+        loadedTransportations.add(Transportation(
+          id: transportationData['transportation_id'].toString(),
+          startCityId: transportationData['startCity']['city_id'].toString(),
+          endCityId: transportationData['endCity']['city_id'].toString(),
+          transportationType: transportationData['transportationType'],
+          link: transportationData['link'],
+          price: transportationData['price'],
+          startDate: transportationData['startDate'] == null
+              ? null
+              : DateTime.parse(transportationData['startDate']),
+          duration: transportationData['duration'],
+        ));
+      });
+
+      _transportations = loadedTransportations;
+      notifyListeners();
+
       print('get all transportations success');
       return json.decode(response.body);
     } else {
@@ -300,26 +325,6 @@ class TripProvider with ChangeNotifier {
       return json.decode(response.body);
     } else {
       print('get all transportations failed');
-    }
-  }
-
-  Future getLocations(String id) async {
-    final url = baseUrl + 'trips/$id/locations';
-    print(url);
-    final response = await http.get(
-      Uri.parse(url),
-      headers: {
-        'Authorization': 'Bearer  $bearerToken',
-        'Content-Type': 'application/json',
-      },
-    );
-    print(response.statusCode);
-
-    if (response.statusCode == 200) {
-      print('get all locations success');
-      return json.decode(response.body);
-    } else {
-      print('get all locations failed');
     }
   }
 

@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:expansion_tile_card/expansion_tile_card.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
@@ -307,10 +310,50 @@ class _HotelPageState extends State<HotelPage> {
                 numberOfPeople,
               )
                   .then((value) {
-                Navigator.of(context).pushNamed(
-                  '/accomodation_list',
-                  arguments: destinationFull,
-                );
+                if (value != null) {
+                  List valueList = value as List;
+                  if (valueList.length == 0) {
+                    Platform.isIOS
+                        ? showCupertinoDialog(
+                            context: context,
+                            builder: (context) => CupertinoAlertDialog(
+                              title: Text('No accomodation found'),
+                              actions: [
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                  child: Text('Ok'),
+                                ),
+                              ],
+                            ),
+                          )
+                        : showDialog(
+                            context: context,
+                            builder: (context) => AlertDialog(
+                              title: Text('No accomodation found'),
+                              actions: [
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                  child: Text('Ok'),
+                                ),
+                              ],
+                            ),
+                          );
+                  } else {
+                    Navigator.of(context).pushNamed(
+                      '/accomodation_list',
+                      arguments: destinationFull,
+                    );
+                  }
+                } else {
+                  Navigator.of(context).pushNamed(
+                    '/accomodation_list',
+                    arguments: destinationFull,
+                  );
+                }
               });
             },
             child: Text(

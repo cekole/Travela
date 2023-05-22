@@ -23,11 +23,11 @@ class _FlightsPageState extends State<FlightsPage> {
       DateTime.now().add(const Duration(days: 7));
   int _numberOfPeople = 1;
 
-  late String originCode;
-  String destinationCode = '';
+  String originCode = '';
+  late String destinationCode;
 
-  late String originCityName;
-  String destinationCityName = '';
+  String originCityName = '';
+  late String destinationCityName;
 
   DateRangePickerController _dateRangePickerController =
       DateRangePickerController();
@@ -57,8 +57,8 @@ class _FlightsPageState extends State<FlightsPage> {
       final destinationFull =
           ModalRoute.of(context)!.settings.arguments as Destination;
       setState(() {
-        originCode = destinationFull.cityIataCode;
-        originCityName = destinationFull.city;
+        destinationCode = destinationFull.cityIataCode;
+        destinationCityName = destinationFull.city;
       });
     });
   }

@@ -7,6 +7,7 @@ class Accomodation {
   final String type;
   final String rating;
   final String image;
+  final Map<String, dynamic> location;
 
   Accomodation({
     required this.name,
@@ -17,5 +18,6 @@ class Accomodation {
     required this.type,
     required this.rating,
     required this.image,
+    required this.location,
   });
 }

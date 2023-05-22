@@ -196,64 +196,69 @@ void formGroup(BuildContext context) {
     builder: (context) => Padding(
       padding: const EdgeInsets.all(16.0),
       child: SafeArea(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(
-              'Form Travel Group',
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            TextField(
-              controller: textController,
-              decoration: InputDecoration(
-                labelText: 'Group Name',
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(50),
+        child: SingleChildScrollView(
+          child: Container(
+            height: MediaQuery.of(context).viewInsets.bottom + 200,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  'Form Travel Group',
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
-              ),
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            ElevatedButton(
-              onPressed: () {
-                String groupName = textController.text;
-                if (groupName.isEmpty) {
-                  AlertDialog(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
+                const SizedBox(
+                  height: 10,
+                ),
+                TextField(
+                  controller: textController,
+                  decoration: InputDecoration(
+                    labelText: 'Group Name',
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(50),
                     ),
-                    title: Text('Error'),
-                    content: Text('Group name cannot be empty'),
-                    actions: [
-                      TextButton(
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        },
-                        child: Text('OK'),
-                      ),
-                    ],
-                  );
-                } else {
-                  groupData
-                      .addGroup(
-                        groupName,
-                        userId,
-                      )
-                      .then(
-                        (value) => showAddFriendDialog(context),
+                  ),
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    String groupName = textController.text;
+                    if (groupName.isEmpty) {
+                      AlertDialog(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        title: Text('Error'),
+                        content: Text('Group name cannot be empty'),
+                        actions: [
+                          TextButton(
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                            child: Text('OK'),
+                          ),
+                        ],
                       );
-                }
-              },
-              child: Text('Create Group'),
+                    } else {
+                      groupData
+                          .addGroup(
+                            groupName,
+                            userId,
+                          )
+                          .then(
+                            (value) => showAddFriendDialog(context),
+                          );
+                    }
+                  },
+                  child: Text('Create Group'),
+                ),
+              ],
             ),
-          ],
+          ),
         ),
       ),
     ),

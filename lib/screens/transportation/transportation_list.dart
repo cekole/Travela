@@ -90,6 +90,7 @@ class _TransportationListState extends State<TransportationList> {
                           onPressed: () {
                             Navigator.pop(context);
                             Navigator.pop(context);
+                            Navigator.pop(context);
                           },
                           child: const Text('OK'),
                         ),
@@ -104,6 +105,7 @@ class _TransportationListState extends State<TransportationList> {
                   actions: [
                     TextButton(
                       onPressed: () {
+                        Navigator.pop(context);
                         Navigator.pop(context);
                         Navigator.pop(context);
                       },

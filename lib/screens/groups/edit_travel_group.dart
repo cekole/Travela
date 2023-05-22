@@ -380,8 +380,7 @@ class _EditTravelGroupState extends State<EditTravelGroup> {
                                                 groupData.draftTrips[index].id,
                                               )
                                                   .then((value) {
-                                                Navigator.of(context).pushNamed(
-                                                    '/edit_travel_group');
+                                                Navigator.of(context).pop();
                                               });
                                             },
                                             icon: Icon(Icons.check),

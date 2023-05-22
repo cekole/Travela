@@ -6,7 +6,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:provider/provider.dart';
+import 'package:shimmer/shimmer.dart';
 import 'package:travela_mobile/appConstant.dart';
+import 'package:travela_mobile/models/accomodation.dart';
+import 'package:travela_mobile/models/destination.dart';
+import 'package:travela_mobile/providers/accomodation_provider.dart';
+import 'package:travela_mobile/providers/destinations_provider.dart';
 import 'package:travela_mobile/providers/group_provider.dart';
 import 'package:travela_mobile/providers/user_provider.dart';
 import 'package:travela_mobile/providers/travel_group_provider.dart';
@@ -49,139 +54,248 @@ class TripsPage extends StatelessWidget {
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(8.0),
-          child: ListView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              Column(
-                children: [
-                  SizedBox(
-                    height: 20,
+              //Upcoming Trips header
+              Text(
+                'Upcoming Trips',
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              Divider(
+                thickness: 2,
+              ),
+              Container(
+                height: 200,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  border: Border.all(
+                    color: Colors.grey,
                   ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        'Upcoming Trips',
-                        style: TextStyle(
-                          fontSize: 20,
+                ),
+                child: ListView.separated(
+                  separatorBuilder: (context, index) => SizedBox(
+                    height: 10,
+                  ),
+                  itemCount: userData.upcomingTrips.length,
+                  itemBuilder: (context, index) {
+                    List<Map<String, dynamic>> locations = [];
+                    List<Accomodation> accomodationForLocation = [];
+
+                    return ListTile(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(10),
                         ),
                       ),
-                    ],
-                  ),
-                  Divider(
-                    thickness: 2,
-                  ),
-                  for (var trip in userData.upcomingTrips)
-                    Padding(
-                      padding: const EdgeInsets.only(bottom: 8.0),
-                      child: ExpansionTileCard(
-                        baseColor:
-                            Theme.of(context).primaryColor.withOpacity(0.2),
-                        expandedColor: Theme.of(context).backgroundColor,
-                        leading: CircleAvatar(
-                          backgroundColor: Theme.of(context).backgroundColor,
-                          child: Icon(
-                            Icons.flight,
-                            color: Theme.of(context).primaryColor,
-                          ),
-                        ),
-                        title: Text(trip.name),
-                        subtitle: Text(trip.status),
-                        children: [
-                          Divider(
-                            thickness: 1.0,
-                            height: 1.0,
-                          ),
-                          Align(
-                            alignment: Alignment.centerLeft,
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 16.0,
-                                vertical: 8.0,
-                              ),
-                              child: Text(
-                                trip.description,
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .bodyText2!
-                                    .copyWith(fontSize: 16),
-                              ),
-                            ),
-                          ),
-                        ],
+                      onTap: () {
+                        final trip = userData.upcomingTrips[index];
+                        Destination? startDestination;
+                        Destination? endDestination;
+                        final tripData =
+                            Provider.of<TripProvider>(context, listen: false);
+                        final destinationData =
+                            Provider.of<DestinationsProvider>(context,
+                                listen: false);
+                        tripData.getLocationsByTripId(trip.id).then(
+                          (value) {
+                            locations = value;
+                            tripData.getTransportations(trip.id);
+                            final accomodationData =
+                                Provider.of<AccomodationProvider>(context,
+                                    listen: false);
+                            final accomodationList = accomodationData
+                                .fetchAllAccomodations()
+                                .then((value) {
+                              accomodationForLocation = value
+                                  .where((element) =>
+                                      element.location['location_id'] ==
+                                      locations[0]['location_id'])
+                                  .toList();
+                              if (tripData.transportations.isNotEmpty) {
+                                startDestination =
+                                    destinationData.destinations.firstWhere(
+                                  (element) =>
+                                      element.id ==
+                                      tripData.transportations[0].startCityId,
+                                );
+
+                                endDestination = destinationData.destinations
+                                    .firstWhere((element) =>
+                                        element.id ==
+                                        tripData.transportations[0].endCityId);
+                              }
+                            }).then(
+                              (value) {
+                                tripData.transportations.forEach((element) {});
+                                showModalBottomSheet(
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.vertical(
+                                      top: Radius.circular(10),
+                                    ),
+                                  ),
+                                  context: context,
+                                  builder: (context) {
+                                    return Container(
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.all(
+                                          Radius.circular(10),
+                                        ),
+                                      ),
+                                      child: ListView(
+                                        children: [
+                                          //locations
+                                          ExpansionTileCard(
+                                            elevation: 20,
+                                            baseColor: Theme.of(context)
+                                                .primaryColor
+                                                .withOpacity(0.2),
+                                            initialPadding: EdgeInsets.all(16),
+                                            finalPadding: EdgeInsets.all(16),
+                                            title: Text('Locations'),
+                                            children: [
+                                              Container(
+                                                height: 200,
+                                                child: ListView.builder(
+                                                  itemCount: locations.length,
+                                                  itemBuilder:
+                                                      (context, index) {
+                                                    return ListTile(
+                                                      title: Text(
+                                                          locations[index]
+                                                              ['locationName']),
+                                                    );
+                                                  },
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          //accomodations
+                                          ExpansionTileCard(
+                                            elevation: 20,
+                                            baseColor: Theme.of(context)
+                                                .primaryColor
+                                                .withOpacity(0.2),
+                                            initialPadding: EdgeInsets.all(16),
+                                            finalPadding: EdgeInsets.all(16),
+                                            title: Text('Accomodations'),
+                                            children: [
+                                              Container(
+                                                height: 200,
+                                                child: ListView.builder(
+                                                  itemCount:
+                                                      accomodationForLocation
+                                                          .length,
+                                                  itemBuilder:
+                                                      (context, index) {
+                                                    return ListTile(
+                                                      leading: Icon(
+                                                        Icons.hotel,
+                                                        color: Theme.of(context)
+                                                            .primaryColor,
+                                                      ),
+                                                      title: Text(
+                                                          accomodationForLocation[
+                                                                  index]
+                                                              .name),
+                                                      subtitle: Text(
+                                                        accomodationForLocation[
+                                                                index]
+                                                            .price
+                                                            .substring(3),
+                                                      ),
+                                                    );
+                                                  },
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          //transportations
+                                          ExpansionTileCard(
+                                            elevation: 20,
+                                            baseColor: Theme.of(context)
+                                                .primaryColor
+                                                .withOpacity(0.2),
+                                            initialPadding: EdgeInsets.all(16),
+                                            finalPadding: EdgeInsets.all(16),
+                                            title: Text('Transportations'),
+                                            children: [
+                                              Container(
+                                                height: 200,
+                                                child: ListView.builder(
+                                                  itemCount: tripData
+                                                      .transportations.length,
+                                                  itemBuilder:
+                                                      (context, index) {
+                                                    return ListTile(
+                                                      leading: Icon(
+                                                        Icons.flight,
+                                                        color: Theme.of(context)
+                                                            .primaryColor,
+                                                      ),
+                                                      title: Text(
+                                                          startDestination!
+                                                                  .city +
+                                                              ' to ' +
+                                                              endDestination!
+                                                                  .city,
+                                                          style: TextStyle(
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                          )),
+                                                      subtitle: Text('€' +
+                                                          tripData
+                                                              .transportations[
+                                                                  index]
+                                                              .price
+                                                              .toString()),
+                                                    );
+                                                  },
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+                                    );
+                                  },
+                                );
+                              },
+                            );
+                          },
+                        );
+                      },
+                      leading: Icon(
+                        Icons.flight_takeoff,
+                        color: Theme.of(context).primaryColor,
                       ),
-                    ),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        'Previous Trips',
-                        style: TextStyle(
-                          fontSize: 20,
-                        ),
+                      title: Text(userData.upcomingTrips[index].name),
+                      subtitle: Text(
+                        userData.upcomingTrips[index].travelGroup.toString(),
                       ),
-                      IconButton(
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const PreviousTripsMap(),
-                            ),
-                          );
-                        },
-                        icon: Icon(Icons.travel_explore),
+                      trailing: Icon(
+                        Icons.arrow_forward_ios,
+                        color: Theme.of(context).primaryColor.withOpacity(0.7),
                       ),
-                    ],
-                  ),
-                  for (var trip in userData.previousTrips)
-                    Padding(
-                      padding: const EdgeInsets.only(bottom: 8.0),
-                      child: ExpansionTileCard(
-                        baseColor:
-                            Theme.of(context).primaryColor.withOpacity(0.2),
-                        expandedColor: Theme.of(context).backgroundColor,
-                        leading: CircleAvatar(
-                          backgroundColor: Theme.of(context).backgroundColor,
-                          child: Icon(
-                            Icons.flight,
-                            color: Theme.of(context).primaryColor,
-                          ),
-                        ),
-                        title: Text(trip.name),
-                        subtitle: Text(trip.status),
-                        children: [
-                          Divider(
-                            thickness: 1.0,
-                            height: 1.0,
-                          ),
-                          Align(
-                            alignment: Alignment.centerLeft,
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 16.0,
-                                vertical: 8.0,
-                              ),
-                              child: Text(
-                                trip.description,
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .bodyText2!
-                                    .copyWith(fontSize: 16),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  Divider(
-                    thickness: 2,
-                  ),
-                  SizedBox(
-                    height: 20,
-                  ),
-                ],
+                    );
+                  },
+                ),
+              ),
+              SizedBox(
+                height: 20,
+              ),
+              Text(
+                'Previous Trips',
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              Divider(
+                thickness: 2,
               ),
             ],
           ),

@@ -147,8 +147,7 @@ class _AccommodationListState extends State<AccommodationList> {
                   context: context,
                   builder: (context) => CupertinoAlertDialog(
                     title: const Text('Success'),
-                    content: Text(
-                        'Accomodation for ${locations[0]['locationName']} added successfully'),
+                    content: Text('Accomodation added successfully'),
                     actions: [
                       CupertinoDialogAction(
                         onPressed: () {
@@ -164,8 +163,7 @@ class _AccommodationListState extends State<AccommodationList> {
                   context: context,
                   builder: (context) => AlertDialog(
                     title: const Text('Success'),
-                    content: Text(
-                        'Accomodation for ${locations[0]['locationName']} added successfully'),
+                    content: Text('Accomodation added successfully'),
                     actions: [
                       TextButton(
                         onPressed: () {

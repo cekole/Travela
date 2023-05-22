@@ -19,7 +19,6 @@ class TransportationProvider with ChangeNotifier {
       Uri.parse(url),
       headers: {
         'Authorization': 'Bearer  $bearerToken',
-        'Content-Type': 'application/json',
       },
     );
     print(response.statusCode);

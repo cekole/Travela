@@ -14,8 +14,11 @@ class AccomodationProvider with ChangeNotifier {
     return [..._accomodations];
   }
 
-  Future<void> fetchAllAccomodations() async {
-    final response = await http.get(Uri.parse(requestUrl));
+  Future<List<Accomodation>> fetchAllAccomodations() async {
+    final response = await http.get(Uri.parse(requestUrl), headers: {
+      'Authorization': 'Bearer $bearerToken',
+    });
+    print(response.statusCode);
     final extractedData = json.decode(response.body) as List<dynamic>;
     final List<Accomodation> loadedAccomodations = [];
     extractedData.forEach((accomodationData) {
@@ -29,11 +32,13 @@ class AccomodationProvider with ChangeNotifier {
           type: accomodationData['type'],
           rating: accomodationData['rating'],
           image: accomodationData['image'],
+          location: accomodationData['location'],
         ),
       );
     });
     _accomodations = loadedAccomodations;
     notifyListeners();
+    return accomodations;
   }
 
   Future<Accomodation> getAccomodationById(String id) async {
@@ -48,6 +53,7 @@ class AccomodationProvider with ChangeNotifier {
       type: extractedData['type'],
       rating: extractedData['rating'],
       image: extractedData['image'],
+      location: extractedData['location'],
     );
     return loadedAccomodation;
   }
