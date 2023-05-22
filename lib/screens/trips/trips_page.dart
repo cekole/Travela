@@ -48,7 +48,7 @@ class TripsPage extends StatelessWidget {
         onPressed: () {
           _travelGroupModal(context);
         },
-        label: Text('Upcoming Trips'),
+        label: Text('Arrange Trips'),
         backgroundColor: Theme.of(context).primaryColor,
       ),
       body: SafeArea(

@@ -312,7 +312,7 @@ class _HotelPageState extends State<HotelPage> {
                   .then((value) {
                 if (value != null) {
                   List valueList = value as List;
-                  if (valueList.length == 0) {
+                  if (valueList.isEmpty) {
                     Platform.isIOS
                         ? showCupertinoDialog(
                             context: context,
@@ -348,11 +348,39 @@ class _HotelPageState extends State<HotelPage> {
                       arguments: destinationFull,
                     );
                   }
-                } else {
-                  Navigator.of(context).pushNamed(
-                    '/accomodation_list',
-                    arguments: destinationFull,
-                  );
+                } else if (value == null ||
+                    _currentEndDateCheckOut.isBefore(_currentEndDateCheckIn)) {
+                  Platform.isIOS
+                      ? showCupertinoDialog(
+                          context: context,
+                          builder: (context) => CupertinoAlertDialog(
+                            title: Text(
+                                'Check out date is before check in. Try again !'),
+                            actions: [
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                                child: Text('Ok'),
+                              ),
+                            ],
+                          ),
+                        )
+                      : showDialog(
+                          context: context,
+                          builder: (context) => AlertDialog(
+                            title: Text(
+                                'Check out date is before check in. Try again!'),
+                            actions: [
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                                child: Text('Ok'),
+                              ),
+                            ],
+                          ),
+                        );
                 }
               });
             },
