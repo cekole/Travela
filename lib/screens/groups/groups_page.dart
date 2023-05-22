@@ -73,7 +73,15 @@ class _GroupsPageState extends State<GroupsPage> {
         backgroundColor: Theme.of(context).primaryColor,
         actions: [
           IconButton(
-            icon: const Icon(Icons.people_alt_outlined),
+            icon: requestNumber > 0
+                ? Badge(
+                    label: Text(
+                      requestNumber.toString(),
+                      style: TextStyle(color: Colors.white),
+                    ),
+                    child: Icon(Icons.people_alt_outlined),
+                  )
+                : Icon(Icons.people_alt_outlined),
             onPressed: () {
               showModalBottomSheet(
                 shape: const RoundedRectangleBorder(

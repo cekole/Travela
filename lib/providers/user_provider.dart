@@ -205,6 +205,7 @@ class UserProvider with ChangeNotifier {
           currentRequestIds.add(request['user_id']);
           currentRequestUsernames.add(request['username']);
           requestCount++;
+          requestNumber = requestCount;
         }
       });
       notifyListeners();
@@ -748,6 +749,9 @@ class UserProvider with ChangeNotifier {
 
     currentVisitedCities = [];
     currentFriendsVisitedCities = [];
+
+    requestNumber = 0;
+
     notifyListeners();
   }
 }

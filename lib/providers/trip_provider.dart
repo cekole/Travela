@@ -288,7 +288,7 @@ class TripProvider with ChangeNotifier {
     }
   }
 
-  Future deleteTrip(String tripId) async {
+  Future<bool> deleteTrip(String tripId) async {
     final url = baseUrl + 'trips/$tripId';
     print(url);
     final response = await http.delete(
@@ -300,10 +300,11 @@ class TripProvider with ChangeNotifier {
     );
     print(response.statusCode);
     if (response.statusCode == 200) {
-      print('deleteTrip succeeded');
-      return json.decode(response.body);
+      print('deleteTrip success');
+      return true;
     } else {
       print('deleteTrip failed');
+      return false;
     }
   }
 
