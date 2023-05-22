@@ -297,20 +297,35 @@ class _EditTravelGroupState extends State<EditTravelGroup> {
                               onPressed: () {
                                 String tripName = _tripNameController.text;
                                 if (tripName.isEmpty) {
-                                  AlertDialog(
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
-                                    title: Text('Error'),
-                                    content: Text('Trip name cannot be empty'),
-                                    actions: [
-                                      TextButton(
-                                        onPressed: () {
-                                          Navigator.of(context).pop();
-                                        },
-                                        child: Text('OK'),
-                                      ),
-                                    ],
+                                  showDialog(
+                                    context: context,
+                                    builder: (context) => Platform.isIOS
+                                        ? CupertinoAlertDialog(
+                                            title: Text('Empty trip name'),
+                                            content:
+                                                Text('Please type a trip name'),
+                                            actions: [
+                                              TextButton(
+                                                onPressed: () {
+                                                  Navigator.of(context).pop();
+                                                },
+                                                child: Text('OK'),
+                                              ),
+                                            ],
+                                          )
+                                        : AlertDialog(
+                                            title: Text('Empty trip name'),
+                                            content:
+                                                Text('Please type a trip name'),
+                                            actions: [
+                                              TextButton(
+                                                onPressed: () {
+                                                  Navigator.of(context).pop();
+                                                },
+                                                child: Text('OK'),
+                                              ),
+                                            ],
+                                          ),
                                   );
                                 } else {
                                   final tripData = Provider.of<TripProvider>(
@@ -342,74 +357,7 @@ class _EditTravelGroupState extends State<EditTravelGroup> {
               SizedBox(height: 20),
               ElevatedButton(
                   onPressed: () {
-                    showModalBottomSheet(
-                        isScrollControlled: true,
-                        useRootNavigator: true,
-                        context: context,
-                        builder: (context) {
-                          //show groupData.draftTrips
-                          return Container(
-                            height: MediaQuery.of(context).size.height * 0.8,
-                            child: Column(
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Text(
-                                    'Draft Trips',
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                      color: Colors.black,
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                ),
-                                Expanded(
-                                  child: ListView.separated(
-                                    separatorBuilder: (context, index) =>
-                                        SizedBox(
-                                      height: 10,
-                                    ),
-                                    itemCount: groupData.draftTrips.length,
-                                    itemBuilder: (context, index) {
-                                      return Container(
-                                        decoration: BoxDecoration(
-                                          color: Colors.grey[100],
-                                          borderRadius:
-                                              BorderRadius.circular(10),
-                                          border: Border.all(
-                                            color: Colors.grey[300]!,
-                                            width: 1,
-                                          ),
-                                        ),
-                                        child: ListTile(
-                                          onTap: () {},
-                                          title: Text(
-                                            groupData.draftTrips[index].name,
-                                          ),
-                                          trailing: //acceptDraft
-                                              IconButton(
-                                            onPressed: () async {
-                                              await groupData
-                                                  .acceptDraftTrip(
-                                                travelGroup.id,
-                                                groupData.draftTrips[index].id,
-                                              )
-                                                  .then((value) {
-                                                Navigator.of(context).pop();
-                                              });
-                                            },
-                                            icon: Icon(Icons.check),
-                                          ),
-                                        ),
-                                      );
-                                    },
-                                  ),
-                                ),
-                              ],
-                            ),
-                          );
-                        });
+                    arrangeTripcationModal(context, groupData, travelGroup);
                   },
                   child: Text('Trip Options')),
             ],
@@ -417,6 +365,76 @@ class _EditTravelGroupState extends State<EditTravelGroup> {
         ),
       ),
     );
+  }
+
+  Future<dynamic> arrangeTripcationModal(
+      BuildContext context, GroupProvider groupData, TravelGroup travelGroup) {
+    return showModalBottomSheet(
+        isScrollControlled: true,
+        useRootNavigator: true,
+        context: context,
+        builder: (context) {
+          //show groupData.draftTrips
+          return Container(
+            height: MediaQuery.of(context).size.height * 0.8,
+            child: Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    'Draft Trips',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+                Expanded(
+                  child: ListView.separated(
+                    separatorBuilder: (context, index) => SizedBox(
+                      height: 10,
+                    ),
+                    itemCount: groupData.draftTrips.length,
+                    itemBuilder: (context, index) {
+                      return Container(
+                        decoration: BoxDecoration(
+                          color: Colors.grey[100],
+                          borderRadius: BorderRadius.circular(10),
+                          border: Border.all(
+                            color: Colors.grey[300]!,
+                            width: 1,
+                          ),
+                        ),
+                        child: ListTile(
+                          onTap: () {},
+                          title: Text(
+                            groupData.draftTrips[index].name,
+                          ),
+                          trailing: //acceptDraft
+                              IconButton(
+                            onPressed: () async {
+                              await groupData
+                                  .acceptDraftTrip(
+                                travelGroup.id,
+                                groupData.draftTrips[index].id,
+                              )
+                                  .then((value) {
+                                Navigator.of(context).pop();
+                              });
+                            },
+                            icon: Icon(Icons.check),
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              ],
+            ),
+          );
+        });
   }
 
   PopupMenuButton<String> buildPopUp(

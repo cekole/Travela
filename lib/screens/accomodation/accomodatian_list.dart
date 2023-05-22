@@ -151,7 +151,9 @@ class _AccommodationListState extends State<AccommodationList> {
                     actions: [
                       CupertinoDialogAction(
                         onPressed: () {
-                          Navigator.pushNamed(context, '/transportation');
+                          Navigator.pop(context);
+                          Navigator.pop(context);
+                          Navigator.pop(context);
                         },
                         child: const Text('OK'),
                       ),
@@ -166,8 +168,9 @@ class _AccommodationListState extends State<AccommodationList> {
                     actions: [
                       TextButton(
                         onPressed: () {
-                          Navigator.of(context).pop();
-                          Navigator.of(context).pop();
+                          Navigator.pop(context);
+                          Navigator.pop(context);
+                          Navigator.pop(context);
                         },
                         child: const Text('OK'),
                       ),

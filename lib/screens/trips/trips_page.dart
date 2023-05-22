@@ -57,6 +57,9 @@ class TripsPage extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
+              SizedBox(
+                height: 20,
+              ),
               //Upcoming Trips header
               Text(
                 'Upcoming Trips',
@@ -72,13 +75,11 @@ class TripsPage extends StatelessWidget {
                 height: 200,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10),
-                  border: Border.all(
-                    color: Colors.grey,
-                  ),
                 ),
                 child: ListView.separated(
-                  separatorBuilder: (context, index) => SizedBox(
-                    height: 10,
+                  separatorBuilder: (context, index) => Divider(
+                    color: Colors.grey,
+                    thickness: 1,
                   ),
                   itemCount: userData.upcomingTrips.length,
                   itemBuilder: (context, index) {
@@ -148,112 +149,176 @@ class TripsPage extends StatelessWidget {
                                       child: ListView(
                                         children: [
                                           //locations
-                                          ExpansionTileCard(
-                                            elevation: 20,
-                                            baseColor: Theme.of(context)
-                                                .primaryColor
-                                                .withOpacity(0.2),
-                                            initialPadding: EdgeInsets.all(16),
-                                            finalPadding: EdgeInsets.all(16),
-                                            title: Text('Locations'),
+                                          Column(
                                             children: [
-                                              Container(
-                                                height: 200,
-                                                child: ListView.builder(
-                                                  itemCount: locations.length,
-                                                  itemBuilder:
-                                                      (context, index) {
-                                                    return ListTile(
-                                                      title: Text(
-                                                          locations[index]
-                                                              ['locationName']),
-                                                    );
-                                                  },
+                                              Card(
+                                                elevation: 20,
+                                                shape: RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(10),
+                                                ),
+                                                child: Column(
+                                                  children: [
+                                                    ListTile(
+                                                      title: Text('Locations'),
+                                                    ),
+                                                    Divider(
+                                                      thickness: 2,
+                                                    ),
+                                                    Container(
+                                                      height: 200,
+                                                      child: locations.isEmpty
+                                                          ? Center(
+                                                              child: Text(
+                                                                  'No locations are added'),
+                                                            )
+                                                          : ListView.builder(
+                                                              itemCount:
+                                                                  locations
+                                                                      .length,
+                                                              itemBuilder:
+                                                                  (context,
+                                                                      index) {
+                                                                return ListTile(
+                                                                  leading: Icon(
+                                                                    Icons
+                                                                        .pin_drop,
+                                                                    color: Theme.of(
+                                                                            context)
+                                                                        .primaryColor,
+                                                                  ),
+                                                                  title: Text(locations[
+                                                                          index]
+                                                                      [
+                                                                      'locationName']),
+                                                                );
+                                                              },
+                                                            ),
+                                                    ),
+                                                  ],
                                                 ),
                                               ),
-                                            ],
-                                          ),
-                                          //accomodations
-                                          ExpansionTileCard(
-                                            elevation: 20,
-                                            baseColor: Theme.of(context)
-                                                .primaryColor
-                                                .withOpacity(0.2),
-                                            initialPadding: EdgeInsets.all(16),
-                                            finalPadding: EdgeInsets.all(16),
-                                            title: Text('Accomodations'),
-                                            children: [
-                                              Container(
-                                                height: 200,
-                                                child: ListView.builder(
-                                                  itemCount:
-                                                      accomodationForLocation
-                                                          .length,
-                                                  itemBuilder:
-                                                      (context, index) {
-                                                    return ListTile(
-                                                      leading: Icon(
-                                                        Icons.hotel,
-                                                        color: Theme.of(context)
-                                                            .primaryColor,
-                                                      ),
-                                                      title: Text(
-                                                          accomodationForLocation[
-                                                                  index]
-                                                              .name),
-                                                      subtitle: Text(
-                                                        accomodationForLocation[
-                                                                index]
-                                                            .price
-                                                            .substring(3),
-                                                      ),
-                                                    );
-                                                  },
+                                              Card(
+                                                elevation: 20,
+                                                shape: RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(10),
+                                                ),
+                                                child: Column(
+                                                  children: [
+                                                    ListTile(
+                                                      title:
+                                                          Text('Accomodations'),
+                                                    ),
+                                                    Divider(
+                                                      thickness: 2,
+                                                    ),
+                                                    Container(
+                                                      height: 200,
+                                                      child:
+                                                          accomodationForLocation
+                                                                  .isEmpty
+                                                              ? Center(
+                                                                  child: Text(
+                                                                      'No accommodations are added yet'),
+                                                                )
+                                                              : ListView
+                                                                  .builder(
+                                                                  itemCount:
+                                                                      accomodationForLocation
+                                                                          .length,
+                                                                  itemBuilder:
+                                                                      (context,
+                                                                          index) {
+                                                                    return ListTile(
+                                                                      leading:
+                                                                          Icon(
+                                                                        Icons
+                                                                            .hotel,
+                                                                        color: Theme.of(context)
+                                                                            .primaryColor,
+                                                                      ),
+                                                                      title: Text(
+                                                                          accomodationForLocation[index]
+                                                                              .name),
+                                                                      subtitle:
+                                                                          Text(
+                                                                        accomodationForLocation[index]
+                                                                            .price
+                                                                            .substring(3),
+                                                                      ),
+                                                                    );
+                                                                  },
+                                                                ),
+                                                    ),
+                                                  ],
                                                 ),
                                               ),
-                                            ],
-                                          ),
-                                          //transportations
-                                          ExpansionTileCard(
-                                            elevation: 20,
-                                            baseColor: Theme.of(context)
-                                                .primaryColor
-                                                .withOpacity(0.2),
-                                            initialPadding: EdgeInsets.all(16),
-                                            finalPadding: EdgeInsets.all(16),
-                                            title: Text('Transportations'),
-                                            children: [
-                                              Container(
-                                                height: 200,
-                                                child: ListView.builder(
-                                                  itemCount: tripData
-                                                      .transportations.length,
-                                                  itemBuilder:
-                                                      (context, index) {
-                                                    return ListTile(
-                                                      leading: Icon(
-                                                        Icons.flight,
-                                                        color: Theme.of(context)
-                                                            .primaryColor,
-                                                      ),
+                                              Card(
+                                                elevation: 20,
+                                                shape: RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(10),
+                                                ),
+                                                child: Column(
+                                                  children: [
+                                                    ListTile(
                                                       title: Text(
-                                                          startDestination!
-                                                                  .city +
-                                                              ' to ' +
-                                                              endDestination!
-                                                                  .city,
-                                                          style: TextStyle(
-                                                            fontWeight:
-                                                                FontWeight.bold,
-                                                          )),
-                                                      subtitle: Text('€' +
-                                                          tripData
-                                                              .transportations[
-                                                                  index]
-                                                              .price
-                                                              .toString()),
-                                                    );
-                                                  },
+                                                          'Transportations'),
+                                                    ),
+                                                    Divider(
+                                                      thickness: 2,
+                                                    ),
+                                                    Container(
+                                                      height: 200,
+                                                      child: tripData
+                                                              .transportations
+                                                              .isEmpty
+                                                          ? Center(
+                                                              child: Text(
+                                                                  'No transportaition is added yet'),
+                                                            )
+                                                          : ListView.builder(
+                                                              itemCount: tripData
+                                                                  .transportations
+                                                                  .length,
+                                                              itemBuilder:
+                                                                  (context,
+                                                                      index) {
+                                                                return ListTile(
+                                                                  leading: Icon(
+                                                                    Icons
+                                                                        .flight,
+                                                                    color: Theme.of(
+                                                                            context)
+                                                                        .primaryColor,
+                                                                  ),
+                                                                  title: Text(
+                                                                    startDestination!
+                                                                            .city +
+                                                                        ' to ' +
+                                                                        endDestination!
+                                                                            .city,
+                                                                    style:
+                                                                        TextStyle(
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .bold,
+                                                                    ),
+                                                                  ),
+                                                                  subtitle:
+                                                                      Text(
+                                                                    '€' +
+                                                                        tripData
+                                                                            .transportations[index]
+                                                                            .price
+                                                                            .toString(),
+                                                                  ),
+                                                                );
+                                                              },
+                                                            ),
+                                                    ),
+                                                  ],
                                                 ),
                                               ),
                                             ],
@@ -284,6 +349,7 @@ class TripsPage extends StatelessWidget {
                   },
                 ),
               ),
+
               SizedBox(
                 height: 20,
               ),

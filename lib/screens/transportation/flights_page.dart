@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -226,23 +229,63 @@ class _FlightsPageState extends State<FlightsPage> {
             onPressed: () {
               final transportationData =
                   Provider.of<TransportationProvider>(context, listen: false);
-              transportationData
-                  .searchTransportation(
-                _currentStartDateCheckIn.toString().split(' ')[0],
-                originCode,
-                destinationCode,
-                _numberOfPeople,
-              )
-                  .then((value) {
-                Navigator.of(context).pushNamed(
-                  '/transportation_list',
-                  arguments: [
-                    destinationFull,
-                    originCityName,
-                    destinationCityName
-                  ],
+              if (_currentStartDateCheckIn == "" ||
+                  originCode == "" ||
+                  destinationCode == "" ||
+                  _numberOfPeople == 0) {
+                showDialog(
+                  context: context,
+                  builder: (context) => Platform.isIOS
+                      ? CupertinoAlertDialog(
+                          title: Text('Please fill all the fields'),
+                          actions: [
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                                child: Text('OK'),
+                              ),
+                            ])
+                      : AlertDialog(
+                          title: Text('Please fill all the fields'),
+                          actions: [
+                            TextButton(
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                              child: Text('OK'),
+                            ),
+                          ],
+                        ),
                 );
-              });
+              } else {
+                transportationData
+                    .searchTransportation(
+                  _currentStartDateCheckIn.toString().split(' ')[0],
+                  originCode,
+                  destinationCode,
+                  _numberOfPeople,
+                )
+                    .then((value) {
+                  if (value == null) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text('No transportation found'),
+                      ),
+                    );
+                    return;
+                  } else {
+                    Navigator.of(context).pushNamed(
+                      '/transportation_list',
+                      arguments: [
+                        destinationFull,
+                        originCityName,
+                        destinationCityName
+                      ],
+                    );
+                  }
+                });
+              }
             },
             child: Text('Search'),
           ),

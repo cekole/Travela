@@ -29,32 +29,10 @@ class SuggestionsForGroup extends StatelessWidget {
                 fontWeight: FontWeight.bold,
               ),
             ),
-            TextButton(
-              onPressed: () {
-                final groupData =
-                    Provider.of<GroupProvider>(context, listen: false);
-                groupData.getTripSuggestions(currentGroupIdForSuggestions);
-                List<Destination> suggestedDestinations =
-                    groupData.groupTripSuggestions;
-                Set<List<Destination>> destinationSet = {};
-                destinationSet.add(suggestedDestinations);
-                Navigator.pushNamed(
-                  context,
-                  '/popular',
-                  arguments: [
-                    destinationSet,
-                    false,
-                  ],
-                );
-              },
-              child: Text(
-                'See All',
-                style: TextStyle(
-                  color: Theme.of(context).primaryColor,
-                ),
-              ),
-            ),
           ],
+        ),
+        SizedBox(
+          height: 10,
         ),
         SizedBox(
           height: MediaQuery.of(context).size.height * 0.25,
