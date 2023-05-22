@@ -30,6 +30,9 @@ class FriendsPage extends StatelessWidget {
             requestNames: currentRequestUsernames,
             requestIds: currentRequestIds,
           ),
+          SizedBox(
+            height: 20,
+          ),
           Padding(
             padding: const EdgeInsets.only(bottom: 16.0),
             child: FloatingActionButton(

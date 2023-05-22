@@ -97,275 +97,315 @@ class _EditTravelGroupState extends State<EditTravelGroup> {
             children: [
               SizedBox(height: 10),
               Container(height: 0),
-              Container(
-                margin: EdgeInsets.all(8.0),
-                height: size.height * 0.5,
-                decoration: BoxDecoration(
-                  color: Colors.grey[100],
-                  borderRadius: BorderRadius.circular(10),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.withOpacity(0.5),
-                      spreadRadius: 3,
-                      blurRadius: 7,
-                      offset: Offset(0, 3),
+              currentGroupUsernames.length > 1
+                  ? Container(
+                      width: double.infinity,
+                      child: Column(
+                        children: [
+                          chat(size, groupData, travelGroup),
+                          sendMessageTextField(context, groupData, travelGroup),
+                          SizedBox(height: 20),
+                          ArrangeTripButton(context),
+                          SizedBox(height: 10),
+                          Container(
+                            width: double.infinity,
+                            padding: EdgeInsets.all(10),
+                            child: ElevatedButton(
+                                onPressed: () {
+                                  arrangeTripcationModal(
+                                      context, groupData, travelGroup);
+                                },
+                                child: Text('Trip Options')),
+                          ),
+                        ],
+                      ),
+                    )
+                  : Container(
+                      width: double.infinity,
+                      child: Column(
+                        children: [
+                          ArrangeTripButton(context),
+                          SizedBox(height: 10),
+                          Container(
+                            width: double.infinity,
+                            padding: EdgeInsets.all(10),
+                            child: ElevatedButton(
+                                onPressed: () {
+                                  arrangeTripcationModal(
+                                      context, groupData, travelGroup);
+                                },
+                                child: Text('Trip Options')),
+                          ),
+                        ],
+                      ),
                     ),
-                  ],
-                ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Container ArrangeTripButton(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      padding: EdgeInsets.all(10),
+      child: ElevatedButton(
+        onPressed: () {
+          showModalBottomSheet(
+            shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.vertical(
+                top: Radius.circular(20),
+              ),
+            ),
+            context: context,
+            builder: (context) => Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: SafeArea(
                 child: Column(
+                  mainAxisSize: MainAxisSize.min,
                   children: [
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Text(
-                        'Chat',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
+                    Text(
+                      'Add a trip',
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    TextField(
+                      controller: _tripNameController,
+                      decoration: InputDecoration(
+                        labelText: 'Trip Name',
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(50),
                         ),
                       ),
                     ),
-                    Divider(
-                      color: Colors.grey,
-                      thickness: 1,
+                    const SizedBox(
+                      height: 10,
                     ),
-                    //chat messages,
-                    //Ex: currentChatMessages = [{senderId: 11, senderName: aaaa, content: a, timestamp: 2023-05-21T12:27:36.030039Z}]
-                    Expanded(
-                      child: ListView.separated(
-                          controller: _scrollController,
-                          separatorBuilder: (context, index) => SizedBox(
-                                height: 20,
-                              ),
-                          itemCount: groupData.chatMessages.length,
-                          itemBuilder: (context, index) {
-                            print(travelGroup.id);
-
-                            return Row(
-                              children: [
-                                CircleAvatar(
-                                  radius: 18,
-                                  backgroundImage: NetworkImage(
-                                    'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png',
-                                  ),
-                                ),
-                                Bubble(
-                                  nip: BubbleNip.leftBottom,
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        groupData.chatMessages[index]
-                                            ['senderName'],
-                                        style: TextStyle(
-                                          color: Colors.blue,
-                                        ),
+                    ElevatedButton(
+                      onPressed: () {
+                        String tripName = _tripNameController.text;
+                        if (tripName.isEmpty) {
+                          showDialog(
+                            context: context,
+                            builder: (context) => Theme.of(context).platform ==
+                                    TargetPlatform.iOS
+                                ? CupertinoAlertDialog(
+                                    title: Text('Empty trip name'),
+                                    content: Text('Please type a trip name'),
+                                    actions: [
+                                      TextButton(
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                        },
+                                        child: Text('OK'),
                                       ),
-                                      Text(
-                                        groupData.chatMessages[index]
-                                            ['content'],
-                                        style: TextStyle(
-                                          color: Colors.black,
-                                        ),
+                                    ],
+                                  )
+                                : AlertDialog(
+                                    title: Text('Empty trip name'),
+                                    content: Text('Please type a trip name'),
+                                    actions: [
+                                      TextButton(
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                        },
+                                        child: Text('OK'),
                                       ),
                                     ],
                                   ),
-                                ),
-                              ],
-                            );
-                          }),
-                    ),
-                  ],
-                ),
-              ),
-              SizedBox(height: 20),
-              //send message textfield
-              Container(
-                decoration: BoxDecoration(
-                  color: Colors.grey[100],
-                  borderRadius: BorderRadius.circular(10),
-                  border: Border.all(
-                    color: Colors.grey[300]!,
-                    width: 1,
-                  ),
-                ),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: TextField(
-                        controller: _messageController,
-                        decoration: InputDecoration(
-                          hintText: 'Type a message',
-                          border: InputBorder.none,
-                          contentPadding: EdgeInsets.only(
-                            left: 15,
-                          ),
-                        ),
-                      ),
-                    ),
-                    IconButton(
-                      onPressed: () async {
-                        print(_messageController.text);
-                        print(userId);
-                        if (_messageController.text.isEmpty) {
-                          showDialog(
-                            context: context,
-                            builder: (context) =>
-                                Theme.of(context).platform == TargetPlatform.iOS
-                                    ? CupertinoAlertDialog(
-                                        title: Text('Empty message'),
-                                        content: Text('Please type a message'),
-                                        actions: [
-                                          TextButton(
-                                            onPressed: () {
-                                              Navigator.of(context).pop();
-                                            },
-                                            child: Text('OK'),
-                                          ),
-                                        ],
-                                      )
-                                    : AlertDialog(
-                                        title: Text('Empty message'),
-                                        content: Text('Please type a message'),
-                                        actions: [
-                                          TextButton(
-                                            onPressed: () {
-                                              Navigator.of(context).pop();
-                                            },
-                                            child: Text('OK'),
-                                          ),
-                                        ],
-                                      ),
                           );
                         } else {
-                          await groupData
-                              .sendMessage(
-                                  travelGroup.id, _messageController.text)
+                          final tripData =
+                              Provider.of<TripProvider>(context, listen: false);
+                          tripData
+                              .addTrip(
+                            tripName,
+                            '',
+                            int.parse(currentGroupIdForSuggestions),
+                          )
                               .then((value) {
-                            _messageController.clear();
-                            groupData.getChat(travelGroup.id).then((messages) {
-                              setState(() {});
-                            });
+                            _tripNameController.clear();
+                            currentTripId = value.toString();
+                            searchDialog(context);
                           });
                         }
                       },
-                      icon: Icon(Icons.send),
+                      child: Text('Add'),
                     ),
                   ],
                 ),
               ),
-              SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: () {
-                  showModalBottomSheet(
-                    shape: const RoundedRectangleBorder(
-                      borderRadius: BorderRadius.vertical(
-                        top: Radius.circular(20),
-                      ),
+            ),
+          );
+        },
+        child: Text('Arrange Trip'),
+      ),
+    );
+  }
+
+  Container sendMessageTextField(
+      BuildContext context, GroupProvider groupData, TravelGroup travelGroup) {
+    SizedBox(height: 20);
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.grey[100],
+        borderRadius: BorderRadius.circular(10),
+        border: Border.all(
+          color: Colors.grey[300]!,
+          width: 1,
+        ),
+      ),
+      child: Row(
+        children: [
+          Expanded(
+            child: TextField(
+              controller: _messageController,
+              decoration: InputDecoration(
+                hintText: 'Type a message',
+                border: InputBorder.none,
+                contentPadding: EdgeInsets.only(
+                  left: 15,
+                ),
+              ),
+            ),
+          ),
+          IconButton(
+            onPressed: () async {
+              print(_messageController.text);
+              print(userId);
+              if (_messageController.text.isEmpty) {
+                showDialog(
+                  context: context,
+                  builder: (context) =>
+                      Theme.of(context).platform == TargetPlatform.iOS
+                          ? CupertinoAlertDialog(
+                              title: Text('Empty message'),
+                              content: Text('Please type a message'),
+                              actions: [
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                  child: Text('OK'),
+                                ),
+                              ],
+                            )
+                          : AlertDialog(
+                              title: Text('Empty message'),
+                              content: Text('Please type a message'),
+                              actions: [
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                  child: Text('OK'),
+                                ),
+                              ],
+                            ),
+                );
+              } else {
+                await groupData
+                    .sendMessage(travelGroup.id, _messageController.text)
+                    .then((value) {
+                  _messageController.clear();
+                  groupData.getChat(travelGroup.id).then((messages) {
+                    setState(() {});
+                  });
+                });
+              }
+            },
+            icon: Icon(Icons.send),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Container chat(Size size, GroupProvider groupData, TravelGroup travelGroup) {
+    return Container(
+      margin: EdgeInsets.all(8.0),
+      height: size.height * 0.5,
+      decoration: BoxDecoration(
+        color: Colors.grey[100],
+        borderRadius: BorderRadius.circular(10),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.5),
+            spreadRadius: 3,
+            blurRadius: 7,
+            offset: Offset(0, 3),
+          ),
+        ],
+      ),
+      child: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Text(
+              'Chat',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                color: Colors.black,
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+          Divider(
+            color: Colors.grey,
+            thickness: 1,
+          ),
+          //chat messages,
+          //Ex: currentChatMessages = [{senderId: 11, senderName: aaaa, content: a, timestamp: 2023-05-21T12:27:36.030039Z}]
+          Expanded(
+            child: ListView.separated(
+                controller: _scrollController,
+                separatorBuilder: (context, index) => SizedBox(
+                      height: 20,
                     ),
-                    context: context,
-                    builder: (context) => Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: SafeArea(
+                itemCount: groupData.chatMessages.length,
+                itemBuilder: (context, index) {
+                  print(travelGroup.id);
+
+                  return Row(
+                    children: [
+                      CircleAvatar(
+                        radius: 18,
+                        backgroundImage: NetworkImage(
+                          'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png',
+                        ),
+                      ),
+                      Bubble(
+                        nip: BubbleNip.leftBottom,
                         child: Column(
-                          mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              'Add a trip',
+                              groupData.chatMessages[index]['senderName'],
                               style: TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold,
+                                color: Colors.blue,
                               ),
                             ),
-                            const SizedBox(
-                              height: 10,
-                            ),
-                            TextField(
-                              controller: _tripNameController,
-                              decoration: InputDecoration(
-                                labelText: 'Trip Name',
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(50),
-                                ),
+                            Text(
+                              groupData.chatMessages[index]['content'],
+                              style: TextStyle(
+                                color: Colors.black,
                               ),
-                            ),
-                            const SizedBox(
-                              height: 10,
-                            ),
-                            ElevatedButton(
-                              onPressed: () {
-                                String tripName = _tripNameController.text;
-                                if (tripName.isEmpty) {
-                                  showDialog(
-                                    context: context,
-                                    builder: (context) => Theme.of(context)
-                                                .platform ==
-                                            TargetPlatform.iOS
-                                        ? CupertinoAlertDialog(
-                                            title: Text('Empty trip name'),
-                                            content:
-                                                Text('Please type a trip name'),
-                                            actions: [
-                                              TextButton(
-                                                onPressed: () {
-                                                  Navigator.of(context).pop();
-                                                },
-                                                child: Text('OK'),
-                                              ),
-                                            ],
-                                          )
-                                        : AlertDialog(
-                                            title: Text('Empty trip name'),
-                                            content:
-                                                Text('Please type a trip name'),
-                                            actions: [
-                                              TextButton(
-                                                onPressed: () {
-                                                  Navigator.of(context).pop();
-                                                },
-                                                child: Text('OK'),
-                                              ),
-                                            ],
-                                          ),
-                                  );
-                                } else {
-                                  final tripData = Provider.of<TripProvider>(
-                                      context,
-                                      listen: false);
-                                  tripData
-                                      .addTrip(
-                                    tripName,
-                                    '',
-                                    int.parse(currentGroupIdForSuggestions),
-                                  )
-                                      .then((value) {
-                                    _tripNameController.clear();
-                                    currentTripId = value.toString();
-                                    searchDialog(context);
-                                  });
-                                }
-                              },
-                              child: Text('Add'),
                             ),
                           ],
                         ),
                       ),
-                    ),
+                    ],
                   );
-                },
-                child: Text('Arrange Trip'),
-              ),
-              SizedBox(height: 20),
-              ElevatedButton(
-                  onPressed: () {
-                    arrangeTripcationModal(context, groupData, travelGroup);
-                  },
-                  child: Text('Trip Options')),
-            ],
+                }),
           ),
-        ),
+        ],
       ),
     );
   }
@@ -613,11 +653,11 @@ class _EditTravelGroupState extends State<EditTravelGroup> {
                     actions: [
                       CupertinoDialogAction(
                         onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => GroupsPage()),
+                          Navigator.of(context).pushNamedAndRemoveUntil(
+                            '/home',
+                            (route) => false,
                           );
+                          pageNum = 2;
                         },
                         child: Text('Ok'),
                       ),

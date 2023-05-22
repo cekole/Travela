@@ -488,21 +488,28 @@ class _AnswerCardHomeState extends State<AnswerCardHome> {
                   },
                 ),
               ),
+              SizedBox(
+                height: 20,
+              ),
               widget.isTrip
-                  ? ElevatedButton(
-                      onPressed: () {
-                        final tripData =
-                            Provider.of<TripProvider>(context, listen: false);
-                        tripData.addLocation(
-                          int.parse(currentTripId),
-                          int.parse(selectedDestination.id),
-                        );
-                        Navigator.of(context).pushNamed(
-                          '/search_options',
-                          arguments: selectedDestination,
-                        );
-                      },
-                      child: Text('Add to Trip'))
+                  ? Container(
+                      padding: EdgeInsets.all(10),
+                      width: double.infinity,
+                      child: ElevatedButton(
+                          onPressed: () {
+                            final tripData = Provider.of<TripProvider>(context,
+                                listen: false);
+                            tripData.addLocation(
+                              int.parse(currentTripId),
+                              int.parse(selectedDestination.id),
+                            );
+                            Navigator.of(context).pushNamed(
+                              '/search_options',
+                              arguments: selectedDestination,
+                            );
+                          },
+                          child: Text('Add to Trip')),
+                    )
                   : Container(),
             ],
           ),

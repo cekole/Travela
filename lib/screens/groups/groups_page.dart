@@ -600,7 +600,9 @@ void showAddFriendDialog(BuildContext context) {
               ),
               TextButton(
                 onPressed: () {
-                  Navigator.of(context).pushNamed('/create_travel_group');
+                  Navigator.of(context)
+                      .pushNamedAndRemoveUntil('/home', (route) => false);
+                  pageNum = 2;
                 },
                 child: Center(
                   child: Text(
