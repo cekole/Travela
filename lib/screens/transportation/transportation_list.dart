@@ -78,7 +78,7 @@ class _TransportationListState extends State<TransportationList> {
     )
         .then((value) {
       if (value != null) {
-        Platform.isIOS
+        Theme.of(context).platform == TargetPlatform.iOS
             ? showCupertinoDialog(
                 context: context,
                 builder: (context) => CupertinoAlertDialog(

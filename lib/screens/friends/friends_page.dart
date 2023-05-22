@@ -38,7 +38,7 @@ class FriendsPage extends StatelessWidget {
                 showDialog(
                   context: context,
                   builder: (context) {
-                    return Platform.isIOS
+                    return Theme.of(context).platform == TargetPlatform.iOS
                         ? CupertinoAlertDialog(
                             title: Text('Send friend request'),
                             content: CupertinoTextField(
@@ -49,7 +49,7 @@ class FriendsPage extends StatelessWidget {
                               },
                             ),
                             actions: [
-                              Platform.isIOS
+                              Theme.of(context).platform == TargetPlatform.iOS
                                   ? CupertinoDialogAction(
                                       onPressed: () {
                                         Navigator.of(context).pop();
@@ -84,7 +84,9 @@ class FriendsPage extends StatelessWidget {
                                           showDialog(
                                             context: context,
                                             builder: (context) {
-                                              return Platform.isIOS
+                                              return Theme.of(context)
+                                                          .platform ==
+                                                      TargetPlatform.iOS
                                                   ? CupertinoAlertDialog(
                                                       title: Text('Success'),
                                                       content: Text(
@@ -129,7 +131,9 @@ class FriendsPage extends StatelessWidget {
                                           showDialog(
                                             context: context,
                                             builder: (context) {
-                                              return Platform.isIOS
+                                              return Theme.of(context)
+                                                          .platform ==
+                                                      TargetPlatform.iOS
                                                   ? CupertinoAlertDialog(
                                                       title: Text('Error'),
                                                       content: Text(

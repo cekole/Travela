@@ -303,40 +303,43 @@ class _AnswerCardHomeState extends State<AnswerCardHome> {
                           if (success) {
                             showDialog(
                               context: context,
-                              builder: (BuildContext context) => Platform.isIOS
-                                  ? CupertinoAlertDialog(
-                                      title: Text('Added to Favourites'),
-                                      // OK BUTTON
-                                      actions: [
-                                        CupertinoDialogAction(
-                                          child: Text('OK'),
-                                          onPressed: () {
-                                            Navigator.of(context).pop();
-                                            Navigator.of(context).pop();
-                                          },
+                              builder: (BuildContext context) =>
+                                  Theme.of(context).platform ==
+                                          TargetPlatform.iOS
+                                      ? CupertinoAlertDialog(
+                                          title: Text('Added to Favourites'),
+                                          // OK BUTTON
+                                          actions: [
+                                            CupertinoDialogAction(
+                                              child: Text('OK'),
+                                              onPressed: () {
+                                                Navigator.of(context).pop();
+                                                Navigator.of(context).pop();
+                                              },
+                                            ),
+                                          ],
+                                        )
+                                      : AlertDialog(
+                                          title: Text('Added to Favourites'),
+                                          // OK BUTTON
+                                          actions: [
+                                            TextButton(
+                                              child: Text('OK'),
+                                              onPressed: () {
+                                                Navigator.of(context).pop();
+                                                Navigator.of(context).pop();
+                                              },
+                                            ),
+                                          ],
                                         ),
-                                      ],
-                                    )
-                                  : AlertDialog(
-                                      title: Text('Added to Favourites'),
-                                      // OK BUTTON
-                                      actions: [
-                                        TextButton(
-                                          child: Text('OK'),
-                                          onPressed: () {
-                                            Navigator.of(context).pop();
-                                            Navigator.of(context).pop();
-                                          },
-                                        ),
-                                      ],
-                                    ),
                             );
                           } else {
                             // Handle the case when the method returns false
                             showDialog(
                                 context: context,
                                 builder: (BuildContext context) =>
-                                    Platform.isIOS
+                                    Theme.of(context).platform ==
+                                            TargetPlatform.iOS
                                         ? CupertinoAlertDialog(
                                             title: Text('Already added'),
                                             actions: [

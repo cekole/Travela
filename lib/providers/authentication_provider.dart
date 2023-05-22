@@ -54,6 +54,7 @@ class AuthenticationProvider with ChangeNotifier {
       Uri.parse(url),
       headers: {
         'Content-Type': 'application/json',
+        'Access-Control-Allow-Credentials': 'true'
       },
       body: json.encode({
         'email': email,

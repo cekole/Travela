@@ -142,7 +142,7 @@ class _AccommodationListState extends State<AccommodationList> {
       (value) {
         if (value != null) {
           //show dialog success
-          Platform.isIOS
+          Theme.of(context).platform == TargetPlatform.iOS
               ? showCupertinoDialog(
                   context: context,
                   builder: (context) => CupertinoAlertDialog(

@@ -202,7 +202,8 @@ class _PlaceCardState extends State<PlaceCard> {
                               showDialog(
                                   context: context,
                                   builder: (BuildContext context) =>
-                                      Platform.isIOS
+                                      Theme.of(context).platform ==
+                                              TargetPlatform.iOS
                                           ? CupertinoAlertDialog(
                                               title: Text('Already added'),
                                               actions: [

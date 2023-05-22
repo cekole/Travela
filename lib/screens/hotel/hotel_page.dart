@@ -313,7 +313,7 @@ class _HotelPageState extends State<HotelPage> {
                 if (value != null) {
                   List valueList = value as List;
                   if (valueList.isEmpty) {
-                    Platform.isIOS
+                    Theme.of(context).platform == TargetPlatform.iOS
                         ? showCupertinoDialog(
                             context: context,
                             builder: (context) => CupertinoAlertDialog(
@@ -350,7 +350,7 @@ class _HotelPageState extends State<HotelPage> {
                   }
                 } else if (value == null ||
                     _currentEndDateCheckOut.isBefore(_currentEndDateCheckIn)) {
-                  Platform.isIOS
+                  Theme.of(context).platform == TargetPlatform.iOS
                       ? showCupertinoDialog(
                           context: context,
                           builder: (context) => CupertinoAlertDialog(

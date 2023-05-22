@@ -529,7 +529,7 @@ class TripsPage extends StatelessWidget {
                 onPressed: () {
                   String groupName = textController.text;
                   if (groupName.isEmpty) {
-                    Platform.isIOS
+                    Theme.of(context).platform == TargetPlatform.iOS
                         ? CupertinoAlertDialog(
                             title: Text('Error'),
                             content: Text('Please enter a group name'),
@@ -561,33 +561,34 @@ class TripsPage extends StatelessWidget {
                         .then((value) {
                       showDialog(
                         context: context,
-                        builder: (context) => Platform.isIOS
-                            ? CupertinoAlertDialog(
-                                title: Text('Success'),
-                                content: Text('Group created successfully'),
-                                actions: [
-                                  TextButton(
-                                    onPressed: () {
-                                      Navigator.of(context).pop();
-                                      Navigator.of(context).pop();
-                                    },
-                                    child: Text('OK'),
+                        builder: (context) =>
+                            Theme.of(context).platform == TargetPlatform.iOS
+                                ? CupertinoAlertDialog(
+                                    title: Text('Success'),
+                                    content: Text('Group created successfully'),
+                                    actions: [
+                                      TextButton(
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                          Navigator.of(context).pop();
+                                        },
+                                        child: Text('OK'),
+                                      ),
+                                    ],
+                                  )
+                                : AlertDialog(
+                                    title: Text('Success'),
+                                    content: Text('Group created successfully'),
+                                    actions: [
+                                      TextButton(
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                          Navigator.of(context).pop();
+                                        },
+                                        child: Text('OK'),
+                                      ),
+                                    ],
                                   ),
-                                ],
-                              )
-                            : AlertDialog(
-                                title: Text('Success'),
-                                content: Text('Group created successfully'),
-                                actions: [
-                                  TextButton(
-                                    onPressed: () {
-                                      Navigator.of(context).pop();
-                                      Navigator.of(context).pop();
-                                    },
-                                    child: Text('OK'),
-                                  ),
-                                ],
-                              ),
                       );
                     });
                   }

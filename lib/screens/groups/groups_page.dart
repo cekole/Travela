@@ -334,37 +334,41 @@ void showAddFriendDialog(BuildContext context) {
                                     if (value) {
                                       showDialog(
                                           context: context,
-                                          builder: (context) => Platform.isIOS
-                                              ? CupertinoAlertDialog(
-                                                  title: Text('Success'),
-                                                  content: Text(
-                                                      'Successfully added ${currentFriendUsernames[index]} to group'),
-                                                  actions: [
-                                                    TextButton(
-                                                        onPressed: () {
-                                                          Navigator.pop(
-                                                              context);
-                                                        },
-                                                        child: Text('OK'))
-                                                  ],
-                                                )
-                                              : AlertDialog(
-                                                  title: Text('Success'),
-                                                  content: Text(
-                                                      'Successfully added ${currentFriendUsernames[index]} to group'),
-                                                  actions: [
-                                                    TextButton(
-                                                        onPressed: () {
-                                                          Navigator.pop(
-                                                              context);
-                                                        },
-                                                        child: Text('OK'))
-                                                  ],
-                                                ));
+                                          builder: (context) =>
+                                              Theme.of(context).platform ==
+                                                      TargetPlatform.iOS
+                                                  ? CupertinoAlertDialog(
+                                                      title: Text('Success'),
+                                                      content: Text(
+                                                          'Successfully added ${currentFriendUsernames[index]} to group'),
+                                                      actions: [
+                                                        TextButton(
+                                                            onPressed: () {
+                                                              Navigator.pop(
+                                                                  context);
+                                                            },
+                                                            child: Text('OK'))
+                                                      ],
+                                                    )
+                                                  : AlertDialog(
+                                                      title: Text('Success'),
+                                                      content: Text(
+                                                          'Successfully added ${currentFriendUsernames[index]} to group'),
+                                                      actions: [
+                                                        TextButton(
+                                                            onPressed: () {
+                                                              Navigator.pop(
+                                                                  context);
+                                                            },
+                                                            child: Text('OK'))
+                                                      ],
+                                                    ));
                                     } else {
                                       showDialog(
                                         context: context,
-                                        builder: (context) => Platform.isIOS
+                                        builder: (context) => Theme.of(context)
+                                                    .platform ==
+                                                TargetPlatform.iOS
                                             ? CupertinoAlertDialog(
                                                 title: Text('Error'),
                                                 content: Text(
@@ -485,7 +489,9 @@ void showAddFriendDialog(BuildContext context) {
                                                 showDialog(
                                                   context: context,
                                                   builder: (context) {
-                                                    return Platform.isIOS
+                                                    return Theme.of(context)
+                                                                .platform ==
+                                                            TargetPlatform.iOS
                                                         ? CupertinoAlertDialog(
                                                             title:
                                                                 Text('Success'),
@@ -526,7 +532,9 @@ void showAddFriendDialog(BuildContext context) {
                                                 showDialog(
                                                   context: context,
                                                   builder: (context) {
-                                                    return Platform.isIOS
+                                                    return Theme.of(context)
+                                                                .platform ==
+                                                            TargetPlatform.iOS
                                                         ? CupertinoAlertDialog(
                                                             title:
                                                                 Text('Error'),
