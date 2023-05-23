@@ -333,56 +333,7 @@ class _EditProfileState extends State<EditProfile> {
               Spacer(),
               TextButton(
                 onPressed: () {
-                  showDialog(
-                      context: context,
-                      builder: (ctx) => Theme.of(context).platform ==
-                              TargetPlatform.iOS
-                          ? CupertinoAlertDialog(
-                              title: Text('Update Password'),
-                              content:
-                                  Text(' Continue to change your password?'),
-                              actions: [
-                                TextButton(
-                                  onPressed: () {
-                                    Navigator.of(ctx).pop();
-                                  },
-                                  child: Text('No'),
-                                ),
-                                TextButton(
-                                  onPressed: () {
-                                    userData.deleteUser(userId);
-                                    Navigator.of(ctx).pop();
-                                    Navigator.of(context)
-                                        .pushNamedAndRemoveUntil(
-                                            '/login', (route) => false);
-                                  },
-                                  child: Text('Yes'),
-                                ),
-                              ],
-                            )
-                          : AlertDialog(
-                              title: Text('Update Password'),
-                              content:
-                                  Text(' Continue to change your password?'),
-                              actions: [
-                                TextButton(
-                                  onPressed: () {
-                                    Navigator.of(ctx).pop();
-                                  },
-                                  child: Text('No'),
-                                ),
-                                TextButton(
-                                  onPressed: () {
-                                    userData.deleteUser(userId);
-                                    Navigator.of(ctx).pop();
-                                    Navigator.of(context)
-                                        .pushNamedAndRemoveUntil(
-                                            '/login', (route) => false);
-                                  },
-                                  child: Text('Yes'),
-                                ),
-                              ],
-                            ));
+                  _openChangePasswordModal(context);
                 },
                 child: Text(
                   'Change Password',
@@ -453,4 +404,94 @@ class _EditProfileState extends State<EditProfile> {
       ),
     );
   }
+}
+
+void _openChangePasswordModal(BuildContext context) {
+  TextEditingController currentPasswordController = TextEditingController();
+  TextEditingController newPasswordController = TextEditingController();
+
+  showModalBottomSheet(
+    context: context,
+    isScrollControlled: true,
+    builder: (context) => Container(
+      width: double.infinity,
+      padding: EdgeInsets.all(20),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          SizedBox(height: 16.0),
+          Text(
+            'Change Password',
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          SizedBox(height: 16.0),
+          TextFormField(
+            decoration: InputDecoration(
+              labelText: 'Current Password',
+            ),
+            obscureText: true,
+          ),
+          SizedBox(height: 16.0),
+          TextFormField(
+            decoration: InputDecoration(
+              labelText: 'New Password',
+            ),
+            obscureText: true,
+          ),
+          SizedBox(height: 16.0),
+          TextFormField(
+            decoration: InputDecoration(
+              labelText: 'Confirm New Password',
+            ),
+            obscureText: true,
+          ),
+          SizedBox(height: 25),
+          ElevatedButton(
+            onPressed: () {
+              if (currentPasswordController.text == "" ||
+                  newPasswordController.text == "" ||
+                  newPasswordController.text !=
+                      currentPasswordController.text) {
+                Theme.of(context).platform == TargetPlatform.iOS
+                    ? showDialog(
+                        context: context,
+                        builder: (BuildContext context) => CupertinoAlertDialog(
+                              title: Text('Invalid Password'),
+                              content: Text('Please enter a valid password'),
+                              actions: [
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.pop(context);
+                                  },
+                                  child: Text('OK'),
+                                ),
+                              ],
+                            ))
+                    : showDialog(
+                        context: context,
+                        builder: (BuildContext context) => AlertDialog(
+                              title: Text('Invalid Password'),
+                              content: Text('Please enter a valid password'),
+                              actions: [
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.pop(context);
+                                  },
+                                  child: Text('OK'),
+                                ),
+                              ],
+                            ));
+              }
+              ;
+            },
+            child: Text('Done'),
+          ),
+          SizedBox(height: 25),
+        ],
+      ),
+    ),
+  );
 }
