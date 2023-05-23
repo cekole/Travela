@@ -68,7 +68,7 @@ class FileStorageProvider with ChangeNotifier {
     }
   }
 
-  Future<void> uploadPhotoToTripLocation(
+  Future<bool?> uploadPhotoToTripLocation(
       String filePath, String tripId, String locationId) async {
     final url =
         baseUrl + 'files/uploadPhotoToTrip/$tripId/ToLocation/$locationId';
@@ -87,8 +87,10 @@ class FileStorageProvider with ChangeNotifier {
 
       if (response.statusCode == 200) {
         print('uploadPhotoToTripLocation success');
+        return true;
       } else {
         print('uploadPhotoToTripLocation failed');
+        return false;
       }
     } catch (e) {
       print('Error: $e');

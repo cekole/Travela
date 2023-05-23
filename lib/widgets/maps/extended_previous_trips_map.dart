@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:typed_data';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_map/flutter_map.dart';
@@ -197,9 +198,117 @@ class _ExtendedPreviousTripsMapState extends State<ExtendedPreviousTripsMap> {
                                                 image!.path,
                                                 selectedTripId,
                                                 selectedLocationId,
-                                              );
-                                              Navigator.of(context).pop();
-                                              Navigator.of(context).pop();
+                                              )
+                                                  .then((value) {
+                                                if (value!) {
+                                                  Theme.of(context).platform ==
+                                                          TargetPlatform.iOS
+                                                      ? showCupertinoDialog(
+                                                          context: context,
+                                                          builder: (context) {
+                                                            return CupertinoAlertDialog(
+                                                              title: Text(
+                                                                  'Success'),
+                                                              content: Text(
+                                                                  'Photo uploaded successfully'),
+                                                              actions: [
+                                                                CupertinoDialogAction(
+                                                                  child: Text(
+                                                                      'OK'),
+                                                                  onPressed:
+                                                                      () {
+                                                                    Navigator.of(
+                                                                            context)
+                                                                        .pop();
+                                                                    Navigator.of(
+                                                                            context)
+                                                                        .pop();
+                                                                  },
+                                                                ),
+                                                              ],
+                                                            );
+                                                          },
+                                                        )
+                                                      : showDialog(
+                                                          context: context,
+                                                          builder: (context) {
+                                                            return AlertDialog(
+                                                              title: Text(
+                                                                  'Success'),
+                                                              content: Text(
+                                                                  'Photo uploaded successfully'),
+                                                              actions: [
+                                                                TextButton(
+                                                                  child: Text(
+                                                                      'OK'),
+                                                                  onPressed:
+                                                                      () {
+                                                                    Navigator.of(
+                                                                            context)
+                                                                        .pop();
+                                                                    Navigator.of(
+                                                                            context)
+                                                                        .pop();
+                                                                  },
+                                                                ),
+                                                              ],
+                                                            );
+                                                          },
+                                                        );
+                                                } else {
+                                                  Theme.of(context).platform ==
+                                                          TargetPlatform.iOS
+                                                      ? showCupertinoDialog(
+                                                          context: context,
+                                                          builder: (context) {
+                                                            return CupertinoAlertDialog(
+                                                              title:
+                                                                  Text('Error'),
+                                                              content: Text(
+                                                                  'Photo upload failed'),
+                                                              actions: [
+                                                                CupertinoDialogAction(
+                                                                  child: Text(
+                                                                      'OK'),
+                                                                  onPressed:
+                                                                      () {
+                                                                    Navigator.of(
+                                                                            context)
+                                                                        .pop();
+                                                                    Navigator.of(
+                                                                            context)
+                                                                        .pop();
+                                                                  },
+                                                                ),
+                                                              ],
+                                                            );
+                                                          },
+                                                        )
+                                                      : showDialog(
+                                                          context: context,
+                                                          builder: (context) {
+                                                            return AlertDialog(
+                                                              title:
+                                                                  Text('Error'),
+                                                              content: Text(
+                                                                  'Photo upload failed'),
+                                                              actions: [
+                                                                TextButton(
+                                                                  child: Text(
+                                                                      'OK'),
+                                                                  onPressed:
+                                                                      () {
+                                                                    Navigator.of(
+                                                                            context)
+                                                                        .pop();
+                                                                  },
+                                                                ),
+                                                              ],
+                                                            );
+                                                          },
+                                                        );
+                                                }
+                                              });
                                             }
                                           });
                                         },
