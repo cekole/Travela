@@ -149,9 +149,49 @@ class _FlightsPageState extends State<FlightsPage> {
                                     Navigator.of(context).pop();
                                   });
                                 },
-                                child: Text('Done'),
+                                child: Text('Submit'),
                               ),
                             ],
+                          ),
+                          ListTile(
+                            leading: Icon(
+                              Icons.calendar_today,
+                              color: Colors.blue,
+                            ),
+                            title: Text(
+                              'Start Date',
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            subtitle: Text(
+                              DateFormat.yMMMd()
+                                  .format(DateTime.parse(currentAvailableFrom)),
+                              style: TextStyle(
+                                fontSize: 14,
+                              ),
+                            ),
+                          ),
+                          ListTile(
+                            leading: Icon(
+                              Icons.calendar_today,
+                              color: Colors.blue,
+                            ),
+                            title: Text(
+                              'End Date',
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            subtitle: Text(
+                              DateFormat.yMMMd()
+                                  .format(DateTime.parse(currentAvailableTo)),
+                              style: TextStyle(
+                                fontSize: 14,
+                              ),
+                            ),
                           ),
                         ],
                       ),

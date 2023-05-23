@@ -860,15 +860,44 @@ class _EditTravelGroupState extends State<EditTravelGroup> {
                   ),
                 ),
                 SizedBox(height: 20),
-                Text(
-                  'Start Date: ${DateFormat.yMMMd().format(
-                    DateTime.parse(travelGroup.commonStartDate),
-                  )}\nEnd Date: ${DateFormat.yMMMd().format(
-                    DateTime.parse(travelGroup.commonEndDate),
-                  )}',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: 18,
+                ListTile(
+                  leading: Icon(
+                    Icons.calendar_today,
+                    color: Theme.of(context).primaryColor,
+                  ),
+                  title: Text(
+                    'Start Date',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  subtitle: Text(
+                    DateFormat.yMMMd()
+                        .format(DateTime.parse(travelGroup.commonStartDate)),
+                    style: TextStyle(
+                      fontSize: 14,
+                    ),
+                  ),
+                ),
+                ListTile(
+                  leading: Icon(
+                    Icons.calendar_today,
+                    color: Theme.of(context).primaryColor,
+                  ),
+                  title: Text(
+                    'End Date',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  subtitle: Text(
+                    DateFormat.yMMMd()
+                        .format(DateTime.parse(travelGroup.commonEndDate)),
+                    style: TextStyle(
+                      fontSize: 14,
+                    ),
                   ),
                 ),
               ],
