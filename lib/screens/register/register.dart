@@ -21,6 +21,8 @@ class _RegisterPageState extends State<RegisterPage> {
   final TextEditingController confirmPasswordController =
       TextEditingController();
   bool passwordCheck = false;
+  bool _obscureText = true;
+  bool _obscureText2 = true;
 
   @override
   void dispose() {
@@ -94,7 +96,7 @@ class _RegisterPageState extends State<RegisterPage> {
                           ),
                           TextField(
                             controller: passwordController,
-                            obscureText: true,
+                            obscureText: _obscureText,
                             style: TextStyle(),
                             decoration: InputDecoration(
                               filled: true,
@@ -102,6 +104,18 @@ class _RegisterPageState extends State<RegisterPage> {
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(50),
                                 borderSide: BorderSide.none,
+                              ),
+                              suffixIcon: IconButton(
+                                onPressed: () {
+                                  setState(() {
+                                    _obscureText = !_obscureText;
+                                  });
+                                },
+                                icon: Icon(
+                                  _obscureText
+                                      ? Icons.visibility
+                                      : Icons.visibility_off,
+                                ),
                               ),
                             ),
                             onSubmitted: (value) {
@@ -113,13 +127,25 @@ class _RegisterPageState extends State<RegisterPage> {
                           ),
                           TextField(
                             controller: confirmPasswordController,
-                            obscureText: true,
+                            obscureText: _obscureText2,
                             decoration: InputDecoration(
                               filled: true,
                               hintText: "Confirm Password",
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(50),
                                 borderSide: BorderSide.none,
+                              ),
+                              suffixIcon: IconButton(
+                                onPressed: () {
+                                  setState(() {
+                                    _obscureText2 = !_obscureText2;
+                                  });
+                                },
+                                icon: Icon(
+                                  _obscureText2
+                                      ? Icons.visibility
+                                      : Icons.visibility_off,
+                                ),
                               ),
                             ),
                             onSubmitted: (value) {

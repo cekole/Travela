@@ -37,7 +37,7 @@ class _PreviousTripsMapState extends State<PreviousTripsMap> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Previous Trips Map'),
+        title: Text('Visited Cities Map'),
         backgroundColor: Theme.of(context).primaryColor,
       ),
       body: SafeArea(

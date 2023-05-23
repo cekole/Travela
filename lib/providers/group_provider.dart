@@ -480,7 +480,7 @@ class GroupProvider with ChangeNotifier {
       loadedCities.add(
         City(
           id: city['city_id'].toString(),
-          cityName: city['cityName'],
+          cityName: utf8.decode(city['cityName'].toString().codeUnits),
           countryName:
               city['country'] == null ? '' : city['country']['countryName'],
           description:
@@ -518,7 +518,7 @@ class GroupProvider with ChangeNotifier {
     final response = await http.put(
       Uri.parse(url),
       headers: {
-        'Authorization': 'Bearer  $bearerToken',
+        'Authorization': 'Bearer $bearerToken',
         'Content-Type': 'application/json',
       },
     );

@@ -389,7 +389,7 @@ class UserProvider with ChangeNotifier {
         loadedCities.add(
           City(
             id: city['city_id'].toString(),
-            cityName: city['cityName'],
+            cityName: utf8.decode(city['cityName'].toString().codeUnits),
             countryName:
                 city['country'] == null ? '' : city['country']['countryName'],
             description:

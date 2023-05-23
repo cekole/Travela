@@ -12,6 +12,7 @@ import 'package:provider/provider.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 import 'package:travela_mobile/appConstant.dart';
 import 'package:travela_mobile/models/destination.dart';
+import 'package:travela_mobile/models/poll_option.dart';
 import 'package:travela_mobile/models/travel_group.dart';
 import 'package:travela_mobile/providers/destinations_provider.dart';
 import 'package:travela_mobile/providers/group_provider.dart';
@@ -552,18 +553,157 @@ class _EditTravelGroupState extends State<EditTravelGroup> {
       ),
       onSelected: (value) {
         if (value == 'create_poll') {
-          // Add functionality for create_poll button
+          final pollOptions = <PollOption>[]; // List to store the poll options
+
+          Widget buildPollOption(int index) {
+            final TextEditingController optionController =
+                TextEditingController();
+
+            return Row(
+              children: [
+                Expanded(
+                  child: TextField(
+                    controller: optionController,
+                    decoration: InputDecoration(
+                      hintText: 'Enter poll option',
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                    ),
+                  ),
+                ),
+                SizedBox(width: 10),
+                IconButton(
+                  onPressed: () {
+                    setState(() {
+                      pollOptions.removeAt(index);
+                    });
+                  },
+                  icon: Icon(Icons.remove_circle),
+                  color: Colors.red,
+                ),
+              ],
+            );
+          }
+
+          showDialog(
+            context: context,
+            builder: (context) => StatefulBuilder(
+              builder: (BuildContext context, StateSetter setState) {
+                return Material(
+                  child: Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      color: Colors.white,
+                    ),
+                    child: SafeArea(
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Column(
+                          children: [
+                            // Close button at the top right corner
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                IconButton(
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                  icon: Icon(Icons.close),
+                                ),
+                              ],
+                            ),
+                            Text(
+                              'Create Poll',
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            SizedBox(height: 10),
+                            TextField(
+                              controller: groupNameController,
+                              decoration: InputDecoration(
+                                hintText: 'Enter your poll question',
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                              ),
+                            ),
+                            SizedBox(height: 10),
+                            ListView.separated(
+                              separatorBuilder: (context, index) =>
+                                  SizedBox(height: 10),
+                              shrinkWrap: true,
+                              itemCount: pollOptions.length,
+                              itemBuilder: (context, index) {
+                                return buildPollOption(index);
+                              },
+                            ),
+                            SizedBox(height: 10),
+                            TextButton(
+                              onPressed: () {
+                                setState(() {
+                                  pollOptions.add(PollOption(
+                                    pollOptionId:
+                                        '', // Assign an appropriate value
+                                    content:
+                                        '', // Set the content later when submitting
+                                    votes: 0,
+                                  ));
+                                });
+                              },
+                              child: Text('Add Poll Option'),
+                            ),
+                            SizedBox(height: 10),
+                            TextButton(
+                              onPressed: () async {
+                                /*  // Set the content for each poll option
+                                for (int i = 0; i < pollOptions.length; i++) {
+                                  final TextEditingController optionController =
+                                      TextEditingController();
+                                  optionController.text =
+                                      pollOptions[i].content;
+                                  pollOptions[i] = pollOptions[i].copyWith(
+                                    content: optionController.text,
+                                  );
+                                }
+
+                                // Create the poll with the question and options
+                                final pollQuestion = groupNameController.text;
+                                final List<PollOption> options =
+                                    pollOptions.toList();
+                                // Call the addPoll function passing the options list
+                                await addPoll(options);
+
+                                Navigator.of(context).pop(); */
+                              },
+                              child: Text('Done'),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                );
+              },
+            ),
+          );
         } else if (value == 'show_common_dates') {
           groupData
               .updateCommonDates(currentGroupIdForSuggestions)
-              .then((value) => {
-                    if (value == true)
-                      {
-                        _datePickerController.displayDate =
-                            DateTime.parse(travelGroup.commonStartDate),
-                        showCalendar(context, travelGroup),
-                      }
-                  });
+              .then((value) {
+            if (value) {
+              _datePickerController.selectedRanges = [
+                PickerDateRange(
+                  DateTime.parse(travelGroup.commonStartDate),
+                  DateTime.parse(travelGroup.commonEndDate),
+                )
+              ];
+            }
+            showCalendar(context, travelGroup);
+          });
         } else if (value == 'add_participants') {
           showAddFriendDialog(context);
         } else if (value == 'update_group_info') {

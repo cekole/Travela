@@ -317,38 +317,74 @@ void showAddFriendDialog(BuildContext context) {
                       color: Theme.of(context).primaryColor,
                     ),
                   ),
-                  child: ListView.separated(
-                    separatorBuilder: (context, index) => SizedBox(height: 10),
-                    itemCount: currentFriendIds.length,
-                    itemBuilder: (context, index) {
-                      return ListTile(
-                        title: Text(
-                          currentFriendUsernames[index],
-                        ),
-                        trailing: IconButton(
-                          icon: Icon(Icons.add),
-                          onPressed: () {
-                            final groupData = Provider.of<GroupProvider>(
-                              context,
-                              listen: false,
-                            );
-                            groupData.getGroupByUserId(userId).then(
-                                  (value) => groupData
-                                      .addUserToGroup(
-                                    currentGroupId,
-                                    currentFriendIds[index].toString(),
-                                  )
-                                      .then((value) {
-                                    if (value) {
-                                      showDialog(
-                                          context: context,
-                                          builder: (context) =>
-                                              Theme.of(context).platform ==
+                  child: currentFriendIds.length > 0
+                      ? ListView.separated(
+                          separatorBuilder: (context, index) =>
+                              SizedBox(height: 10),
+                          itemCount: currentFriendIds.length,
+                          itemBuilder: (context, index) {
+                            return ListTile(
+                              title: Text(
+                                currentFriendUsernames[index],
+                              ),
+                              trailing: IconButton(
+                                icon: Icon(Icons.add),
+                                onPressed: () {
+                                  final groupData = Provider.of<GroupProvider>(
+                                    context,
+                                    listen: false,
+                                  );
+                                  groupData.getGroupByUserId(userId).then(
+                                        (value) => groupData
+                                            .addUserToGroup(
+                                          currentGroupId,
+                                          currentFriendIds[index].toString(),
+                                        )
+                                            .then((value) {
+                                          if (value) {
+                                            showDialog(
+                                                context: context,
+                                                builder: (context) => Theme.of(
+                                                                context)
+                                                            .platform ==
+                                                        TargetPlatform.iOS
+                                                    ? CupertinoAlertDialog(
+                                                        title: Text('Success'),
+                                                        content: Text(
+                                                            'Successfully added ${currentFriendUsernames[index]} to group'),
+                                                        actions: [
+                                                          TextButton(
+                                                              onPressed: () {
+                                                                Navigator.pop(
+                                                                    context);
+                                                              },
+                                                              child: Text('OK'))
+                                                        ],
+                                                      )
+                                                    : AlertDialog(
+                                                        title: Text('Success'),
+                                                        content: Text(
+                                                            'Successfully added ${currentFriendUsernames[index]} to group'),
+                                                        actions: [
+                                                          TextButton(
+                                                              onPressed: () {
+                                                                Navigator.pop(
+                                                                    context);
+                                                              },
+                                                              child: Text('OK'))
+                                                        ],
+                                                      ));
+                                          } else {
+                                            showDialog(
+                                              context: context,
+                                              builder: (context) => Theme.of(
+                                                              context)
+                                                          .platform ==
                                                       TargetPlatform.iOS
                                                   ? CupertinoAlertDialog(
-                                                      title: Text('Success'),
+                                                      title: Text('Error'),
                                                       content: Text(
-                                                          'Successfully added ${currentFriendUsernames[index]} to group'),
+                                                          'Failed to add ${currentFriendUsernames[index]} to group'),
                                                       actions: [
                                                         TextButton(
                                                             onPressed: () {
@@ -359,9 +395,9 @@ void showAddFriendDialog(BuildContext context) {
                                                       ],
                                                     )
                                                   : AlertDialog(
-                                                      title: Text('Success'),
+                                                      title: Text('Error'),
                                                       content: Text(
-                                                          'Successfully added ${currentFriendUsernames[index]} to group'),
+                                                          'Failed to add ${currentFriendUsernames[index]} to group'),
                                                       actions: [
                                                         TextButton(
                                                             onPressed: () {
@@ -370,49 +406,22 @@ void showAddFriendDialog(BuildContext context) {
                                                             },
                                                             child: Text('OK'))
                                                       ],
-                                                    ));
-                                    } else {
-                                      showDialog(
-                                        context: context,
-                                        builder: (context) => Theme.of(context)
-                                                    .platform ==
-                                                TargetPlatform.iOS
-                                            ? CupertinoAlertDialog(
-                                                title: Text('Error'),
-                                                content: Text(
-                                                    'Failed to add ${currentFriendUsernames[index]} to group'),
-                                                actions: [
-                                                  TextButton(
-                                                      onPressed: () {
-                                                        Navigator.pop(context);
-                                                      },
-                                                      child: Text('OK'))
-                                                ],
-                                              )
-                                            : AlertDialog(
-                                                title: Text('Error'),
-                                                content: Text(
-                                                    'Failed to add ${currentFriendUsernames[index]} to group'),
-                                                actions: [
-                                                  TextButton(
-                                                      onPressed: () {
-                                                        Navigator.pop(context);
-                                                      },
-                                                      child: Text('OK'))
-                                                ],
-                                              ),
+                                                    ),
+                                            );
+                                          }
+                                        }),
                                       );
-                                    }
-                                  }),
-                                );
 
-                            /* groupData.addUserToGroup(
+                                  /* groupData.addUserToGroup(
                                 groupData.groups.last.id, userId); */
+                                },
+                              ),
+                            );
                           },
+                        )
+                      : Center(
+                          child: Text('No friends found'),
                         ),
-                      );
-                    },
-                  ),
                 ),
               ),
               SizedBox(
