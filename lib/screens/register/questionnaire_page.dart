@@ -73,6 +73,13 @@ class _QuestionnarePageState extends State<QuestionnarePage> {
                     setState(
                         () {}); // Trigger UI update when search text changes
                   },
+                  decoration: InputDecoration(
+                    hintText: 'Search for a destination',
+                    prefixIcon: Icon(Icons.search),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
                 ),
                 SizedBox(height: 10),
                 Text(
@@ -282,7 +289,8 @@ class _QuestionnarePageState extends State<QuestionnarePage> {
                                   .toString(),
                             );
 
-                            Navigator.of(context).pushNamed('/home');
+                            Navigator.pushReplacementNamed(context, '/home');
+                            pageNum = 0;
                           }
                         },
                       ),

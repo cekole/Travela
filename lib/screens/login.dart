@@ -70,7 +70,7 @@ class _LoginPageState extends State<LoginPage> {
                                 borderSide: BorderSide.none,
                               ),
                               prefixIcon: Icon(
-                                Icons.email,
+                                Icons.person,
                               ),
                             ),
                             onSubmitted: (value) {

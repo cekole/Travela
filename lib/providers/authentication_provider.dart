@@ -121,4 +121,28 @@ class AuthenticationProvider with ChangeNotifier {
     }
     notifyListeners();
   }
+
+  Future<bool> updatePassword(String username, String password) async {
+    final url = baseUrl + 'authentication/password';
+    print(url);
+    final response = await http.put(
+      Uri.parse(url),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: json.encode({
+        'username': username,
+        'password': password,
+      }),
+    );
+    print(response.statusCode);
+    print(response.body);
+    if (response.statusCode == 200) {
+      print('updatePassword success');
+      return true;
+    } else {
+      print('updatePassword failed');
+      return false;
+    }
+  }
 }
