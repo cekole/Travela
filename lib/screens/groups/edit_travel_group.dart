@@ -1395,7 +1395,7 @@ void showAddFriendDialog(BuildContext context) {
               SizedBox(
                 height: 10,
               ),
-              Row(
+              /*  Row(
                 children: <Widget>[
                   Expanded(
                       child: Divider(
@@ -1428,7 +1428,7 @@ void showAddFriendDialog(BuildContext context) {
                     ),
                   ),
                 ),
-              ),
+              ), */
             ],
           ),
         );

@@ -54,6 +54,7 @@ class _QuestionnarePageState extends State<QuestionnarePage> {
       listen: false,
     );
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         elevation: 0,
         title: Text('Welcome to Travela'),
@@ -83,7 +84,7 @@ class _QuestionnarePageState extends State<QuestionnarePage> {
                 ),
                 SizedBox(height: 10),
                 Text(
-                  'Choose your top 3 destinations',
+                  'Choose at least 3 visited cities',
                   style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
