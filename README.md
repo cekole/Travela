@@ -1,16 +1,3 @@
-# travela_mobile
+# Travela
 
-A new Flutter project.
-
-## Getting Started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+Travela is a multifaceted travel companion and social media platform designed to enhance the travel planning experience. It allows users to form travel groups, plan trips considering each member's interests, budget, and time constraints, and suggests suitable hotels, transportation, landmarks, and activities. Users can see past trips on personalized Globes, create routes, post photos, and share their world maps with others. Travela leverages machine learning to recommend vacations for groups, integrates with third-party applications like Google Hotels and Skyscanner, and aims to optimize customer experiences by providing innovative and engaging travel planning services. The app serves as an intermediary, directing users to external sites for reservations, while sustaining its high-quality service through advertisements.
